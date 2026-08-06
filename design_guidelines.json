@@ -1,0 +1,148 @@
+{
+  "theme": "light",
+  "art_direction": "High-Contrast Swiss Editorial (Making Excel look like a luxury performance tool)",
+  "typography": {
+    "primary_heading": {
+      "family": "Cabinet Grotesk",
+      "weights": ["800", "900"],
+      "usage": "Massive hero typography, manifesto numbers, and section titles",
+      "styles": "tracking-tighter leading-[0.9]"
+    },
+    "secondary_data": {
+      "family": "IBM Plex Mono",
+      "weights": ["400", "600"],
+      "usage": "Prices (₹290), data points, overlines, and labels",
+      "styles": "uppercase tracking-[0.15em] text-xs or text-sm"
+    },
+    "body": {
+      "family": "General Sans",
+      "weights": ["400", "500"],
+      "usage": "Paragraphs, FAQ text, and standard button text",
+      "styles": "leading-relaxed tracking-normal"
+    }
+  },
+  "colors": {
+    "background": {
+      "primary": "#F6F5F2",
+      "description": "Bone white (Organic matte, not stark #FFF)"
+    },
+    "surface": {
+      "primary": "#FFFFFF",
+      "secondary": "#EBEAE6",
+      "dark": "#0F0F0F",
+      "description": "Solid cards, sharp borders, no muddy transparencies."
+    },
+    "text": {
+      "primary": "#0F0F0F",
+      "secondary": "#595959",
+      "inverse": "#F6F5F2"
+    },
+    "accent": {
+      "primary": "#D4FF11",
+      "hover": "#C2EB0F",
+      "description": "Electric Volt/Chartreuse for CTAs and ₹290 price tags. High energy, finance-forward."
+    },
+    "border": {
+      "default": "#0F0F0F20",
+      "strong": "#0F0F0F"
+    }
+  },
+  "visual_enhancers": {
+    "surfaces": "Sharp edges, flat colors. Minimal border-radius (max 4px or rounded-none). Neo-brutalist solid black borders (1px) around product images and cards.",
+    "shadows": "Hard shadows instead of soft blurs. `shadow-[4px_4px_0px_#0F0F0F]` for buttons and key feature cards to give a tactile, grounded feel.",
+    "textures": "Use an ultra-subtle SVG noise overlay fixed to the screen with `pointer-events-none opacity-[0.03]` to give a premium print/editorial feel."
+  },
+  "layouts": {
+    "spacing_system": "Generous. p-8, p-16, py-24, py-32. Create massive negative space between sections.",
+    "grid_strategy": "The 'Bento' Grid Protocol (Mode A) for the Dashboard Showcase. Use asymmetrical spans (e.g., col-span-8 for main chart, col-span-4 for smaller stats).",
+    "alignment": "Strict left-alignment for text blocks to maintain the editorial/Swiss feel. Center alignment only for the massive final CTA."
+  },
+  "motion": {
+    "scroll": "MANDATORY: `lenis` for smooth scrolling. Momentum must feel heavy and premium.",
+    "hero_reveal": "Masked line-by-line text reveal using `framer-motion`. Text elements should be wrapped in `overflow-hidden`, and the text itself translates Y from 100% to 0%.",
+    "parallax_3d": "Hero product image MUST have a subtle 3D tilt effect on mouse move (using framer-motion `useMotionValue` and `useTransform`) and a slow parallax scroll reveal.",
+    "micro_interactions": "Buttons shrink slightly on click (`scale-95`). Tilted device mockups subtly shift rotation on hover.",
+    "marquee": "Use `react-fast-marquee` for an ultra-slow, editorial ribbon. Pale background, dark text, massive spacing."
+  },
+  "accessibility": {
+    "contrast": "All text must pass APCA/WCAG. Black on Bone White is perfect. Black text on Volt (#D4FF11) is high contrast.",
+    "testing": "All interactive elements (CTAs, FAQs) MUST have `data-testid` attributes (e.g., `data-testid='hero-cta-buy'`, `data-testid='faq-accordion'`)."
+  },
+  "media": {
+    "image_urls": [
+      {
+        "url": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxOTB8MHwxfHNlYXJjaHwxfHxmaW5hbmNpYWwlMjBkYXNoYm9hcmQlMjBVSXxlbnwwfHx8fDE3ODYwNTA0MDN8MA&ixlib=rb-4.1.0&q=85",
+        "category": "hero_mockup",
+        "description": "Main product shot (graphs on laptop screen). Use with a tilted 3D transform and black border."
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1591696205602-2f950c417cb9?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxOTB8MHwxfHNlYXJjaHwyfHxhYnN0cmFjdCUyMGRhdGElMjBncmFwaHxlbnwwfHx8fDE3ODYwNTA0MDN8MA&ixlib=rb-4.1.0&q=85",
+        "category": "feature_mockup",
+        "description": "Stock market chart. Use in the Bento Grid for the 'Profit & Loss' feature."
+      }
+    ],
+    "treatment": "Images MUST have a 1px solid black border to fit the editorial theme. No soft drop shadows."
+  },
+  "3d_libraries": {
+    "decision": "Use `framer-motion` (3D transforms: rotateX, rotateY via mouse position) for the hero product mockup instead of heavy WebGL/ThreeJS, ensuring high performance while meeting the 'tilted device mockup / 3D moment' requirement."
+  },
+  "section_blueprint": [
+    {
+      "name": "Navigation",
+      "layout": "Fixed, glassmorphism (`backdrop-blur-md bg-[#F6F5F2]/80`), 1px bottom border. Left: Logo, Right: Buy Now (₹290) button."
+    },
+    {
+      "name": "Hero Section",
+      "layout": "Massive typography. Left column: Kinetic masked text reveal ('The Last Spreadsheet You Will Ever Need.'). Right column: Tilted, floating laptop mockup showing the financial dashboard. CTA: 'Get Lifetime Access - ₹290'."
+    },
+    {
+      "name": "Editorial Marquee",
+      "layout": "Slow drifting text strip. 'PROFIT & LOSS • MONTHLY DASHBOARDS • AUTO-CALCULATIONS • TAXES • NO SUBSCRIPTIONS'."
+    },
+    {
+      "name": "Manifesto 01: The Problem",
+      "layout": "Huge chapter number '01' (IBM Plex Mono). Brutally honest copy: 'Stop paying $30/mo for software you don't understand.' High negative space."
+    },
+    {
+      "name": "Manifesto 02: Dashboard Showcase",
+      "layout": "Bento Grid (Mode A). Asymmetrical layout showcasing cropped, spotlighted images of Income & Expenses, Tax Automation, and Graphs. Each card has a sharp 1px border."
+    },
+    {
+      "name": "Manifesto 03: How It Works",
+      "layout": "3-step process (Buy → Email → Download). Minimal icons (Lucide or Phosphor), step numbers in IBM Plex Mono. Clean, scannable."
+    },
+    {
+      "name": "Pricing Card / Final Hook",
+      "layout": "Massive full-width container (Dark background `#0F0F0F`). Giant Volt (`#D4FF11`) CTA button. Clear copy: '₹290 One-time. Fully Editable. Download immediately.'."
+    },
+    {
+      "name": "FAQ",
+      "layout": "Shadcn Accordion component customized with sharp borders, no background, large clickable areas."
+    },
+    {
+      "name": "Footer",
+      "layout": "Massive typography for brand name. Minimal links."
+    }
+  ],
+  "instructions_to_main_agent": [
+    "Build the UI in pure React + Tailwind CSS (.js files).",
+    "Use framer-motion heavily for the masked text reveals (Hero) and scroll-triggered fade-ins.",
+    "Implement Lenis for smooth scrolling (crucial for the premium feel).",
+    "Use react-fast-marquee for the marquee strip.",
+    "DO NOT use generic Shadcn cards with soft shadows. Build custom flat divs with 1px solid borders and hard shadows.",
+    "Stick strictly to the chosen font families: Cabinet Grotesk, IBM Plex Mono, and General Sans. Provide Google Fonts/Fontshare CDN links in the HTML or index.css.",
+    "Never use the `inter` font anywhere."
+  ],
+  "UNIVERSAL_GUIDELINES_FOR_MAIN_AGENT": [
+    "You tend to converge toward generic, 'on distribution' outputs. In frontend design, this creates what users call the 'AI slop' aesthetic. Avoid this.",
+    "Don't make generic centered layouts, simplistic gradients, and uniform styling.",
+    "Create depth through layered design elements with z-index hierarchy and sharp contrasts.",
+    "You MUST NOT apply universal transition. Eg: `transition: all`. Always add transitions for specific interactive elements.",
+    "You MUST NOT center align the app container. Strict left alignment for typography.",
+    "NEVER use AI assistant Emoji characters.",
+    "Every interaction needs micro-animations - hover states, transitions, parallax effects, and entrance animations.",
+    "Use 2-3x more spacing than feels comfortable.",
+    "Add a subtle SVG grain overlay to the entire app for that premium editorial texture.",
+    "All interactive and key informational elements MUST include a `data-testid` attribute."
+  ]
+}
