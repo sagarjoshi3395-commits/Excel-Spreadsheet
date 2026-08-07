@@ -24,8 +24,14 @@ Sell a business management Excel template toolkit (income & expenses, profit & l
 - 5 CTAs (nav, hero, how-it-works, pricing, footer) all open the demo checkout.
 
 ## Mock / Not Real
-- Email delivery is SIMULATED (no email actually sent) — file delivered via on-screen download only.
 - Excel file is a PLACEHOLDER sample, not the final product.
+
+## Email Delivery (Resend, Emergent-managed) — added 2026-06
+- On successful Razorpay verify, buyer is emailed their access file via Emergent Resend (from_name="Crevvo", reply-to support@crevvo.com).
+- Product delivered as the uploaded PDF (`/business-bookkeeping-system.pdf`, hosted on our domain) which contains the Google Sheets + Excel links and the video tutorial. Email links to the PDF (proxy has no attachment support); the PDF also opens on-screen after payment.
+- Email failure never blocks payment confirmation; verify returns an email_sent flag.
+- NOTE: `PRODUCT_PDF_URL` in backend/.env is the preview host — update it to the production domain after deploying so emailed links point to prod.
+- Tested: iteration_7.json (backend 100%, email_sent:true to delivered@resend.dev, invalid signature sends nothing).
 
 ## Payments — Razorpay (LIVE) — added 2026-06
 - Real ₹290 one-time checkout via Razorpay. LIVE keys in backend/.env (RAZORPAY_KEY_ID/SECRET) — real money.
