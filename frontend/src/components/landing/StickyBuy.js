@@ -14,7 +14,15 @@ function useCountdown() {
       dl = Date.now() + WINDOW_MS;
       localStorage.setItem("lk_deadline", String(dl));
     }
-    const tick = () => setLeft(Math.max(0, dl - Date.now()));
+    const tick = () => {
+      let rem = dl - Date.now();
+      if (rem <= 0) {
+        dl = Date.now() + WINDOW_MS;
+        localStorage.setItem("lk_deadline", String(dl));
+        rem = WINDOW_MS;
+      }
+      setLeft(rem);
+    };
     tick();
     const id = setInterval(tick, 1000);
     return () => clearInterval(id);
