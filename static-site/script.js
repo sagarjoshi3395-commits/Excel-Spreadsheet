@@ -1,5 +1,5 @@
 /* ============ CONFIG — edit after you deploy your backend ============ */
-const BACKEND_URL = "https://biz-mgmt-sheet.preview.emergentagent.com"; // your FastAPI backend origin
+const BACKEND_URL = "https://gh-sync-14.preview.emergentagent.com"; // your FastAPI backend origin
 const API = BACKEND_URL + "/api";
 const SHEET_URL = "https://docs.google.com/spreadsheets/d/1lkJ0fBS50QHAXW4o8YDPLvsZRuT7-kLci6r23h5f_fA/copy";
 const PDF_URL = "assets/business-bookkeeping-system.pdf"; // local copy shipped with the site
