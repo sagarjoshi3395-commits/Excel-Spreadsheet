@@ -62,17 +62,17 @@ export default function Testimonials() {
         <div className="grid lg:grid-cols-12 gap-6">
           {/* featured */}
           <Reveal className="lg:col-span-5">
-            <div className="h-full bg-[#0f0f0f] text-[#f6f5f2] border border-[#0f0f0f] p-8 sm:p-10 flex flex-col">
-              <Quote className="w-10 h-10 text-[#d4ff11]" />
+            <div className="h-full bg-[#d4ff11] text-[#0f0f0f] border border-[#0f0f0f] hard-shadow p-8 sm:p-10 flex flex-col">
+              <Quote className="w-10 h-10 text-[#0f0f0f]" />
               <Stars2 />
               <p className="font-display font-bold text-2xl sm:text-3xl leading-snug mt-4">
                 “{featured.quote}”
               </p>
               <div className="flex items-center gap-4 mt-auto pt-8">
-                <Avatar init={featured.init} dark />
+                <Avatar init={featured.init} />
                 <div>
                   <p className="font-semibold">{featured.name}</p>
-                  <p className="font-mono text-xs uppercase tracking-[0.1em] text-[#f6f5f2]/60">{featured.role}</p>
+                  <p className="font-mono text-xs uppercase tracking-[0.1em] text-[#0f0f0f]/60">{featured.role}</p>
                 </div>
               </div>
             </div>
@@ -106,7 +106,7 @@ function Stars2() {
   return (
     <div className="flex gap-0.5 mt-5">
       {[...Array(5)].map((_, i) => (
-        <Star key={i} className="w-4 h-4 fill-[#d4ff11] text-[#d4ff11]" />
+        <Star key={i} className="w-4 h-4 fill-[#0f0f0f] text-[#0f0f0f]" />
       ))}
     </div>
   );
