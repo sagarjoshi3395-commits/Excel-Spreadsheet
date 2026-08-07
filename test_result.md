@@ -121,20 +121,23 @@
 ## frontend:
 ##   - task: "Product link success screen and support footer"
 ##     implemented: true
-##     working: NA
+##     working: true
 ##     file: "frontend/src/components/landing/BuyModal.js"
 ##     stuck_count: 0
 ##     priority: "high"
-##     needs_retesting: true
+##     needs_retesting: false
 ##     status_history:
 ##         -working: true
 ##         -agent: "main"
 ##         -comment: "Removed the PDF download, switched to the new editable Google Sheet URL, surfaced email delivery status, and added the support message/address to the footer."
+##         -working: true
+##         -agent: "testing"
+##         -comment: "All 8 frontend requirements verified and passed. (1) Homepage loads without blocking errors (200 status). (2) Footer visibly contains 'Support & queries' heading and mailto:ledgerkitsupport@gmail.com link. (3) All Buy CTAs (hero, footer) open Razorpay modal correctly. (4) New Google Sheet URL (1gpHWZ0trtvAIX8QpwufRr2qRpCV7ascpKzu-UwEBn5Y) verified in frontend source (landingData.js), backend .env (PRODUCT_SHEET_URL), and backend response (product_url field). (5) PDF download link and old Google Sheet URLs completely absent from codebase. (6) Success copy includes email delivery success message ('The product link was sent to') and support fallback ('email could not be sent. Please contact ledgerkitsupport@gmail.com'). (7) Preview's missing Mongo error shows friendly message: 'Could not start the payment. Please try again.' (8) No critical console/network errors - only expected 503 on create-order and minor Razorpay ORB warning. Success UI elements verified through source code inspection (cannot trigger without real payment as instructed). No real payment made, no real email triggered. Implementation is production-ready."
 ##
 ## metadata:
 ##     created_by: "main_agent"
 ##     version: "1.0"
-##     test_sequence: 8
+##     test_sequence: 9
 ##     run_ui: true
 ##
 ## test_plan:
@@ -160,3 +163,5 @@
 ##     -message: "Meta Pixel backend support testing complete. All 7 backend tests passed successfully. The /api/payments/verify endpoint correctly returns Meta Purchase event fields (event_id, value, currency) with stable formats. Backend has no Meta secrets (browser-only tracking, correct approach). All routes use /api prefix. Error handling is safe - returns 503 when database is not configured, preventing any payment from being marked as paid without proper verification. Preview environment limitation confirmed: MONGO_URL and DB_NAME are empty, cannot test live verified-payment fixture, but this is expected behavior. Backend code is production-ready for Meta Pixel support."
 ##     -agent: "testing"
 ##     -message: "Resend product delivery backend testing complete. All 9 tests passed successfully. Backend starts with no tracebacks after adding resend. GET /api/ returns 200. resend>=2.0.0 in requirements.txt and imported correctly. All environment variables configured without exposing secrets in logs. /api/payments/verify response contract verified: returns product_url, email_sent, event_id, value, currency (NO download_url). Missing Mongo fails safely with 503. Email delivery is async/non-blocking and wrapped in try-except - email failure cannot turn verified payment into failed payment. Important note: ledgerkitsupport@gmail.com is configured as sender/reply-to. Resend requires domain verification for custom senders - Gmail addresses may require additional setup or domain verification to work properly in production."
+##     -agent: "testing"
+##     -message: "Product link success screen and support footer testing complete. All 8 requirements verified and passed. Homepage loads cleanly (200), footer contains support message with mailto:ledgerkitsupport@gmail.com, all Buy CTAs open Razorpay modal, new Google Sheet URL present in frontend/backend code, no PDF or old Sheet URLs found, success copy includes email delivery and support fallback messages, friendly error handling for missing Mongo (503), no critical console/network errors. Success UI verified through source code inspection (cannot trigger without real payment). No real payment made, no real email sent. Implementation is production-ready."
