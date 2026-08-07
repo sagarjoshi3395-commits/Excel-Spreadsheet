@@ -25,4 +25,5 @@ export const TABS = [
 ];
 
 export const DOWNLOAD_FILE = "/business-bookkeeping-system.pdf";
+export const SHEET_URL = "https://docs.google.com/spreadsheets/d/1lkJ0fBS50QHAXW4o8YDPLvsZRuT7-kLci6r23h5f_fA/copy";
 export const PRICE = "290";

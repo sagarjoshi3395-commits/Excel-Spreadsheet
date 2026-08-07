@@ -38,6 +38,7 @@ EMAIL_BASE_URL = "https://integrations.emergentagent.com"
 EMAIL_KEY = os.environ["EMERGENT_EMAIL_KEY"]
 EMAIL_FROM_NAME = os.environ["EMAIL_FROM_NAME"]
 PRODUCT_PDF_URL = os.environ["PRODUCT_PDF_URL"]
+GOOGLE_SHEET_URL = os.environ.get("GOOGLE_SHEET_URL", "")
 SUPPORT_EMAIL = os.environ.get("SUPPORT_EMAIL", "")
 
 
@@ -53,21 +54,25 @@ def delivery_email_html() -> str:
             <h1 style="margin:0 0 8px;font-size:26px;color:#0f0f0f;">Success! Your Bookkeeping System is ready 🎉</h1>
             <p style="margin:0 0 20px;font-size:15px;color:#595959;line-height:1.6;">
               Thank you for your purchase. Your <b>Business Bookkeeping Sheet System</b> is ready.
-              Open the file below — it contains your <b>Google Sheets</b> &amp; <b>Microsoft Excel</b>
-              download links and a <b>video tutorial</b> showing exactly how to use it.
+              Click below to save your own copy of the Google Sheet, then follow the video tutorial to get started.
             </p>
-            <table cellpadding="0" cellspacing="0" style="margin:8px 0 24px;"><tr><td style="background:#d4ff11;border:1px solid #0f0f0f;">
-              <a href="{PRODUCT_PDF_URL}" style="display:inline-block;padding:14px 26px;font-size:14px;font-weight:bold;color:#0f0f0f;text-decoration:none;letter-spacing:1px;text-transform:uppercase;">
-                Open your access file (PDF)
+            <table cellpadding="0" cellspacing="0" style="margin:8px 0 12px;"><tr><td style="background:#d4ff11;border:1px solid #0f0f0f;">
+              <a href="{GOOGLE_SHEET_URL}" style="display:inline-block;padding:14px 26px;font-size:14px;font-weight:bold;color:#0f0f0f;text-decoration:none;letter-spacing:1px;text-transform:uppercase;">
+                📊 Get your Google Sheet (make a copy)
+              </a>
+            </td></tr></table>
+            <table cellpadding="0" cellspacing="0" style="margin:0 0 24px;"><tr><td style="border:1px solid #0f0f0f;">
+              <a href="{PRODUCT_PDF_URL}" style="display:inline-block;padding:12px 22px;font-size:13px;font-weight:bold;color:#0f0f0f;text-decoration:none;letter-spacing:1px;text-transform:uppercase;">
+                📄 Video tutorial + Excel version (PDF)
               </a>
             </td></tr></table>
             <p style="margin:0 0 6px;font-size:13px;color:#595959;line-height:1.6;">
-              Inside the PDF you'll find:
+              Your access includes:
             </p>
             <ul style="margin:0 0 20px;padding-left:18px;font-size:13px;color:#595959;line-height:1.7;">
-              <li>▶ Video tutorial — how to use the system</li>
-              <li>📊 Google Sheets copy link (works on any device)</li>
-              <li>📥 Microsoft Excel download</li>
+              <li>📊 Google Sheets — click above, then "Make a copy" to get your own editable version</li>
+              <li>▶ Video tutorial — how to use the system (in the PDF)</li>
+              <li>📥 Microsoft Excel download (in the PDF)</li>
             </ul>
             <p style="margin:0;font-size:12px;color:#999;line-height:1.6;">
               Keep this email for your records. Need help? Reply to this email{f" or write to {SUPPORT_EMAIL}" if SUPPORT_EMAIL else ""}.

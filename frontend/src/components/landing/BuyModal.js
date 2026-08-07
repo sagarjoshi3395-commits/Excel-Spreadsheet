@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useBuy } from "@/hooks/useBuy";
-import { X, Download, ShieldCheck, CheckCircle2, Loader2, AlertTriangle } from "lucide-react";
-import { DOWNLOAD_FILE, PRICE } from "@/lib/landingData";
+import { X, Download, ShieldCheck, CheckCircle2, Loader2, AlertTriangle, FileSpreadsheet } from "lucide-react";
+import { DOWNLOAD_FILE, SHEET_URL, PRICE } from "@/lib/landingData";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
@@ -154,16 +154,25 @@ export default function BuyModal() {
                     We've emailed your access to <b className="text-[#0f0f0f]">{email}</b> — and you can open it right here too.
                   </p>
                   <a
+                    href={SHEET_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    data-testid="buy-sheet-button"
+                    className="mt-6 w-full inline-flex items-center justify-center gap-2 bg-[#d4ff11] text-[#0f0f0f] py-3.5 font-mono text-sm uppercase tracking-[0.12em] font-semibold border border-[#0f0f0f] hover:bg-[#c2eb0f] transition-colors"
+                  >
+                    <FileSpreadsheet className="w-4 h-4" /> Get your Google Sheet
+                  </a>
+                  <a
                     href={DOWNLOAD_FILE}
                     target="_blank"
                     rel="noopener noreferrer"
                     data-testid="buy-download-button"
-                    className="mt-6 w-full inline-flex items-center justify-center gap-2 bg-[#0f0f0f] text-[#f6f5f2] py-3.5 font-mono text-sm uppercase tracking-[0.12em] font-medium hover:bg-[#d4ff11] hover:text-[#0f0f0f] border border-[#0f0f0f] transition-colors"
+                    className="mt-3 w-full inline-flex items-center justify-center gap-2 bg-[#0f0f0f] text-[#f6f5f2] py-3 font-mono text-xs uppercase tracking-[0.12em] font-medium hover:bg-[#161616] border border-[#0f0f0f] transition-colors"
                   >
-                    <Download className="w-4 h-4" /> Open your access file
+                    <Download className="w-4 h-4" /> Video tutorial + Excel (PDF)
                   </a>
                   <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.1em] text-[#595959]">
-                    Inside: Google Sheet, Excel &amp; a video tutorial
+                    On the sheet, choose "Make a copy" to edit your own version
                   </p>
                 </div>
               )}
