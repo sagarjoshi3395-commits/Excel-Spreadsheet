@@ -2,20 +2,32 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Reveal, Chapter } from "./Reveal";
 import { TABS } from "@/lib/landingData";
-import { Receipt, MoveHorizontal } from "lucide-react";
+import { Receipt } from "lucide-react";
 
-const DURATION = 4200;
+const DURATION = 1000;
 
 export default function Showcase() {
   const [active, setActive] = useState(3);
   const [paused, setPaused] = useState(false);
   const tab = TABS[active];
 
+  // preload every dashboard image so 1s switching is instant (no blank/flicker)
+  useEffect(() => {
+    TABS.forEach((t) => {
+      const img = new Image();
+      img.src = t.img;
+    });
+  }, []);
+
   useEffect(() => {
     if (paused) return;
     const t = setTimeout(() => setActive((a) => (a + 1) % TABS.length), DURATION);
     return () => clearTimeout(t);
   }, [active, paused]);
+
+  // pause ONLY for a real mouse pointer (never on touch), so mobile keeps auto-playing
+  const onEnter = (e) => e.pointerType === "mouse" && setPaused(true);
+  const onLeave = (e) => e.pointerType === "mouse" && setPaused(false);
 
   return (
     <section
@@ -37,8 +49,8 @@ export default function Showcase() {
 
         <div
           className="grid lg:grid-cols-12 gap-4 sm:gap-6 items-start"
-          onMouseEnter={() => setPaused(true)}
-          onMouseLeave={() => setPaused(false)}
+          onPointerEnter={onEnter}
+          onPointerLeave={onLeave}
         >
           {/* Tab list */}
           <Reveal className="lg:col-span-3">
@@ -48,19 +60,10 @@ export default function Showcase() {
                   key={t.label}
                   data-testid={`showcase-tab-${i}`}
                   onClick={() => setActive(i)}
-                  className={`relative shrink-0 lg:w-full text-left flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2.5 sm:py-3 border border-[#0f0f0f] font-mono text-[11px] sm:text-xs uppercase tracking-[0.1em] transition-colors duration-200 overflow-hidden ${
+                  className={`relative shrink-0 lg:w-full text-left flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2.5 sm:py-3 border border-[#0f0f0f] font-mono text-[11px] sm:text-xs uppercase tracking-[0.1em] transition-colors duration-200 ${
                     active === i ? "bg-[#0f0f0f] text-[#f6f5f2]" : "bg-white text-[#0f0f0f] hover:bg-[#d4ff11]"
                   }`}
                 >
-                  {active === i && !paused && (
-                    <motion.span
-                      key={active}
-                      className="absolute left-0 bottom-0 h-0.5 bg-[#d4ff11]"
-                      initial={{ width: "0%" }}
-                      animate={{ width: "100%" }}
-                      transition={{ duration: DURATION / 1000, ease: "linear" }}
-                    />
-                  )}
                   <span className={active === i ? "text-[#d4ff11]" : "text-[#595959]"}>
                     {String(i + 1).padStart(2, "0")}
                   </span>
@@ -84,26 +87,23 @@ export default function Showcase() {
                 </span>
                 <span className="ml-auto flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-[#595959]">
                   <span className={`w-1.5 h-1.5 rounded-full ${paused ? "bg-[#595959]" : "bg-[#d4ff11] animate-pulse"}`} />
-                  <span className="hidden xs:inline sm:inline">{paused ? "Paused" : "Auto"}</span>
+                  {paused ? "Paused" : "Auto"}
                 </span>
               </div>
 
-              {/* mobile: horizontal-scroll full image; desktop: contained aspect box */}
-              <div className="relative overflow-x-auto sm:overflow-hidden bg-[#f4f4f2]">
-                <div className="w-[760px] sm:w-auto sm:relative sm:aspect-[16/9]">
-                  <motion.img
-                    key={tab.img}
-                    src={tab.img}
-                    alt={`${tab.label} dashboard`}
-                    loading="lazy"
-                    decoding="async"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.4, ease: "easeOut" }}
-                    className="block w-full sm:absolute sm:inset-0 sm:w-full sm:h-full object-contain object-top"
-                    data-testid="showcase-image"
-                  />
-                </div>
+              {/* fully-contained image: nothing is ever cropped, on mobile or desktop */}
+              <div className="relative bg-[#f4f4f2] sm:aspect-[16/9]">
+                <motion.img
+                  key={tab.img}
+                  src={tab.img}
+                  alt={`${tab.label} dashboard`}
+                  decoding="async"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.35, ease: "easeOut" }}
+                  className="block w-full h-auto sm:absolute sm:inset-0 sm:w-full sm:h-full sm:object-contain object-top"
+                  data-testid="showcase-image"
+                />
               </div>
 
               <div className="flex items-center justify-between gap-4 px-4 sm:px-5 py-3 sm:py-4 border-t border-[#0f0f0f]">
@@ -116,9 +116,6 @@ export default function Showcase() {
                 </span>
               </div>
             </div>
-            <p className="sm:hidden mt-2 flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.1em] text-[#595959]">
-              <MoveHorizontal className="w-3.5 h-3.5" /> Swipe the sheet to see it all
-            </p>
           </Reveal>
         </div>
 
