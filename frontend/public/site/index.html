@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LedgerKit · Business Bookkeeping Sheet System — ₹290</title>
+  <meta name="description" content="Track income, expenses, profit & loss, taxes and dashboards in one auto-calculating spreadsheet. One-time ₹290." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
+  <link rel="preload" as="image" href="assets/shots/custom.webp" />
+  <link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@800,900&f[]=general-sans@400,500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="grain"></div>
+
+  <!-- NAV -->
+  <nav class="nav" id="nav">
+    <div class="wrap nav-inner">
+      <a href="#top" class="logo">LEDGER<span class="dim">/</span>KIT<span class="logo-dot"></span></a>
+      <div class="nav-links">
+        <a href="#showcase">Features</a>
+        <a href="#how">How it works</a>
+        <a href="#faq">FAQ</a>
+      </div>
+      <button class="nav-buy js-buy">Buy · ₹290</button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero" id="top">
+    <div class="hero-grid-bg"></div>
+    <div class="hero-blob"></div>
+    <div class="wrap hero-inner">
+      <div class="hero-left">
+        <span class="badge reveal">One Excel file · No software · Lifetime</span>
+        <h1 class="hero-title">
+          <span class="line"><span class="line-in" style="animation-delay:.30s">The last</span></span>
+          <span class="line"><span class="line-in" style="animation-delay:.42s">spreadsheet</span></span>
+          <span class="line"><span class="line-in" style="animation-delay:.54s">you'll ever</span></span>
+          <span class="line"><span class="line-in" style="animation-delay:.66s">need<mark>.</mark></span></span>
+        </h1>
+        <p class="hero-sub reveal" data-delay="1">Track income, expenses, profit &amp; loss, taxes and monthly, quarterly &amp; annual dashboards — all automatically, with clean graphs. Works in Excel or Google Sheets.</p>
+        <div class="hero-cta reveal" data-delay="1.1">
+          <button class="btn btn-dark js-buy">Get lifetime access · ₹290 <span class="arr">↗</span></button>
+          <span class="mono small"><s>₹999</s> · one-time</span>
+        </div>
+        <div class="hero-checks reveal" data-delay="1.2">
+          <span>✓ Fully editable</span><span>✓ Auto-calculated</span><span>✓ Instant access</span>
+        </div>
+      </div>
+
+      <div class="hero-right">
+        <div class="tilt" id="tilt">
+          <div class="tilt-back"></div>
+          <svg class="tilt-arrow" viewBox="0 0 120 70" fill="none"><path d="M4 62 L38 40 L62 50 L112 8" stroke="#0f0f0f" stroke-width="3"/><path d="M112 8 L96 12 M112 8 L108 24" stroke="#0f0f0f" stroke-width="3"/></svg>
+          <img src="assets/shots/custom.webp" alt="Business dashboard" class="tilt-img" width="1264" height="848" fetchpriority="high" />
+          <div class="chip chip-a"><i>📈</i><b>+9.5%</b><small>Net profit</small></div>
+          <div class="chip chip-b"><i>▦</i><b>10</b><small>Dashboards</small></div>
+          <div class="chip chip-c"><i>⚡</i><b>Live</b><small>Auto updates</small></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MARQUEE -->
+  <section class="marquee" aria-hidden="true">
+    <div class="marquee-track" id="marquee"></div>
+  </section>
+
+  <!-- PROBLEM -->
+  <section class="section" id="problem">
+    <div class="wrap">
+      <div class="chapter reveal"><span>[ 01 ]</span> The Problem <i></i></div>
+      <div class="prob-grid">
+        <h2 class="reveal h-big">Running a business is hard.<br><span class="dim2">Managing the money shouldn't be.</span></h2>
+        <div class="prob-list">
+          <div class="prob reveal">✕ Paying ₹500–₹2000 every month for accounting software you barely use.</div>
+          <div class="prob reveal">✕ Copy-pasting numbers between apps and still not knowing your real profit.</div>
+          <div class="prob reveal">✕ Confusing dashboards, hidden features and steep learning curves.</div>
+          <div class="prob reveal">✕ No clear picture of taxes, expenses or where the money actually goes.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SHOWCASE -->
+  <section class="section alt" id="showcase">
+    <div class="wrap">
+      <div class="chapter reveal"><span>[ 02 ]</span> Take A Look Inside <i></i></div>
+      <div class="reveal">
+        <h2 class="h-big">One file. Ten dashboards. Zero formulas to write.</h2>
+        <p class="lead">Every tab updates itself the moment you type a number. Watch it cycle through the real sheets — or tap any tab to explore.</p>
+      </div>
+      <div class="show-grid" id="showRoot">
+        <div class="tabs" id="tabs"></div>
+        <div class="frame reveal">
+          <div class="frame-bar">
+            <span class="dots"><i></i><i class="v"></i><i></i></span>
+            <span class="mono tiny" id="frameLabel">Setup tab</span>
+            <span class="mono tiny auto" id="autoLabel"><i class="pulse"></i> Auto</span>
+          </div>
+          <div class="frame-img"><img id="showImg" src="assets/shots/monthly.webp" alt="dashboard" /></div>
+          <div class="frame-cap"><b id="capTitle">Monthly · </b><span id="capDesc"></span></div>
+        </div>
+      </div>
+      <div class="taxstrip reveal">
+        <span class="ico">🧾</span>
+        <p><b>Even your taxes are calculated for you.</b> <span class="dim2">Tax collected vs paid, tracked every month — no accountant needed.</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW -->
+  <section class="section" id="how">
+    <div class="wrap">
+      <div class="chapter reveal"><span>[ 03 ]</span> How It Works <i></i></div>
+      <h2 class="h-big reveal">From payment to profit in under a minute.</h2>
+      <div class="steps">
+        <div class="step reveal"><div class="step-top"><span>💳</span><em>01</em></div><h3>Buy for ₹290</h3><p>One-time payment. No subscription, no hidden fees, ever.</p></div>
+        <div class="step reveal"><div class="step-top"><span>✉️</span><em>02</em></div><h3>Get it on email</h3><p>Your Google Sheet + tutorial land in your inbox within seconds.</p></div>
+        <div class="step reveal"><div class="step-top"><span>⬇️</span><em>03</em></div><h3>Copy &amp; use</h3><p>Make a copy in Google Sheets or open in Excel. Start entering numbers.</p></div>
+      </div>
+      <div class="reveal"><button class="btn btn-dark js-buy" style="margin-top:2.5rem">Start now · ₹290 <span class="arr">↗</span></button></div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="section" id="reviews">
+    <div class="wrap">
+      <div class="chapter reveal"><span>[ 04 ]</span> The Proof <i></i></div>
+      <div class="stats reveal">
+        <div><b>2,400+</b><small>Businesses running on it</small></div>
+        <div><b>4.9/5</b><small>Average owner rating</small></div>
+        <div><b>10</b><small>Auto dashboards inside</small></div>
+        <div><b>₹290</b><small>One-time · no subscription</small></div>
+      </div>
+      <div class="rev-grid">
+        <div class="rev-feat reveal">
+          <span class="q">”</span>
+          <div class="stars">★★★★★</div>
+          <p>“I cancelled my ₹1,500/month accounting app the same day. This one sheet shows my profit, expenses and taxes better than any software I've paid for.”</p>
+          <div class="rev-who"><span class="ava dark">RM</span><div><b>Rohan Mehta</b><small>Founder, Urban Threads</small></div></div>
+        </div>
+        <div class="rev-cards" id="revCards"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="section" id="pricing">
+    <div class="wrap">
+      <div class="price-card reveal">
+        <div class="price-left">
+          <span class="tag">One plan · Everything included</span>
+          <h2 class="h-big">Your entire business finance system. <span class="dim2">One file.</span></h2>
+          <div class="incl" id="incl"></div>
+        </div>
+        <div class="price-right">
+          <div class="mono"><s>₹999</s> Launch price</div>
+          <div class="price-big">₹290<span>/ one-time</span></div>
+          <p>Pay once. Own it forever. No monthly fees, no logins, no lock-in.</p>
+          <button class="btn btn-block js-buy">Buy now · Instant access</button>
+          <p class="mono tiny center">Emailed instantly + open on screen</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section alt" id="faq">
+    <div class="wrap narrow">
+      <div class="chapter reveal"><span>[ 05 ]</span> Questions <i></i></div>
+      <h2 class="h-big reveal">Everything you might ask.</h2>
+      <div class="faq" id="faq"></div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="wrap">
+      <div class="foot-top">
+        <div>
+          <span class="mono volt">Ready when you are</span>
+          <h2 class="h-big light">Stop guessing. Start seeing your numbers clearly.</h2>
+        </div>
+        <button class="btn btn-volt js-buy">Get it for ₹290 <span class="arr">↗</span></button>
+      </div>
+      <div class="foot-bottom">
+        <div class="logo light">LEDGER<span class="dim">/</span>KIT</div>
+        <div class="foot-links"><a href="#showcase">Features</a><a href="#faq">FAQ</a><a href="#pricing">Pricing</a></div>
+        <p class="mono tiny">© 2026 Crevvo · Made for small businesses</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- STICKY BUY -->
+  <div class="sticky" id="sticky">
+    <div class="wrap sticky-inner">
+      <div class="sticky-l">
+        <span class="sticky-ico">📄</span>
+        <div>
+          <b>Business Toolkit</b>
+          <p class="mono tiny">⏱ Price rises to ₹999 in <span class="cd" id="cd">15:00</span></p>
+        </div>
+      </div>
+      <div class="sticky-r">
+        <span class="sticky-price">₹290</span>
+        <button class="btn btn-volt sm js-buy">Buy now</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL -->
+  <div class="modal" id="modal" aria-hidden="true">
+    <div class="modal-bg js-close"></div>
+    <div class="modal-card">
+      <div class="modal-head"><span class="mono tiny">🛡 Secure checkout</span><button class="x js-close">✕</button></div>
+      <div class="modal-body">
+        <div id="stageForm">
+          <p class="modal-title">Business Toolkit</p>
+          <div class="modal-price">₹290 <span>one-time</span></div>
+          <label class="mono tiny">Email for your receipt &amp; file</label>
+          <input type="email" id="email" placeholder="you@business.com" />
+          <p class="err" id="emailErr" style="display:none">Please enter a valid email.</p>
+          <button class="btn btn-block" id="payBtn">Pay ₹290 securely</button>
+          <p class="mono tiny center">🛡 Payments secured by Razorpay</p>
+        </div>
+        <div id="stageProcessing" style="display:none" class="center pad">
+          <div class="spinner"></div>
+          <p class="mono">Opening secure payment…</p>
+        </div>
+        <div id="stageDone" style="display:none" class="center">
+          <div class="big-check">✓</div>
+          <p class="modal-title">Payment successful!</p>
+          <p class="dim2 sm">We've emailed your access to <b id="doneEmail"></b> — and you can open it right here too.</p>
+          <a id="sheetBtn" class="btn btn-block" target="_blank" rel="noopener">📊 Get your Google Sheet</a>
+          <a id="pdfBtn" class="btn btn-dark btn-block sm2" target="_blank" rel="noopener">⬇ Video tutorial + Excel (PDF)</a>
+          <p class="mono tiny center">On the sheet, choose "Make a copy" to edit your own version</p>
+        </div>
+        <div id="stageError" style="display:none" class="center">
+          <div class="big-warn">!</div>
+          <p class="modal-title">Payment not completed</p>
+          <p class="dim2 sm" id="errMsg"></p>
+          <button class="btn btn-block" id="retryBtn">Try again</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
