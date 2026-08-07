@@ -24,9 +24,14 @@ Sell a business management Excel template toolkit (income & expenses, profit & l
 - 5 CTAs (nav, hero, how-it-works, pricing, footer) all open the demo checkout.
 
 ## Mock / Not Real
-- Payment is MOCKED (no gateway).
-- Email delivery is SIMULATED (no email actually sent).
+- Email delivery is SIMULATED (no email actually sent) — file delivered via on-screen download only.
 - Excel file is a PLACEHOLDER sample, not the final product.
+
+## Payments — Razorpay (LIVE) — added 2026-06
+- Real ₹290 one-time checkout via Razorpay. LIVE keys in backend/.env (RAZORPAY_KEY_ID/SECRET) — real money.
+- Backend: POST /api/payments/create-order (amount 29000 paise, stores order in Mongo db.orders), POST /api/payments/verify (HMAC-SHA256 signature check, idempotent, marks order 'paid'/'signature_failed').
+- Frontend: BuyModal loads Razorpay checkout.js, opens Checkout, verifies signature, then reveals the download.
+- Tested: iteration_6.json (backend 100%, signature valid/invalid, checkout iframe opens). Real UI payment not auto-tested (LIVE keys need OTP/real card).
 
 ## Backlog
 - P1: Real payment (Razorpay ₹290) + real email delivery (Resend).

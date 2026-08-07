@@ -26,6 +26,12 @@ RAZORPAY_KEY_SECRET = os.environ['RAZORPAY_KEY_SECRET']
 razorpay_client = razorpay.Client(auth=(RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET))
 PRICE_PAISE = 29000  # ₹290
 
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
+
 # Create the main app without a prefix
 app = FastAPI()
 
@@ -129,7 +135,7 @@ async def verify_payment(req: VerifyRequest):
         raise HTTPException(status_code=400, detail="Payment verification failed")
 
     await db.orders.update_one(
-        {"order_id": req.razorpay_order_id},
+        {"order_id": req.razorpay_order_id, "status": {"$ne": "paid"}},
         {"$set": {
             "status": "paid",
             "payment_id": req.razorpay_payment_id,
@@ -149,13 +155,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
-logger = logging.getLogger(__name__)
 
 @app.on_event("shutdown")
 async def shutdown_db_client():
