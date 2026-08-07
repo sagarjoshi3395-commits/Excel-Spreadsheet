@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { Reveal, Chapter } from "./Reveal";
 import { TABS } from "@/lib/landingData";
@@ -9,21 +9,41 @@ const DURATION = 1000;
 export default function Showcase() {
   const [active, setActive] = useState(3);
   const [paused, setPaused] = useState(false);
+  const [inView, setInView] = useState(false);
+  const sectionRef = useRef(null);
   const tab = TABS[active];
 
-  // preload every dashboard image so 1s switching is instant (no blank/flicker)
+  // Only start work once the section is near the viewport — keeps initial page load fast on mobile.
   useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          setInView(true);
+          io.disconnect();
+        }
+      },
+      { rootMargin: "300px" }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  // preload the rest of the dashboards ONLY after the section is in view
+  useEffect(() => {
+    if (!inView) return;
     TABS.forEach((t) => {
       const img = new Image();
       img.src = t.img;
     });
-  }, []);
+  }, [inView]);
 
   useEffect(() => {
-    if (paused) return;
+    if (paused || !inView) return;
     const t = setTimeout(() => setActive((a) => (a + 1) % TABS.length), DURATION);
     return () => clearTimeout(t);
-  }, [active, paused]);
+  }, [active, paused, inView]);
 
   // pause ONLY for a real mouse pointer (never on touch), so mobile keeps auto-playing
   const onEnter = (e) => e.pointerType === "mouse" && setPaused(true);
@@ -31,6 +51,7 @@ export default function Showcase() {
 
   return (
     <section
+      ref={sectionRef}
       id="showcase"
       className="px-5 sm:px-8 py-20 sm:py-32 bg-[#ebeae6] border-y border-[#0f0f0f]"
       data-testid="showcase-section"
@@ -97,6 +118,7 @@ export default function Showcase() {
                   key={tab.img}
                   src={tab.img}
                   alt={`${tab.label} dashboard`}
+                  loading="lazy"
                   decoding="async"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}

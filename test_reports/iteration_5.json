@@ -1,0 +1,59 @@
+{
+  "summary": "Frontend-only perf retest for iPhone-slow-load fix. All perf optimizations verified working. Before scrolling on mobile (390x844), only 2 /shots/*.webp images are fetched (custom.webp hero + monthly.webp default active tab) — the other 8 dashboard images are correctly deferred until the showcase section is near the viewport. After scrolling to showcase, remaining images are fetched and auto-advance runs (~1s cycle). Desktop hover-pause works. Buy flow (hero-cta-buy -> buy-modal -> buy-email-input -> buy-submit -> buy-success -> buy-download-button) is functional. Fonts render in Cabinet Grotesk (not serif fallback). No console errors, no 404s.",
+  "perf_metrics_mobile_390x844": {
+    "domContentLoaded_ms": 737,
+    "load_ms": 1365,
+    "total_requests_before_scroll": 31,
+    "resource_entries_before_scroll": 15,
+    "transfer_size_bytes_before_scroll": 611747,
+    "shots_before_scroll_count": 2,
+    "shots_before_scroll_list": [
+      "/shots/custom.webp (preloaded hero)",
+      "/shots/monthly.webp (default active tab)"
+    ],
+    "shots_after_scroll_new_count": 10,
+    "shots_after_scroll_list": [
+      "/shots/monthly.webp (re-fetch via new Image preload — cached)",
+      "/shots/custom.webp (re-fetch — cached)",
+      "/shots/setup.webp",
+      "/shots/income.webp",
+      "/shots/expenses.webp",
+      "/shots/annual.webp",
+      "/shots/fiveyear.webp",
+      "/shots/comparison.webp",
+      "/shots/balance.webp",
+      "/shots/salestax.webp"
+    ],
+    "showcase_image_width_mobile_px": 348,
+    "auto_advance": "OK (caption changed within 1.3s of entering viewport)"
+  },
+  "desktop_1440x820_checks": {
+    "heading_font_family": "Cabinet Grotesk, sans-serif",
+    "auto_advance": "OK",
+    "hover_pause": "OK (caption unchanged during hover)",
+    "buy_flow": "OK (modal -> email -> submit -> success -> download button visible)",
+    "console_errors": 0,
+    "http_400_plus_responses": 0
+  },
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "observations_non_blocking": [
+    "Showcase useEffect re-preloads all TABS (including monthly.webp and custom.webp) when inView flips true — both are already cached, so cost is negligible (304/from cache). Optional micro-opt: skip re-preloading the currently active tab and the hero image.",
+    "sticky-buy-bar testid was not found via query on desktop 1440 viewport but is clearly rendered on mobile (visible in screenshot with countdown 14:53 and BUY NOW). Likely hidden on desktop by design (sm:hidden). Not a regression — noted for awareness."
+  ],
+  "test_report_links": [],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "Showcase.js: image preload loop re-loads all 10 tab images when inView triggers, including the currently-displayed one and the hero (custom.webp) which is already in browser cache. Fine functionally, minor waste."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "N/A (skipped per request)", "frontend": "100%"},
+  "seed_data_creation": "None",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Perf optimizations validated end-to-end on the public preview URL. Key numbers: mobile DOMContentLoaded ~737ms, load ~1365ms, only 2 /shots/*.webp fetched before scroll (custom+monthly), remaining 8 fetched after scrolling into the showcase (IntersectionObserver rootMargin 300px). Auto-advance, hover-pause, buy-modal flow, sticky bar (mobile), and fonts (Cabinet Grotesk) all confirmed working with 0 console errors and 0 HTTP 4xx/5xx."
+}
