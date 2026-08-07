@@ -9,8 +9,8 @@ import {
 const faqs = [
   { q: "Do I need any special software?", a: "No. It's a single Excel file that also works in Google Sheets. If you can open a spreadsheet, you can use this." },
   { q: "Is it really fully editable?", a: "Yes. Change categories, colours, labels and formulas however you like. It's your file forever." },
-  { q: "How do I receive the file after buying?", a: "You get a download link on your email instantly, and you can also download it right here on the screen after checkout." },
-  { q: "Is this a one-time payment?", a: "Absolutely. Pay ₹290 once and it's yours for life. No subscriptions, no recurring charges." },
+  { q: "How do I receive the file after buying?", a: "The moment your payment succeeds, a Download button appears right here on the screen — grab the file instantly and save it to your device or Google Drive." },
+  { q: "Is this a one-time payment?", a: "Absolutely. Pay ₹290 once via Razorpay and it's yours for life. No subscriptions, no recurring charges." },
   { q: "Will my numbers calculate automatically?", a: "Yes. Just enter your income and expenses — profit & loss, taxes and every dashboard update themselves with graphs." },
 ];
 

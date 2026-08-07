@@ -65,7 +65,7 @@ export default function Pricing() {
                 Buy now · Instant access
               </motion.button>
               <p className="text-center font-mono text-[11px] uppercase tracking-[0.1em] text-[#0f0f0f]/60 mt-4">
-                Emailed instantly · download on screen
+                Instant download after secure payment
               </p>
             </div>
           </div>

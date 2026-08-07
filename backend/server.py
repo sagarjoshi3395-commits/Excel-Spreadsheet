@@ -1,13 +1,14 @@
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI, APIRouter, HTTPException
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import logging
 from pathlib import Path
-from pydantic import BaseModel, Field, ConfigDict
-from typing import List
+from pydantic import BaseModel, Field, ConfigDict, EmailStr
+from typing import List, Optional
 import uuid
+import razorpay
 from datetime import datetime, timezone
 
 
@@ -18,6 +19,12 @@ load_dotenv(ROOT_DIR / '.env')
 mongo_url = os.environ['MONGO_URL']
 client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
+
+# Razorpay
+RAZORPAY_KEY_ID = os.environ['RAZORPAY_KEY_ID']
+RAZORPAY_KEY_SECRET = os.environ['RAZORPAY_KEY_SECRET']
+razorpay_client = razorpay.Client(auth=(RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET))
+PRICE_PAISE = 29000  # ₹290
 
 # Create the main app without a prefix
 app = FastAPI()
@@ -65,6 +72,72 @@ async def get_status_checks():
             check['timestamp'] = datetime.fromisoformat(check['timestamp'])
     
     return status_checks
+
+
+# ---- Razorpay payment endpoints ----
+class CreateOrderRequest(BaseModel):
+    email: EmailStr
+
+class VerifyRequest(BaseModel):
+    razorpay_order_id: str
+    razorpay_payment_id: str
+    razorpay_signature: str
+
+@api_router.post("/payments/create-order")
+async def create_order(req: CreateOrderRequest):
+    try:
+        order = razorpay_client.order.create({
+            "amount": PRICE_PAISE,
+            "currency": "INR",
+            "payment_capture": 1,
+            "notes": {"email": req.email, "product": "Business Management Toolkit"},
+        })
+    except Exception as e:
+        logger.error(f"Razorpay order create failed: {e}")
+        raise HTTPException(status_code=502, detail="Could not create payment order")
+
+    doc = {
+        "id": str(uuid.uuid4()),
+        "order_id": order["id"],
+        "email": req.email,
+        "amount": PRICE_PAISE,
+        "currency": "INR",
+        "status": "created",
+        "created_at": datetime.now(timezone.utc).isoformat(),
+    }
+    await db.orders.insert_one(doc)
+    return {
+        "order_id": order["id"],
+        "amount": PRICE_PAISE,
+        "currency": "INR",
+        "key_id": RAZORPAY_KEY_ID,
+    }
+
+@api_router.post("/payments/verify")
+async def verify_payment(req: VerifyRequest):
+    try:
+        razorpay_client.utility.verify_payment_signature({
+            "razorpay_order_id": req.razorpay_order_id,
+            "razorpay_payment_id": req.razorpay_payment_id,
+            "razorpay_signature": req.razorpay_signature,
+        })
+    except razorpay.errors.SignatureVerificationError:
+        await db.orders.update_one(
+            {"order_id": req.razorpay_order_id},
+            {"$set": {"status": "signature_failed"}},
+        )
+        raise HTTPException(status_code=400, detail="Payment verification failed")
+
+    await db.orders.update_one(
+        {"order_id": req.razorpay_order_id},
+        {"$set": {
+            "status": "paid",
+            "payment_id": req.razorpay_payment_id,
+            "paid_at": datetime.now(timezone.utc).isoformat(),
+        }},
+    )
+    return {"status": "paid", "download_url": "/business-management-toolkit.xlsx"}
+
 
 # Include the router in the main app
 app.include_router(api_router)
