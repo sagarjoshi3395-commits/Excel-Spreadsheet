@@ -151,18 +151,19 @@ export default function BuyModal() {
                   <CheckCircle2 className="w-14 h-14 mx-auto text-[#0f0f0f]" strokeWidth={1.5} />
                   <p className="font-display font-black text-3xl mt-4 tracking-tight">Payment successful!</p>
                   <p className="text-sm text-[#595959] mt-3">
-                    Thank you. Your toolkit for <b className="text-[#0f0f0f]">{email}</b> is ready to download.
+                    We've emailed your access to <b className="text-[#0f0f0f]">{email}</b> — and you can open it right here too.
                   </p>
                   <a
                     href={DOWNLOAD_FILE}
-                    download
+                    target="_blank"
+                    rel="noopener noreferrer"
                     data-testid="buy-download-button"
                     className="mt-6 w-full inline-flex items-center justify-center gap-2 bg-[#0f0f0f] text-[#f6f5f2] py-3.5 font-mono text-sm uppercase tracking-[0.12em] font-medium hover:bg-[#d4ff11] hover:text-[#0f0f0f] border border-[#0f0f0f] transition-colors"
                   >
-                    <Download className="w-4 h-4" /> Download the toolkit
+                    <Download className="w-4 h-4" /> Open your access file
                   </a>
                   <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.1em] text-[#595959]">
-                    Save the file to your device or Google Drive
+                    Inside: Google Sheet, Excel &amp; a video tutorial
                   </p>
                 </div>
               )}

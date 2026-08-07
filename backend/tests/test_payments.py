@@ -67,9 +67,9 @@ def _sign(order_id, payment_id):
     return hmac.new(RAZORPAY_KEY_SECRET.encode(), msg, hashlib.sha256).hexdigest()
 
 
-def test_verify_valid_signature():
-    # create fresh order
-    r = requests.post(f"{BASE_URL}/api/payments/create-order", json={"email": "buyer2@shop.com"})
+def test_verify_valid_signature_sends_email():
+    # create fresh order with a Resend "delivered" sandbox address
+    r = requests.post(f"{BASE_URL}/api/payments/create-order", json={"email": "delivered@resend.dev"})
     order_id = r.json()["order_id"]
     payment_id = "pay_TESTfake123456"
     sig = _sign(order_id, payment_id)
@@ -81,10 +81,31 @@ def test_verify_valid_signature():
     assert r2.status_code == 200, r2.text
     data = r2.json()
     assert data["status"] == "paid"
-    assert data["download_url"] == "/business-management-toolkit.xlsx"
+    assert data["download_url"] == "/business-bookkeeping-system.pdf"
+    assert data["email_sent"] is True
     doc = mongo.orders.find_one({"order_id": order_id})
     assert doc["status"] == "paid"
     assert doc["payment_id"] == payment_id
+    assert doc.get("email_sent") is True
+
+
+def test_verify_invalid_email_still_paid():
+    """Email failure must not break payment confirmation."""
+    # bounce@resend.dev triggers a hard bounce, but Resend still returns 202 with id,
+    # so we simulate a bad domain that Resend rejects synchronously? Actually Resend
+    # sandbox always accepts, so this test simply asserts that even if we can't
+    # guarantee email delivery, status is still 'paid'.
+    r = requests.post(f"{BASE_URL}/api/payments/create-order", json={"email": "bounced@resend.dev"})
+    order_id = r.json()["order_id"]
+    payment_id = "pay_TESTfake_email_resilience"
+    sig = _sign(order_id, payment_id)
+    r2 = requests.post(f"{BASE_URL}/api/payments/verify", json={
+        "razorpay_order_id": order_id,
+        "razorpay_payment_id": payment_id,
+        "razorpay_signature": sig,
+    })
+    assert r2.status_code == 200, r2.text
+    assert r2.json()["status"] == "paid"
 
 
 def test_verify_invalid_signature():
@@ -101,6 +122,23 @@ def test_verify_invalid_signature():
     assert doc["status"] == "signature_failed"
 
 
-def test_xlsx_available():
-    r = requests.get(f"{BASE_URL}/business-management-toolkit.xlsx")
+def test_pdf_available():
+    r = requests.get(f"{BASE_URL}/business-bookkeeping-system.pdf")
     assert r.status_code == 200
+    assert "application/pdf" in r.headers.get("content-type", "")
+    # ~104KB expected
+    assert 50_000 < len(r.content) < 500_000
+
+
+def test_verify_invalid_signature_no_email():
+    r = requests.post(f"{BASE_URL}/api/payments/create-order", json={"email": "delivered@resend.dev"})
+    order_id = r.json()["order_id"]
+    r2 = requests.post(f"{BASE_URL}/api/payments/verify", json={
+        "razorpay_order_id": order_id,
+        "razorpay_payment_id": "pay_fake",
+        "razorpay_signature": "0" * 64,
+    })
+    assert r2.status_code == 400
+    doc = mongo.orders.find_one({"order_id": order_id})
+    assert doc["status"] == "signature_failed"
+    assert doc.get("email_sent") is not True

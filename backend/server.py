@@ -8,6 +8,7 @@ from pathlib import Path
 from pydantic import BaseModel, Field, ConfigDict, EmailStr
 from typing import List, Optional
 import uuid
+import httpx
 import razorpay
 from datetime import datetime, timezone
 
@@ -31,6 +32,73 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
+
+# Email (Emergent-managed Resend). Base URL is a constant so it survives deployment.
+EMAIL_BASE_URL = "https://integrations.emergentagent.com"
+EMAIL_KEY = os.environ["EMERGENT_EMAIL_KEY"]
+EMAIL_FROM_NAME = os.environ["EMAIL_FROM_NAME"]
+PRODUCT_PDF_URL = os.environ["PRODUCT_PDF_URL"]
+SUPPORT_EMAIL = os.environ.get("SUPPORT_EMAIL", "")
+
+
+def delivery_email_html() -> str:
+    return f"""
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:#f6f5f2;padding:32px 0;font-family:Arial,Helvetica,sans-serif;">
+      <tr><td align="center">
+        <table width="560" cellpadding="0" cellspacing="0" style="background:#ffffff;border:1px solid #0f0f0f;">
+          <tr><td style="background:#0f0f0f;padding:22px 28px;">
+            <span style="color:#d4ff11;font-size:20px;font-weight:bold;letter-spacing:1px;">CREVVO</span>
+          </td></tr>
+          <tr><td style="padding:32px 28px;">
+            <h1 style="margin:0 0 8px;font-size:26px;color:#0f0f0f;">Success! Your Bookkeeping System is ready 🎉</h1>
+            <p style="margin:0 0 20px;font-size:15px;color:#595959;line-height:1.6;">
+              Thank you for your purchase. Your <b>Business Bookkeeping Sheet System</b> is ready.
+              Open the file below — it contains your <b>Google Sheets</b> &amp; <b>Microsoft Excel</b>
+              download links and a <b>video tutorial</b> showing exactly how to use it.
+            </p>
+            <table cellpadding="0" cellspacing="0" style="margin:8px 0 24px;"><tr><td style="background:#d4ff11;border:1px solid #0f0f0f;">
+              <a href="{PRODUCT_PDF_URL}" style="display:inline-block;padding:14px 26px;font-size:14px;font-weight:bold;color:#0f0f0f;text-decoration:none;letter-spacing:1px;text-transform:uppercase;">
+                Open your access file (PDF)
+              </a>
+            </td></tr></table>
+            <p style="margin:0 0 6px;font-size:13px;color:#595959;line-height:1.6;">
+              Inside the PDF you'll find:
+            </p>
+            <ul style="margin:0 0 20px;padding-left:18px;font-size:13px;color:#595959;line-height:1.7;">
+              <li>▶ Video tutorial — how to use the system</li>
+              <li>📊 Google Sheets copy link (works on any device)</li>
+              <li>📥 Microsoft Excel download</li>
+            </ul>
+            <p style="margin:0;font-size:12px;color:#999;line-height:1.6;">
+              Keep this email for your records. Need help? Reply to this email{f" or write to {SUPPORT_EMAIL}" if SUPPORT_EMAIL else ""}.
+            </p>
+          </td></tr>
+          <tr><td style="background:#ebeae6;padding:16px 28px;border-top:1px solid #0f0f0f;">
+            <span style="font-size:11px;color:#595959;">© Crevvo · Business Bookkeeping Sheet System</span>
+          </td></tr>
+        </table>
+      </td></tr>
+    </table>
+    """
+
+
+async def send_delivery_email(recipient: str):
+    payload = {
+        "to": [recipient],
+        "subject": "Your Business Bookkeeping Sheet System is ready 🎉",
+        "html": delivery_email_html(),
+        "from_name": EMAIL_FROM_NAME,
+    }
+    if SUPPORT_EMAIL:
+        payload["contact_email"] = SUPPORT_EMAIL
+    async with httpx.AsyncClient(timeout=30) as http_client:
+        resp = await http_client.post(
+            f"{EMAIL_BASE_URL}/api/v1/email/send",
+            headers={"X-Email-Key": EMAIL_KEY},
+            json=payload,
+        )
+    resp.raise_for_status()
+    return resp.json().get("id")
 
 # Create the main app without a prefix
 app = FastAPI()
@@ -142,7 +210,19 @@ async def verify_payment(req: VerifyRequest):
             "paid_at": datetime.now(timezone.utc).isoformat(),
         }},
     )
-    return {"status": "paid", "download_url": "/business-management-toolkit.xlsx"}
+
+    # Deliver the product PDF by email (don't fail the purchase if email errors)
+    email_sent = False
+    order = await db.orders.find_one({"order_id": req.razorpay_order_id}, {"_id": 0, "email": 1})
+    if order and order.get("email"):
+        try:
+            await send_delivery_email(order["email"])
+            email_sent = True
+            await db.orders.update_one({"order_id": req.razorpay_order_id}, {"$set": {"email_sent": True}})
+        except Exception as e:
+            logger.error(f"Delivery email failed for {order.get('email')}: {e}")
+
+    return {"status": "paid", "download_url": "/business-bookkeeping-system.pdf", "email_sent": email_sent}
 
 
 # Include the router in the main app
