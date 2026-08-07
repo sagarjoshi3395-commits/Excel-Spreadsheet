@@ -18,7 +18,7 @@ export default function FAQ() {
   return (
     <section id="faq" className="px-5 sm:px-8 py-24 sm:py-32 bg-[#ebeae6] border-y border-[#0f0f0f]" data-testid="faq-section">
       <div className="max-w-[1000px] mx-auto">
-        <Chapter number="04" label="Questions" />
+        <Chapter number="05" label="Questions" />
         <Reveal className="mb-12">
           <h2 className="font-display font-black text-4xl sm:text-6xl leading-[0.95] tracking-tighter">
             Everything you might ask.
