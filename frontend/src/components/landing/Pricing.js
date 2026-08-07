@@ -65,7 +65,7 @@ export default function Pricing() {
                 Buy now · Instant access
               </motion.button>
               <p className="text-center font-mono text-[11px] uppercase tracking-[0.1em] text-[#0f0f0f]/60 mt-4">
-                Instant access after payment
+                Google Sheet emailed + open on screen
               </p>
             </div>
           </div>

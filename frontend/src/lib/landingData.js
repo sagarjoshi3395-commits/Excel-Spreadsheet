@@ -24,6 +24,5 @@ export const TABS = [
   { label: "Sales Tax", desc: "Tax collected vs paid, tracked month by month.", img: IMAGES.salesTax },
 ];
 
-export const DOWNLOAD_FILE = "/business-bookkeeping-system.pdf";
-export const SHEET_URL = "https://docs.google.com/spreadsheets/d/1lkJ0fBS50QHAXW4o8YDPLvsZRuT7-kLci6r23h5f_fA/copy";
+export const SHEET_URL = "https://docs.google.com/spreadsheets/d/1gpHWZ0trtvAIX8QpwufRr2qRpCV7ascpKzu-UwEBn5Y/edit?usp=sharing";
 export const PRICE = "290";

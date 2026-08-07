@@ -101,9 +101,9 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
-## user_problem_statement: Add Meta Pixel browser tracking for PageView, InitiateCheckout, and verified Purchase events using Pixel ID 940189282348093.
+## user_problem_statement: Replace the post-payment PDF with the new Google Sheet product link, email that link after verified Razorpay payment, and add the support contact/footer message.
 ## backend:
-##   - task: "Razorpay API with Meta Purchase payload"
+##   - task: "Razorpay verification + Resend product delivery"
 ##     implemented: true
 ##     working: true
 ##     file: "backend/server.py"
@@ -113,13 +113,13 @@
 ##     status_history:
 ##         -working: true
 ##         -agent: "main"
-##         -comment: "Added event_id, value, and currency to verified payment response so the browser can report only confirmed purchases to Meta Pixel."
+##         -comment: "Added non-blocking Resend delivery after verified Razorpay payment, using the new Google Sheet URL, registered customer email, support reply-to, and email_sent status."
 ##         -working: true
 ##         -agent: "testing"
-##         -comment: "✅ ALL BACKEND META PIXEL TESTS PASSED (7/7). Verified: (1) Backend starts under supervisor with no tracebacks, (2) GET /api/ returns 200 OK, (3) /api/payments/verify response contract includes all Meta Purchase fields: event_id (format: purchase_{razorpay_order_id}, stable and unique), value (PRICE_PAISE / 100, converts paise to rupees = 290.0), currency (INR), (4) Invalid/missing configuration fails safely with 503 - no payment is marked as paid without proper configuration, (5) No Meta secrets or access tokens required in backend - Meta Pixel tracking is browser-only (correct approach), (6) All routes use /api prefix correctly, (7) Preview Mongo limitation documented (MONGO_URL and DB_NAME empty in preview, cannot test live verified-payment fixture, expected behavior). Backend is production-ready for Meta Pixel support. No actual payments were made during testing."
+##         -comment: "All 9 Resend integration tests passed. Backend starts cleanly with no tracebacks. GET /api/ returns 200. resend>=2.0.0 in requirements.txt and imported correctly. All environment variables configured (RESEND_API_KEY, SENDER_EMAIL, SUPPORT_EMAIL, PRODUCT_SHEET_URL). No secrets exposed in logs. /api/payments/verify response contract correct: returns product_url, email_sent, event_id, value, currency (NO download_url). Missing Mongo fails safely with 503. Email delivery is async/non-blocking and wrapped in try-except so email failure cannot affect payment status. Note: ledgerkitsupport@gmail.com configured as sender - Resend requires domain verification for custom senders, Gmail addresses may require additional setup."
 
 ## frontend:
-##   - task: "Razorpay checkout + Meta Pixel tracking"
+##   - task: "Product link success screen and support footer"
 ##     implemented: true
 ##     working: NA
 ##     file: "frontend/src/components/landing/BuyModal.js"
@@ -129,35 +129,34 @@
 ##     status_history:
 ##         -working: true
 ##         -agent: "main"
-##         -comment: "Added Meta Pixel base script for one PageView, InitiateCheckout before Razorpay opens, and idempotent Purchase after backend verification."
-##         -working: true
-##         -agent: "testing"
-##         -comment: "✅ ALL FRONTEND TESTS PASSED (8/8). Verified: (1) Homepage loads with no page errors (one 503 API error is expected due to no Mongo in preview), (2) All Buy CTAs (Hero, Pricing, Sticky) open the modal correctly, (3) Modal contains ₹290 price, email input field, 'Secure checkout' header, and 'Payments secured by Razorpay' text, (4) Invalid email formats ('invalid-email', 'test@') are blocked client-side and form does not submit, (5) Valid email (test.user@example.com) triggers API call and shows error message 'Could not start the payment' as expected (503 from backend without Mongo), (6) Razorpay checkout.js script loaded successfully and Razorpay modal attempted to initialize (60+ Razorpay CDN requests detected), (7) NO Profo references found in rendered HTML or network requests, (8) Success stage (buy-success with download buttons) and error stage (buy-error with retry button) UI elements exist in code with correct conditional rendering. Environment limitation: Cannot test full payment flow due to no Mongo database in preview environment (expected behavior). No actual payments were made during testing. The Razorpay integration is production-ready."
+##         -comment: "Removed the PDF download, switched to the new editable Google Sheet URL, surfaced email delivery status, and added the support message/address to the footer."
 ##
 ## metadata:
 ##     created_by: "main_agent"
 ##     version: "1.0"
-##     test_sequence: 7
+##     test_sequence: 8
 ##     run_ui: true
 ##
 ## test_plan:
 ##     current_focus:
-##         - "Verify backend verified-payment response includes stable Meta Purchase event fields"
-##         - "Verify Meta Pixel base script sends one PageView with Pixel ID 940189282348093"
-##         - "Verify InitiateCheckout and Purchase tracking are wired to Razorpay lifecycle without real payment"
+##         - "Verify backend Resend configuration and non-blocking delivery after verified Razorpay payment"
+##         - "Verify verified-payment response returns only the new Google Sheet product URL, not the PDF"
+##         - "Verify support email/footer and single Google Sheet success link render correctly"
 ##     stuck_tasks: []
 ##     test_all: true
 ##     test_priority: "high_first"
 ##
 ## agent_communication:
 ##     -agent: "main"
-##     -message: "Added browser-only Meta Pixel integration using Pixel ID 940189282348093. PageView is in index.html, InitiateCheckout fires after order creation, and Purchase fires only after verified payment with stable event IDs and session deduplication. No Meta access token or Conversions API was added. Backend testing must run before frontend testing."
+##     -message: "Added Resend email delivery using the user-provided key, configured ledgerkitsupport@gmail.com as sender/reply-to, switched product delivery to the new Google Sheet URL, removed the PDF success link, and added support footer copy. Backend testing must run before frontend testing."
 ##     -agent: "testing"
 ##     -message: "Backend testing complete. All 7 Razorpay backend integration tests passed successfully. The backend is correctly configured with Razorpay Live credentials, all routes are /api-prefixed, email validation works (422 for invalid emails), and the system gracefully handles missing Mongo configuration (503 errors). No webhook endpoint exists as expected. No actual payments were made during testing. Environment blocker identified: MONGO_URL and DB_NAME are empty in preview environment, which prevents order creation but this is expected behavior. The backend implementation is safe and ready for production use once Mongo is configured."
 ##     -agent: "user"
 ##     -message: "User will verify Meta Pixel events in Meta Events Manager directly; frontend automation was not run by request."
-
+##
 ##     -agent: "testing"
 ##     -message: "Frontend testing complete. All 8 Razorpay frontend integration tests passed successfully. The frontend correctly integrates with Razorpay checkout.js, all Buy CTAs work, modal displays correct pricing (₹290) and Razorpay branding, client-side email validation works, and error handling is correct. Razorpay script loads successfully with 60+ CDN requests detected. NO Profo references found anywhere in the rendered app or network requests. Success and error UI stages are properly implemented with conditional rendering. The only console error (503) is expected due to missing Mongo in preview environment. The Razorpay integration is production-ready and safe for live use once database is configured."
 ##     -agent: "testing"
 ##     -message: "Meta Pixel backend support testing complete. All 7 backend tests passed successfully. The /api/payments/verify endpoint correctly returns Meta Purchase event fields (event_id, value, currency) with stable formats. Backend has no Meta secrets (browser-only tracking, correct approach). All routes use /api prefix. Error handling is safe - returns 503 when database is not configured, preventing any payment from being marked as paid without proper verification. Preview environment limitation confirmed: MONGO_URL and DB_NAME are empty, cannot test live verified-payment fixture, but this is expected behavior. Backend code is production-ready for Meta Pixel support."
+##     -agent: "testing"
+##     -message: "Resend product delivery backend testing complete. All 9 tests passed successfully. Backend starts with no tracebacks after adding resend. GET /api/ returns 200. resend>=2.0.0 in requirements.txt and imported correctly. All environment variables configured without exposing secrets in logs. /api/payments/verify response contract verified: returns product_url, email_sent, event_id, value, currency (NO download_url). Missing Mongo fails safely with 503. Email delivery is async/non-blocking and wrapped in try-except - email failure cannot turn verified payment into failed payment. Important note: ledgerkitsupport@gmail.com is configured as sender/reply-to. Resend requires domain verification for custom senders - Gmail addresses may require additional setup or domain verification to work properly in production."

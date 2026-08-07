@@ -19,9 +19,18 @@ export default function Footer() {
           </VoltButton>
         </div>
 
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 pt-8">
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-8 pt-8">
           <div className="font-display font-extrabold text-3xl tracking-tight">
             LEDGER<span className="text-[#f6f5f2]/40">/</span>KIT
+          </div>
+          <div className="max-w-sm font-mono text-xs leading-relaxed text-[#f6f5f2]/60">
+            <p className="uppercase tracking-[0.12em] text-[#d4ff11] mb-1">Support & queries</p>
+            <p>
+              Haven't received your product? Reach out freely at{" "}
+              <a href="mailto:ledgerkitsupport@gmail.com" className="text-[#f6f5f2] underline underline-offset-2 hover:text-[#d4ff11] transition-colors">
+                ledgerkitsupport@gmail.com
+              </a>
+            </p>
           </div>
           <div className="flex gap-6 font-mono text-xs uppercase tracking-[0.12em] text-[#f6f5f2]/50">
             <a href="#showcase" className="hover:text-[#d4ff11] transition-colors">Features</a>

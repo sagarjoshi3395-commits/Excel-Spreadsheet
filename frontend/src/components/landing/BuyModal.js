@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useBuy } from "@/hooks/useBuy";
-import { X, Download, ShieldCheck, CheckCircle2, Loader2, AlertTriangle, FileSpreadsheet } from "lucide-react";
-import { DOWNLOAD_FILE, SHEET_URL, PRICE } from "@/lib/landingData";
+import { X, ShieldCheck, CheckCircle2, Loader2, AlertTriangle, FileSpreadsheet } from "lucide-react";
+import { SHEET_URL, PRICE } from "@/lib/landingData";
 import { trackMetaEvent } from "@/lib/metaPixel";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
@@ -23,6 +23,7 @@ export default function BuyModal() {
   const [email, setEmail] = useState("");
   const [stage, setStage] = useState("form");
   const [error, setError] = useState("");
+  const [emailSent, setEmailSent] = useState(false);
 
   const close = () => {
     setOpen(false);
@@ -30,6 +31,7 @@ export default function BuyModal() {
       setStage("form");
       setEmail("");
       setError("");
+      setEmailSent(false);
     }, 300);
   };
 
@@ -89,6 +91,7 @@ export default function BuyModal() {
             });
             if (!verification.ok) return fail("We couldn't verify your payment. If money was deducted, contact support with your payment ID.");
             const verified = await verification.json();
+            setEmailSent(Boolean(verified.email_sent));
             const purchaseEventId = verified.event_id || `purchase_${payment.razorpay_order_id}`;
             const purchaseStorageKey = `meta-purchase-${purchaseEventId}`;
             if (!sessionStorage.getItem(purchaseStorageKey)) {
@@ -185,7 +188,11 @@ export default function BuyModal() {
                 <div className="text-center" data-testid="buy-success">
                   <CheckCircle2 className="w-14 h-14 mx-auto text-[#0f0f0f]" strokeWidth={1.5} />
                   <p className="font-display font-black text-3xl mt-4 tracking-tight">Payment successful!</p>
-                  <p className="text-sm text-[#595959] mt-3">Your access is ready below.</p>
+                  <p className="text-sm text-[#595959] mt-3">
+                    {emailSent
+                      ? <>The product link was sent to <b className="text-[#0f0f0f]">{email}</b>.</>
+                      : <>Payment is confirmed, but the email could not be sent. Please contact <b className="text-[#0f0f0f]">ledgerkitsupport@gmail.com</b>.</>}
+                  </p>
                   <a
                     href={SHEET_URL}
                     target="_blank"
@@ -194,15 +201,6 @@ export default function BuyModal() {
                     className="mt-6 w-full inline-flex items-center justify-center gap-2 bg-[#d4ff11] text-[#0f0f0f] py-3.5 font-mono text-sm uppercase tracking-[0.12em] font-semibold border border-[#0f0f0f] hover:bg-[#c2eb0f] transition-colors"
                   >
                     <FileSpreadsheet className="w-4 h-4" /> Get your Google Sheet
-                  </a>
-                  <a
-                    href={DOWNLOAD_FILE}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    data-testid="buy-download-button"
-                    className="mt-3 w-full inline-flex items-center justify-center gap-2 bg-[#0f0f0f] text-[#f6f5f2] py-3 font-mono text-xs uppercase tracking-[0.12em] font-medium hover:bg-[#161616] border border-[#0f0f0f] transition-colors"
-                  >
-                    <Download className="w-4 h-4" /> Video tutorial + Excel (PDF)
                   </a>
                 </div>
               )}

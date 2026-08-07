@@ -7,8 +7,10 @@ import logging
 from pathlib import Path
 from pydantic import BaseModel, Field, ConfigDict, EmailStr
 from typing import List
+import asyncio
 import uuid
 import razorpay
+import resend
 from datetime import datetime, timezone
 
 
@@ -35,6 +37,56 @@ razorpay_client = (
     else None
 )
 PRICE_PAISE = 29000
+RESEND_API_KEY = os.environ.get("RESEND_API_KEY")
+SENDER_EMAIL = os.environ.get("SENDER_EMAIL")
+SUPPORT_EMAIL = os.environ.get("SUPPORT_EMAIL", "ledgerkitsupport@gmail.com")
+PRODUCT_SHEET_URL = os.environ.get("PRODUCT_SHEET_URL")
+if RESEND_API_KEY:
+    resend.api_key = RESEND_API_KEY
+
+
+def delivery_email_html() -> str:
+    return f"""
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:#f6f5f2;padding:32px 0;font-family:Arial,Helvetica,sans-serif;">
+      <tr><td align="center">
+        <table width="560" cellpadding="0" cellspacing="0" style="background:#ffffff;border:1px solid #0f0f0f;">
+          <tr><td style="background:#0f0f0f;padding:22px 28px;">
+            <span style="color:#d4ff11;font-size:20px;font-weight:bold;letter-spacing:1px;">LEDGER/KIT</span>
+          </td></tr>
+          <tr><td style="padding:32px 28px;">
+            <h1 style="margin:0 0 8px;font-size:26px;color:#0f0f0f;">Your Business Toolkit is ready</h1>
+            <p style="margin:0 0 20px;font-size:15px;color:#595959;line-height:1.6;">
+              Thank you for your purchase. Use the button below to open your editable Google Sheet product.
+            </p>
+            <table cellpadding="0" cellspacing="0" style="margin:8px 0 24px;"><tr><td style="background:#d4ff11;border:1px solid #0f0f0f;">
+              <a href="{PRODUCT_SHEET_URL}" style="display:inline-block;padding:14px 26px;font-size:14px;font-weight:bold;color:#0f0f0f;text-decoration:none;letter-spacing:1px;text-transform:uppercase;">
+                Open your Google Sheet
+              </a>
+            </td></tr></table>
+            <p style="margin:0;font-size:12px;color:#999;line-height:1.6;">
+              Need help or did not receive your product? Contact {SUPPORT_EMAIL}.
+            </p>
+          </td></tr>
+          <tr><td style="background:#ebeae6;padding:16px 28px;border-top:1px solid #0f0f0f;">
+            <span style="font-size:11px;color:#595959;">© LedgerKit · Business Management Toolkit</span>
+          </td></tr>
+        </table>
+      </td></tr>
+    </table>
+    """
+
+
+async def send_delivery_email(recipient: str):
+    if not RESEND_API_KEY or not SENDER_EMAIL or not PRODUCT_SHEET_URL:
+        raise RuntimeError("Email delivery is not configured")
+    params = {
+        "from": SENDER_EMAIL,
+        "to": [recipient],
+        "subject": "Your LedgerKit Business Toolkit is ready",
+        "html": delivery_email_html(),
+        "reply_to": [SUPPORT_EMAIL],
+    }
+    return await asyncio.to_thread(resend.Emails.send, params)
 
 # Create the main app without a prefix
 app = FastAPI()
@@ -154,6 +206,13 @@ async def verify_payment(req: VerifyRequest):
         )
         raise HTTPException(status_code=400, detail="Payment verification failed") from exc
 
+    order_record = await db.orders.find_one(
+        {"order_id": req.razorpay_order_id},
+        {"_id": 0, "email": 1, "email_sent": 1},
+    )
+    if not order_record:
+        raise HTTPException(status_code=404, detail="Payment order not found")
+
     await db.orders.update_one(
         {"order_id": req.razorpay_order_id, "status": {"$ne": "paid"}},
         {"$set": {
@@ -162,12 +221,26 @@ async def verify_payment(req: VerifyRequest):
             "paid_at": datetime.now(timezone.utc).isoformat(),
         }},
     )
+
+    email_sent = bool(order_record.get("email_sent"))
+    if order_record.get("email") and not email_sent:
+        try:
+            await send_delivery_email(order_record["email"])
+            email_sent = True
+            await db.orders.update_one(
+                {"order_id": req.razorpay_order_id},
+                {"$set": {"email_sent": True}},
+            )
+        except Exception as exc:
+            logger.error("Product email delivery failed: %s", exc)
+
     return {
         "status": "paid",
-        "download_url": "/business-bookkeeping-system.pdf",
+        "product_url": PRODUCT_SHEET_URL,
         "event_id": f"purchase_{req.razorpay_order_id}",
         "value": PRICE_PAISE / 100,
         "currency": "INR",
+        "email_sent": email_sent,
     }
 
 
