@@ -9,8 +9,8 @@ import {
 const faqs = [
   { q: "Do I need any special software?", a: "No. It's a single Excel file that also works in Google Sheets. If you can open a spreadsheet, you can use this." },
   { q: "Is it really fully editable?", a: "Yes. Change categories, colours, labels and formulas however you like. It's your file forever." },
-  { q: "How do I receive the file after buying?", a: "The instant your payment succeeds we email your access file to you, and it also appears right here to open. It contains your Google Sheets & Microsoft Excel links plus a step-by-step video tutorial." },
-  { q: "Is this a one-time payment?", a: "Absolutely. Pay ₹290 once via Razorpay and it's yours for life. No subscriptions, no recurring charges." },
+  { q: "How do I receive the file after buying?", a: "After checkout, Profo provides access to the toolkit and its included bonuses through the product page." },
+  { q: "Is this a one-time payment?", a: "Absolutely. Pay ₹290 once through the secure Profo checkout and it's yours for life. No subscriptions, no recurring charges." },
   { q: "Will my numbers calculate automatically?", a: "Yes. Just enter your income and expenses — profit & loss, taxes and every dashboard update themselves with graphs." },
 ];
 
