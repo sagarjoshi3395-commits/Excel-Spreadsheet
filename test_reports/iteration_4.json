@@ -1,0 +1,22 @@
+{
+  "summary": "Targeted retest of mobile crop fix on showcase-image. FIX CONFIRMED. On 390x844 viewport, showcase-image getBoundingClientRect().width = 348px (well within the 390px viewport with ~21px side padding), imgLeft=21, imgRight=369, image height=145px, full dashboard image visible with no right-side cropping. document.scrollWidth=390 (no horizontal page overflow). Tab list (showcase-tabs) is horizontally scrollable independently: clientWidth=350 vs scrollWidth=1149, and does NOT stretch the preview panel. Auto-advance verified on mobile (src changed from /shots/fiveyear.webp -> /shots/comparison.webp within ~1.5s without interaction). Desktop 1440x820 regression clean: image 1024x576 in 16:9 contain frame, auto-advance ~1s working, mouse hover pauses (src did not change during hover), no console errors, buy flow works end-to-end (hero-cta-buy -> buy-modal -> fill email -> buy-submit -> buy-success -> buy-download-button visible), sticky-buy-bar + countdown functional (countdown shows '14:56 ...'). Images load from /shots/*.webp.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "Mobile grid fix is correct: grid-cols-1 + min-w-0 w-full on children prevents the 10 shrink-0 tab buttons (~1149px scroll content) from expanding the grid track. Solid fix.",
+    "Minor UX: buy-submit does not show a visible validation error when email is empty (submit becomes no-op). Consider surfacing an inline error for clarity, but not blocking."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "N/A (skipped)", "frontend": "100%"},
+  "seed_data_creation": "None",
+  "retest_needed": false,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "Mobile showcase crop bug is fully resolved as of iteration_4. Measured showcase-image width = 348px on 390px viewport; no horizontal overflow; tabs scroll independently; auto-advance and desktop behaviors intact.",
+  "rca of the issue": "Previous root cause (iteration_3): implicit mobile grid track sized to min-content of 10 shrink-0 tab buttons (~1090-1149px) stretched the preview column causing the image to overflow right. Applied fix in Showcase.js: outer grid uses 'grid grid-cols-1 lg:grid-cols-12'; both Reveal children have 'min-w-0 w-full'; tab list has 'overflow-x-auto ... max-w-full'. Verified via getBoundingClientRect: imgWidth reduced from ~1090px to 348px on 390px viewport."
+}

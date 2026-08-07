@@ -48,13 +48,13 @@ export default function Showcase() {
         </Reveal>
 
         <div
-          className="grid lg:grid-cols-12 gap-4 sm:gap-6 items-start"
+          className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 items-start"
           onPointerEnter={onEnter}
           onPointerLeave={onLeave}
         >
           {/* Tab list */}
-          <Reveal className="lg:col-span-3">
-            <div className="flex lg:flex-col gap-2 overflow-x-auto lg:overflow-visible pb-2 lg:pb-0 -mx-1 px-1" data-testid="showcase-tabs">
+          <Reveal className="lg:col-span-3 min-w-0 w-full">
+            <div className="flex lg:flex-col gap-2 overflow-x-auto lg:overflow-visible pb-2 lg:pb-0 -mx-1 px-1 max-w-full" data-testid="showcase-tabs">
               {TABS.map((t, i) => (
                 <button
                   key={t.label}
@@ -74,7 +74,7 @@ export default function Showcase() {
           </Reveal>
 
           {/* Browser frame preview */}
-          <Reveal className="lg:col-span-9" delay={0.1}>
+          <Reveal className="lg:col-span-9 min-w-0 w-full" delay={0.1}>
             <div className="border border-[#0f0f0f] bg-white hard-shadow">
               <div className="flex items-center gap-3 px-3 sm:px-4 py-2.5 sm:py-3 border-b border-[#0f0f0f] bg-[#f6f5f2]">
                 <span className="flex gap-1.5">
