@@ -101,3 +101,53 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
+## user_problem_statement: Replace Razorpay checkout with the provided Profo product link, resolve production deployment failure, and make the website deployable.
+## backend:
+##   - task: "Deployment-safe backend without Razorpay/email secrets"
+##     implemented: true
+##     working: true
+##     file: "backend/server.py"
+##     stuck_count: 0
+##     priority: "high"
+##     needs_retesting: false
+##     status_history:
+##         -working: NA
+##         -agent: "main"
+##         -comment: "Removed unused Razorpay/email payment endpoints and made Mongo configuration optional when deployment injects env values."
+##         -working: true
+##         -agent: "testing"
+##         -comment: "✅ ALL BACKEND TESTS PASSED (4/4): (1) FastAPI starts successfully under supervisor without Razorpay/email env vars - no crashes, (2) GET /api/ returns 200 with correct response, (3) POST /api/status returns 503 with 'Database is not configured' message (correct graceful failure), (4) GET /api/status returns 503 with correct error (correct graceful failure), (5) All removed payment endpoints (/api/create-order, /api/verify-payment, /api/payment) correctly return 404, (6) No import errors or tracebacks in backend logs, (7) requirements.txt litellm URL syntax is valid, (8) pip check shows no broken dependencies, (9) No Razorpay/email imports found in server.py, (10) Frontend code has no references to removed payment endpoints. Backend is deployment-safe and stable (running 40+ minutes)."
+##
+## frontend:
+##   - task: "External Profo checkout destination"
+##     implemented: true
+##     working: NA
+##     file: "frontend/src/components/landing/BuyModal.js"
+##     stuck_count: 0
+##     priority: "high"
+##     needs_retesting: true
+##     status_history:
+##         -working: NA
+##         -agent: "main"
+##         -comment: "All buy CTAs now open the modal with the provided Profo checkout link; Razorpay script/API flow removed."
+##
+## metadata:
+##     created_by: "main_agent"
+##     version: "1.0"
+##     test_sequence: 2
+##     run_ui: true
+##
+## test_plan:
+##     current_focus:
+##         - "Confirm backend starts with deployment-safe env files and API routes remain healthy"
+##         - "Confirm buy modal exposes the exact Profo URL and no Razorpay assets are loaded"
+##         - "Confirm frontend production build succeeds"
+##     stuck_tasks: []
+##     test_all: true
+##     test_priority: "high_first"
+##
+## agent_communication:
+##     -agent: "main"
+##     -message: "Implemented Profo checkout redirect, removed unused Razorpay/email backend integration, added deployment env manifests, and fixed the pip litellm URL conflict. Backend testing must run before frontend testing."
+##     -agent: "testing"
+##     -message: "Backend testing complete - all tests passed. Backend is deployment-safe: (1) starts without Razorpay/email secrets, (2) root API works, (3) status APIs fail gracefully without Mongo, (4) payment endpoints removed, (5) no import/startup errors, (6) requirements.txt valid. Frontend does not call removed endpoints. No test_credentials.md needed (no auth flow). Backend ready for deployment."
