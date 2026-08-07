@@ -154,6 +154,9 @@
 ##     -message: "Added browser-only Meta Pixel integration using Pixel ID 940189282348093. PageView is in index.html, InitiateCheckout fires after order creation, and Purchase fires only after verified payment with stable event IDs and session deduplication. No Meta access token or Conversions API was added. Backend testing must run before frontend testing."
 ##     -agent: "testing"
 ##     -message: "Backend testing complete. All 7 Razorpay backend integration tests passed successfully. The backend is correctly configured with Razorpay Live credentials, all routes are /api-prefixed, email validation works (422 for invalid emails), and the system gracefully handles missing Mongo configuration (503 errors). No webhook endpoint exists as expected. No actual payments were made during testing. Environment blocker identified: MONGO_URL and DB_NAME are empty in preview environment, which prevents order creation but this is expected behavior. The backend implementation is safe and ready for production use once Mongo is configured."
+##     -agent: "user"
+##     -message: "User will verify Meta Pixel events in Meta Events Manager directly; frontend automation was not run by request."
+
 ##     -agent: "testing"
 ##     -message: "Frontend testing complete. All 8 Razorpay frontend integration tests passed successfully. The frontend correctly integrates with Razorpay checkout.js, all Buy CTAs work, modal displays correct pricing (₹290) and Razorpay branding, client-side email validation works, and error handling is correct. Razorpay script loads successfully with 60+ CDN requests detected. NO Profo references found anywhere in the rendered app or network requests. Success and error UI stages are properly implemented with conditional rendering. The only console error (503) is expected due to missing Mongo in preview environment. The Razorpay integration is production-ready and safe for live use once database is configured."
 ##     -agent: "testing"
