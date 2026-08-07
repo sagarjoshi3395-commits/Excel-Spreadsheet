@@ -162,7 +162,13 @@ async def verify_payment(req: VerifyRequest):
             "paid_at": datetime.now(timezone.utc).isoformat(),
         }},
     )
-    return {"status": "paid", "download_url": "/business-bookkeeping-system.pdf"}
+    return {
+        "status": "paid",
+        "download_url": "/business-bookkeeping-system.pdf",
+        "event_id": f"purchase_{req.razorpay_order_id}",
+        "value": PRICE_PAISE / 100,
+        "currency": "INR",
+    }
 
 
 # Include the router in the main app

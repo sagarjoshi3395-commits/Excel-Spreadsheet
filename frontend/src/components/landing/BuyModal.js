@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useBuy } from "@/hooks/useBuy";
 import { X, Download, ShieldCheck, CheckCircle2, Loader2, AlertTriangle, FileSpreadsheet } from "lucide-react";
 import { DOWNLOAD_FILE, SHEET_URL, PRICE } from "@/lib/landingData";
+import { trackMetaEvent } from "@/lib/metaPixel";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
@@ -53,6 +54,17 @@ export default function BuyModal() {
       });
       if (!response.ok) return fail("Could not start the payment. Please try again.");
       const order = await response.json();
+      trackMetaEvent(
+        "InitiateCheckout",
+        {
+          value: order.amount / 100,
+          currency: order.currency,
+          num_items: 1,
+          content_ids: ["business-management-toolkit"],
+          content_type: "product",
+        },
+        `checkout_${order.order_id}`,
+      );
 
       const checkout = new window.Razorpay({
         key: order.key_id,
@@ -76,6 +88,22 @@ export default function BuyModal() {
               }),
             });
             if (!verification.ok) return fail("We couldn't verify your payment. If money was deducted, contact support with your payment ID.");
+            const verified = await verification.json();
+            const purchaseEventId = verified.event_id || `purchase_${payment.razorpay_order_id}`;
+            const purchaseStorageKey = `meta-purchase-${purchaseEventId}`;
+            if (!sessionStorage.getItem(purchaseStorageKey)) {
+              trackMetaEvent(
+                "Purchase",
+                {
+                  value: verified.value ?? order.amount / 100,
+                  currency: verified.currency ?? order.currency,
+                  content_ids: ["business-management-toolkit"],
+                  content_type: "product",
+                },
+                purchaseEventId,
+              );
+              sessionStorage.setItem(purchaseStorageKey, "1");
+            }
             setStage("done");
           } catch {
             fail("Verification error. If money was deducted, please contact support.");
