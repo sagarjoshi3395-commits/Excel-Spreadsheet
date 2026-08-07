@@ -5,9 +5,10 @@ from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import logging
 from pathlib import Path
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import BaseModel, Field, ConfigDict, EmailStr
 from typing import List
 import uuid
+import razorpay
 from datetime import datetime, timezone
 
 
@@ -25,6 +26,15 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
+
+RAZORPAY_KEY_ID = os.environ.get("RAZORPAY_KEY_ID")
+RAZORPAY_KEY_SECRET = os.environ.get("RAZORPAY_KEY_SECRET")
+razorpay_client = (
+    razorpay.Client(auth=(RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET))
+    if RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET
+    else None
+)
+PRICE_PAISE = 29000
 
 # Create the main app without a prefix
 app = FastAPI()
@@ -77,6 +87,82 @@ async def get_status_checks():
     
     return status_checks
 
+
+
+class CreateOrderRequest(BaseModel):
+    email: EmailStr
+
+
+class VerifyRequest(BaseModel):
+    razorpay_order_id: str
+    razorpay_payment_id: str
+    razorpay_signature: str
+
+
+@api_router.post("/payments/create-order")
+async def create_order(req: CreateOrderRequest):
+    if razorpay_client is None:
+        raise HTTPException(status_code=503, detail="Razorpay is not configured")
+    if db is None:
+        raise HTTPException(status_code=503, detail="Database is not configured")
+
+    try:
+        order = razorpay_client.order.create({
+            "amount": PRICE_PAISE,
+            "currency": "INR",
+            "payment_capture": 1,
+            "receipt": str(uuid.uuid4())[:40],
+            "notes": {"email": req.email, "product": "Business Management Toolkit"},
+        })
+    except Exception as exc:
+        logger.error("Razorpay order create failed: %s", exc)
+        raise HTTPException(status_code=502, detail="Could not create payment order") from exc
+
+    doc = {
+        "id": str(uuid.uuid4()),
+        "order_id": order["id"],
+        "email": req.email,
+        "amount": PRICE_PAISE,
+        "currency": "INR",
+        "status": "created",
+        "created_at": datetime.now(timezone.utc).isoformat(),
+    }
+    await db.orders.insert_one(doc)
+    return {
+        "order_id": order["id"],
+        "amount": PRICE_PAISE,
+        "currency": "INR",
+        "key_id": RAZORPAY_KEY_ID,
+    }
+
+
+@api_router.post("/payments/verify")
+async def verify_payment(req: VerifyRequest):
+    if razorpay_client is None or db is None:
+        raise HTTPException(status_code=503, detail="Payment service is not configured")
+
+    try:
+        razorpay_client.utility.verify_payment_signature({
+            "razorpay_order_id": req.razorpay_order_id,
+            "razorpay_payment_id": req.razorpay_payment_id,
+            "razorpay_signature": req.razorpay_signature,
+        })
+    except razorpay.errors.SignatureVerificationError as exc:
+        await db.orders.update_one(
+            {"order_id": req.razorpay_order_id},
+            {"$set": {"status": "signature_failed"}},
+        )
+        raise HTTPException(status_code=400, detail="Payment verification failed") from exc
+
+    await db.orders.update_one(
+        {"order_id": req.razorpay_order_id, "status": {"$ne": "paid"}},
+        {"$set": {
+            "status": "paid",
+            "payment_id": req.razorpay_payment_id,
+            "paid_at": datetime.now(timezone.utc).isoformat(),
+        }},
+    )
+    return {"status": "paid", "download_url": "/business-bookkeeping-system.pdf"}
 
 
 # Include the router in the main app
