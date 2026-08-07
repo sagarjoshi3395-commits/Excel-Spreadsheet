@@ -95,6 +95,8 @@ export default function Showcase() {
                     key={tab.img}
                     src={tab.img}
                     alt={`${tab.label} dashboard`}
+                    loading="lazy"
+                    decoding="async"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.4, ease: "easeOut" }}

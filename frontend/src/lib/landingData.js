@@ -1,16 +1,14 @@
-const A = "https://customer-assets-wrfwihn1.emergentagent.net/job_biz-mgmt-sheet/artifacts";
-
 export const IMAGES = {
-  hero: `${A}/tyi8kvok_Custom%20Dashboard.png`,
-  monthly: `${A}/rezn6pi3_Monthly%20Dashboard.png`,
-  income: `${A}/x0cig2j6_Income%20section.png`,
-  expenses: `${A}/zhwuec90_Expance%20Tab.png`,
-  setup: `${A}/5lmbl8gu_Setup%20Tab.png`,
-  annual: `${A}/u8yuw5gm_Annual%20Dashboard.png`,
-  fiveYear: `${A}/5ee56iz3_5%20Year%20Dashboard.png`,
-  comparison: `${A}/h0k2esgl_Comparison%20Dashboard.png`,
-  balance: `${A}/djyvlqsl_Balance%20Sheet.png`,
-  salesTax: `${A}/6k2a9ub5_Sales%20Tax%20Tracker.png`,
+  hero: "/shots/custom.webp",
+  monthly: "/shots/monthly.webp",
+  income: "/shots/income.webp",
+  expenses: "/shots/expenses.webp",
+  setup: "/shots/setup.webp",
+  annual: "/shots/annual.webp",
+  fiveYear: "/shots/fiveyear.webp",
+  comparison: "/shots/comparison.webp",
+  balance: "/shots/balance.webp",
+  salesTax: "/shots/salestax.webp",
 };
 
 export const TABS = [

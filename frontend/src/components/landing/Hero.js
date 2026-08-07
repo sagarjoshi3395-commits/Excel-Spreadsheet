@@ -130,6 +130,10 @@ export default function Hero() {
             <img
               src={IMAGES.hero}
               alt="Business management Excel dashboard with charts"
+              fetchpriority="high"
+              decoding="async"
+              width="1264"
+              height="848"
               className="w-full border border-[#0f0f0f] object-cover"
               data-testid="hero-image"
             />
