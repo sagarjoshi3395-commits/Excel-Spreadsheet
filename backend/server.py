@@ -37,15 +37,17 @@ razorpay_client = (
     else None
 )
 PRICE_PAISE = 29000
+BUMP_PRICE_PAISE = 19900
 RESEND_API_KEY = os.environ.get("RESEND_API_KEY")
 SENDER_EMAIL = os.environ.get("SENDER_EMAIL")
 SUPPORT_EMAIL = os.environ.get("SUPPORT_EMAIL", "ledgerkitsupport@gmail.com")
 PRODUCT_SHEET_URL = os.environ.get("PRODUCT_SHEET_URL")
+BUMP_PRODUCT_URL = os.environ.get("BUMP_PRODUCT_URL", "")
 if RESEND_API_KEY:
     resend.api_key = RESEND_API_KEY
 
 
-def delivery_email_html() -> str:
+def delivery_email_html(include_bump: bool = False) -> str:
     return f"""
     <table width="100%" cellpadding="0" cellspacing="0" style="background:#f6f5f2;padding:32px 0;font-family:Arial,Helvetica,sans-serif;">
       <tr><td align="center">
@@ -63,6 +65,11 @@ def delivery_email_html() -> str:
                 Open your Google Sheet
               </a>
             </td></tr></table>
+            {f'''<table cellpadding="0" cellspacing="0" style="margin:0 0 24px;"><tr><td style="background:#ffffff;border:1px solid #0f0f0f;">
+              <a href="{BUMP_PRODUCT_URL}" style="display:inline-block;padding:12px 22px;font-size:13px;font-weight:bold;color:#0f0f0f;text-decoration:none;letter-spacing:1px;text-transform:uppercase;">
+                Open your Productivity & Execution Bundle
+              </a>
+            </td></tr></table>''' if BUMP_PRODUCT_URL else '<p style="margin:0 0 20px;font-size:13px;color:#595959;line-height:1.6;">Your optional Productivity &amp; Execution Bundle is included in your order. Its access link will be added once the bundle link is configured.</p>' if include_bump else ''}
             <p style="margin:0;font-size:12px;color:#999;line-height:1.6;">
               Need help or did not receive your product? Contact {SUPPORT_EMAIL}.
             </p>
@@ -76,14 +83,14 @@ def delivery_email_html() -> str:
     """
 
 
-async def send_delivery_email(recipient: str):
+async def send_delivery_email(recipient: str, include_bump: bool = False):
     if not RESEND_API_KEY or not SENDER_EMAIL or not PRODUCT_SHEET_URL:
         raise RuntimeError("Email delivery is not configured")
     params = {
         "from": SENDER_EMAIL,
         "to": [recipient],
-        "subject": "Your LedgerKit Business Toolkit is ready",
-        "html": delivery_email_html(),
+        "subject": "Your LedgerKit products are ready",
+        "html": delivery_email_html(include_bump),
         "reply_to": [SUPPORT_EMAIL],
     }
     return await asyncio.to_thread(resend.Emails.send, params)
@@ -143,6 +150,7 @@ async def get_status_checks():
 
 class CreateOrderRequest(BaseModel):
     email: EmailStr
+    include_bump: bool = False
 
 
 class VerifyRequest(BaseModel):
@@ -158,13 +166,18 @@ async def create_order(req: CreateOrderRequest):
     if db is None:
         raise HTTPException(status_code=503, detail="Database is not configured")
 
+    amount_paise = PRICE_PAISE + (BUMP_PRICE_PAISE if req.include_bump else 0)
     try:
         order = razorpay_client.order.create({
-            "amount": PRICE_PAISE,
+            "amount": amount_paise,
             "currency": "INR",
             "payment_capture": 1,
             "receipt": str(uuid.uuid4())[:40],
-            "notes": {"email": req.email, "product": "Business Management Toolkit"},
+            "notes": {
+                "email": req.email,
+                "product": "Business Management Toolkit",
+                "include_bump": str(req.include_bump).lower(),
+            },
         })
     except Exception as exc:
         logger.error("Razorpay order create failed: %s", exc)
@@ -174,17 +187,21 @@ async def create_order(req: CreateOrderRequest):
         "id": str(uuid.uuid4()),
         "order_id": order["id"],
         "email": req.email,
-        "amount": PRICE_PAISE,
+        "amount": amount_paise,
         "currency": "INR",
         "status": "created",
+        "include_bump": req.include_bump,
+        "bump_amount": BUMP_PRICE_PAISE if req.include_bump else 0,
         "created_at": datetime.now(timezone.utc).isoformat(),
     }
     await db.orders.insert_one(doc)
     return {
         "order_id": order["id"],
-        "amount": PRICE_PAISE,
+        "amount": amount_paise,
         "currency": "INR",
         "key_id": RAZORPAY_KEY_ID,
+        "include_bump": req.include_bump,
+        "bump_amount": BUMP_PRICE_PAISE if req.include_bump else 0,
     }
 
 
@@ -208,7 +225,7 @@ async def verify_payment(req: VerifyRequest):
 
     order_record = await db.orders.find_one(
         {"order_id": req.razorpay_order_id},
-        {"_id": 0, "email": 1, "email_sent": 1},
+        {"_id": 0, "email": 1, "email_sent": 1, "include_bump": 1, "amount": 1, "currency": 1},
     )
     if not order_record:
         raise HTTPException(status_code=404, detail="Payment order not found")
@@ -222,10 +239,11 @@ async def verify_payment(req: VerifyRequest):
         }},
     )
 
+    include_bump = bool(order_record.get("include_bump"))
     email_sent = bool(order_record.get("email_sent"))
     if order_record.get("email") and not email_sent:
         try:
-            await send_delivery_email(order_record["email"])
+            await send_delivery_email(order_record["email"], include_bump)
             email_sent = True
             await db.orders.update_one(
                 {"order_id": req.razorpay_order_id},
@@ -238,8 +256,10 @@ async def verify_payment(req: VerifyRequest):
         "status": "paid",
         "product_url": PRODUCT_SHEET_URL,
         "event_id": f"purchase_{req.razorpay_order_id}",
-        "value": PRICE_PAISE / 100,
-        "currency": "INR",
+        "value": float(order_record.get("amount", PRICE_PAISE)) / 100,
+        "currency": order_record.get("currency", "INR"),
+        "include_bump": include_bump,
+        "bump_product_url": BUMP_PRODUCT_URL if include_bump else "",
         "email_sent": email_sent,
     }
 

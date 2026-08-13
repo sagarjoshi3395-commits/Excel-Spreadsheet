@@ -2,7 +2,7 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useBuy } from "@/hooks/useBuy";
 import { X, ShieldCheck, CheckCircle2, Loader2, AlertTriangle, FileSpreadsheet } from "lucide-react";
-import { SHEET_URL, PRICE } from "@/lib/landingData";
+import { SHEET_URL, BUMP_PRODUCT_IMAGE, EXCEL_BUNDLE_IMAGE, BUMP_PRICE, PRICE } from "@/lib/landingData";
 import { trackMetaEvent } from "@/lib/metaPixel";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
@@ -24,6 +24,8 @@ export default function BuyModal() {
   const [stage, setStage] = useState("form");
   const [error, setError] = useState("");
   const [emailSent, setEmailSent] = useState(false);
+  const [includeBump, setIncludeBump] = useState(false);
+  const [bumpProductUrl, setBumpProductUrl] = useState("");
 
   const close = () => {
     setOpen(false);
@@ -32,6 +34,8 @@ export default function BuyModal() {
       setEmail("");
       setError("");
       setEmailSent(false);
+      setIncludeBump(false);
+      setBumpProductUrl("");
     }, 300);
   };
 
@@ -52,7 +56,7 @@ export default function BuyModal() {
       const response = await fetch(`${API}/payments/create-order`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, include_bump: includeBump }),
       });
       if (!response.ok) return fail("Could not start the payment. Please try again.");
       const order = await response.json();
@@ -61,8 +65,8 @@ export default function BuyModal() {
         {
           value: order.amount / 100,
           currency: order.currency,
-          num_items: 1,
-          content_ids: ["business-management-toolkit"],
+          num_items: includeBump ? 2 : 1,
+          content_ids: includeBump ? ["business-management-toolkit", "productivity-execution-bundle"] : ["business-management-toolkit"],
           content_type: "product",
         },
         `checkout_${order.order_id}`,
@@ -74,7 +78,9 @@ export default function BuyModal() {
         currency: order.currency,
         order_id: order.order_id,
         name: "LedgerKit",
-        description: "Business Management Toolkit — lifetime access",
+        description: includeBump
+          ? "Business Management Toolkit + Productivity & Execution Bundle"
+          : "Business Management Toolkit — lifetime access",
         prefill: { email },
         theme: { color: "#0f0f0f" },
         modal: { ondismiss: () => setStage("form") },
@@ -92,6 +98,7 @@ export default function BuyModal() {
             if (!verification.ok) return fail("We couldn't verify your payment. If money was deducted, contact support with your payment ID.");
             const verified = await verification.json();
             setEmailSent(Boolean(verified.email_sent));
+            setBumpProductUrl(verified.bump_product_url || "");
             const purchaseEventId = verified.event_id || `purchase_${payment.razorpay_order_id}`;
             const purchaseStorageKey = `meta-purchase-${purchaseEventId}`;
             if (!sessionStorage.getItem(purchaseStorageKey)) {
@@ -150,10 +157,34 @@ export default function BuyModal() {
               {stage === "form" && (
                 <form onSubmit={submit} data-testid="buy-form">
                   <p className="font-display font-black text-3xl leading-tight tracking-tight">Business Toolkit</p>
-                  <div className="flex items-end gap-2 mt-2 mb-6">
-                    <span className="font-display font-black text-4xl">₹{PRICE}</span>
+                  <div className="flex items-end gap-2 mt-2 mb-5">
+                    <span className="font-display font-black text-4xl">₹{includeBump ? "489" : PRICE}</span>
                     <span className="font-mono text-xs text-[#595959] mb-1.5">one-time</span>
                   </div>
+                  <label className="block cursor-pointer border border-[#0f0f0f] bg-white p-3 mb-5 hover:bg-[#f0efe9] transition-colors" data-testid="bump-offer">
+                    <div className="flex items-start gap-3">
+                      <input
+                        type="checkbox"
+                        checked={includeBump}
+                        onChange={(event) => setIncludeBump(event.target.checked)}
+                        data-testid="bump-checkbox"
+                        className="mt-1 h-4 w-4 accent-[#0f0f0f]"
+                      />
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center justify-between gap-3">
+                          <span className="font-mono text-[10px] uppercase tracking-[0.12em] bg-[#d4ff11] border border-[#0f0f0f] px-1.5 py-0.5">Limited-time offer</span>
+                          <span className="font-display font-black text-xl shrink-0">+₹{BUMP_PRICE}</span>
+                        </div>
+                        <p className="font-display font-black text-lg leading-tight mt-2">Add Productivity & Execution Bundle</p>
+                        <p className="font-mono text-[10px] uppercase tracking-[0.08em] text-[#595959] mt-1">One payment · delivered with your toolkit</p>
+                        <div className="grid grid-cols-2 gap-2 mt-3">
+                          <img src={BUMP_PRODUCT_IMAGE} alt="Productivity and Execution Bundle" className="w-full h-20 object-cover border border-[#0f0f0f]" />
+                          <img src={EXCEL_BUNDLE_IMAGE} alt="Excel templates and budget planner" className="w-full h-20 object-cover border border-[#0f0f0f]" />
+                        </div>
+                        <p className="text-xs text-[#595959] leading-relaxed mt-3">Lead tracker, bookkeeping & habit tracker, 3,200+ AI prompts, 1,000+ email templates, 1,600+ business and Reel ideas, plus 1,000+ Excel templates and a budget planner.</p>
+                      </div>
+                    </div>
+                  </label>
                   <label className="font-mono text-xs uppercase tracking-[0.12em] text-[#595959]">Email for your receipt & file</label>
                   <input
                     type="email"
@@ -169,7 +200,7 @@ export default function BuyModal() {
                     data-testid="buy-submit"
                     className="mt-5 w-full bg-[#d4ff11] text-[#0f0f0f] border border-[#0f0f0f] py-3.5 font-mono text-sm uppercase tracking-[0.12em] font-semibold hover:bg-[#c2eb0f] transition-colors"
                   >
-                    Pay ₹{PRICE} securely
+                    Pay ₹{includeBump ? "489" : PRICE} securely
                   </button>
                   <p className="mt-3 flex items-center justify-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.1em] text-[#595959]">
                     <ShieldCheck className="w-3 h-3" /> Payments secured by Razorpay
@@ -202,6 +233,20 @@ export default function BuyModal() {
                   >
                     <FileSpreadsheet className="w-4 h-4" /> Get your Google Sheet
                   </a>
+                  {includeBump && bumpProductUrl && (
+                    <a
+                      href={bumpProductUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      data-testid="buy-bump-button"
+                      className="mt-3 w-full inline-flex items-center justify-center gap-2 bg-white text-[#0f0f0f] py-3 font-mono text-xs uppercase tracking-[0.12em] font-medium hover:bg-[#ebeae6] border border-[#0f0f0f] transition-colors"
+                    >
+                      <FileSpreadsheet className="w-4 h-4" /> Open Productivity Bundle
+                    </a>
+                  )}
+                  {includeBump && !bumpProductUrl && (
+                    <p className="mt-3 text-xs text-[#595959]">Your bundle is included. Its access link will be added once the bundle link is configured.</p>
+                  )}
                 </div>
               )}
 

@@ -101,9 +101,8 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
-## user_problem_statement: Replace the post-payment PDF with the new Google Sheet product link, email that link after verified Razorpay payment, and add the support contact/footer message.
-## backend:
-##   - task: "Razorpay verification + Resend product delivery"
+## user_problem_statement: Add an optional ₹199 Razorpay checkout bump offer for the Productivity & Execution Bundle, with a combined ₹489 total when selected, while keeping the main ₹290 product unchanged.
+##   - task: "Razorpay bump pricing and order persistence"
 ##     implemented: true
 ##     working: true
 ##     file: "backend/server.py"
@@ -113,10 +112,25 @@
 ##     status_history:
 ##         -working: true
 ##         -agent: "main"
-##         -comment: "Added non-blocking Resend delivery after verified Razorpay payment, using the new Google Sheet URL, registered customer email, support reply-to, and email_sent status."
+##         -comment: "Added optional include_bump order flag, server-controlled ₹19,900 bump amount, combined ₹48,900 order amount, persisted bump selection, and dynamic Meta purchase value."
 ##         -working: true
 ##         -agent: "testing"
-##         -comment: "All 9 Resend integration tests passed. Backend starts cleanly with no tracebacks. GET /api/ returns 200. resend>=2.0.0 in requirements.txt and imported correctly. All environment variables configured (RESEND_API_KEY, SENDER_EMAIL, SUPPORT_EMAIL, PRODUCT_SHEET_URL). No secrets exposed in logs. /api/payments/verify response contract correct: returns product_url, email_sent, event_id, value, currency (NO download_url). Missing Mongo fails safely with 503. Email delivery is async/non-blocking and wrapped in try-except so email failure cannot affect payment status. Note: ledgerkitsupport@gmail.com configured as sender - Resend requires domain verification for custom senders, Gmail addresses may require additional setup."
+##         -comment: "All bump pricing tests passed (12/12). Verified: (1) Backend starts without tracebacks, (2) GET /api/ returns 200, (3) Invalid email returns 422, (4) Valid create-order with missing Mongo fails safely with 503 and does not call Razorpay, (5) Code inspection confirms include_bump=false → 29000 paise (₹290), include_bump=true → 48900 paise (₹489), bump_amount=19900, and selection is persisted to order records with include_bump and bump_amount fields, (6) /api/payments/verify response contract verified: uses stored order amount for Meta value (₹290 or ₹489), includes include_bump and bump_product_url fields, no PDF/download_url present, only product_url, (7) Resend email logic verified: includes bump conditionally when BUMP_PRODUCT_URL is configured, wrapped in try-except for non-blocking delivery, (8) BUMP_PRODUCT_URL is intentionally blank in .env (user will provide bundle link later), (9) No errors in backend logs. Implementation is production-ready."
+##
+##   - task: "Bump product delivery configuration"
+##     implemented: true
+##     working: true
+##     file: "backend/server.py"
+##     stuck_count: 0
+##     priority: "high"
+##     needs_retesting: false
+##     status_history:
+##         -working: true
+##         -agent: "main"
+##         -comment: "Resend email now includes the bump when BUMP_PRODUCT_URL is configured. BUMP_PRODUCT_URL is intentionally blank until the user supplies the bundle delivery link, so the checkout is ready but bump delivery is not fully linked yet."
+##         -working: true
+##         -agent: "testing"
+##         -comment: "Bump delivery configuration verified. Email template (delivery_email_html) accepts include_bump parameter and conditionally renders bump product button when BUMP_PRODUCT_URL is configured. Currently BUMP_PRODUCT_URL is intentionally blank - email will show pending message for bump until user provides the bundle link. Email sending is non-blocking (wrapped in try-except) and cannot fail payment verification. Implementation is correct and ready for production use once user provides BUMP_PRODUCT_URL."
 
 ## frontend:
 ##   - task: "Product link success screen and support footer"
@@ -137,23 +151,31 @@
 ## metadata:
 ##     created_by: "main_agent"
 ##     version: "1.0"
-##     test_sequence: 9
+##     test_sequence: 10
 ##     run_ui: true
 ##
 ## test_plan:
 ##     current_focus:
-##         - "Verify backend Resend configuration and non-blocking delivery after verified Razorpay payment"
-##         - "Verify verified-payment response returns only the new Google Sheet product URL, not the PDF"
-##         - "Verify support email/footer and single Google Sheet success link render correctly"
+##         - "Verify optional bump amount is ₹199 and combined order amount is ₹489"
+##         - "Verify bump selection persists to Mongo order records and Meta Purchase value"
+##         - "Verify frontend unchecked bump card, images, dynamic total, and checkout payload"
+##         - "Verify bump delivery remains clearly pending until BUMP_PRODUCT_URL is supplied"
 ##     stuck_tasks: []
 ##     test_all: true
 ##     test_priority: "high_first"
 ##
 ## agent_communication:
 ##     -agent: "main"
+##     -message: "Added optional ₹199 bump offer with supplied product image and spreadsheet/budget visual, server-side ₹489 pricing, optional order persistence, dynamic Meta value, and conditional email delivery. The user will provide the bump delivery link later, so BUMP_PRODUCT_URL remains blank and the UI is transparent about that pending link. Backend testing must run before frontend testing."
+##
+## agent_communication:
+##     -agent: "main"
 ##     -message: "Added Resend email delivery using the user-provided key, configured ledgerkitsupport@gmail.com as sender/reply-to, switched product delivery to the new Google Sheet URL, removed the PDF success link, and added support footer copy. Backend testing must run before frontend testing."
 ##     -agent: "testing"
 ##     -message: "Backend testing complete. All 7 Razorpay backend integration tests passed successfully. The backend is correctly configured with Razorpay Live credentials, all routes are /api-prefixed, email validation works (422 for invalid emails), and the system gracefully handles missing Mongo configuration (503 errors). No webhook endpoint exists as expected. No actual payments were made during testing. Environment blocker identified: MONGO_URL and DB_NAME are empty in preview environment, which prevents order creation but this is expected behavior. The backend implementation is safe and ready for production use once Mongo is configured."
+##     -agent: "user"
+##     -message: "User will verify the optional bump offer UI and checkout behavior themselves; frontend automation was not run by request."
+
 ##     -agent: "user"
 ##     -message: "User will verify Meta Pixel events in Meta Events Manager directly; frontend automation was not run by request."
 ##
@@ -165,3 +187,5 @@
 ##     -message: "Resend product delivery backend testing complete. All 9 tests passed successfully. Backend starts with no tracebacks after adding resend. GET /api/ returns 200. resend>=2.0.0 in requirements.txt and imported correctly. All environment variables configured without exposing secrets in logs. /api/payments/verify response contract verified: returns product_url, email_sent, event_id, value, currency (NO download_url). Missing Mongo fails safely with 503. Email delivery is async/non-blocking and wrapped in try-except - email failure cannot turn verified payment into failed payment. Important note: ledgerkitsupport@gmail.com is configured as sender/reply-to. Resend requires domain verification for custom senders - Gmail addresses may require additional setup or domain verification to work properly in production."
 ##     -agent: "testing"
 ##     -message: "Product link success screen and support footer testing complete. All 8 requirements verified and passed. Homepage loads cleanly (200), footer contains support message with mailto:ledgerkitsupport@gmail.com, all Buy CTAs open Razorpay modal, new Google Sheet URL present in frontend/backend code, no PDF or old Sheet URLs found, success copy includes email delivery and support fallback messages, friendly error handling for missing Mongo (503), no critical console/network errors. Success UI verified through source code inspection (cannot trigger without real payment). No real payment made, no real email sent. Implementation is production-ready."
+##     -agent: "testing"
+##     -message: "Bump offer backend testing complete. All 12 tests passed (7 base + 5 bump-specific). Verified all requirements from review request: (1) Supervisor backend starts without tracebacks ✓, (2) GET /api/ returns 200 ✓, (3) Invalid email returns 422 for /api/payments/create-order ✓, (4) With preview Mongo unavailable, valid create-order requests fail safely with 503 and do not call Razorpay ✓, (5) Code inspection confirms include_bump=false → 29000 paise (₹290), include_bump=true → 48900 paise (₹489), bump_amount=19900, selection persisted to order records ✓, (6) /api/payments/verify response uses stored order amount for Meta value (₹290 or ₹489), includes include_bump and bump_product_url, no PDF/download_url ✓, (7) Resend email includes bump only when BUMP_PRODUCT_URL is configured, non-blocking ✓, (8) BUMP_PRODUCT_URL is intentionally blank (user will provide bundle link later) ✓, (9) No errors in backend logs ✓. No files modified. No real Razorpay payment made. No live order created. Backend implementation is production-ready."

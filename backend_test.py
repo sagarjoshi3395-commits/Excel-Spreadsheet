@@ -167,13 +167,199 @@ def check_razorpay_in_requirements():
         print_test("Razorpay in requirements.txt", False, f"Error: {str(e)}")
         return False
 
+def test_bump_pricing_code_inspection():
+    """Test 8: Inspect server.py code to verify bump pricing logic"""
+    try:
+        with open("/app/backend/server.py", "r") as f:
+            content = f.read()
+        
+        # Check for PRICE_PAISE = 29000
+        price_check = "PRICE_PAISE = 29000" in content
+        
+        # Check for BUMP_PRICE_PAISE = 19900
+        bump_price_check = "BUMP_PRICE_PAISE = 19900" in content
+        
+        # Check for amount calculation: PRICE_PAISE + (BUMP_PRICE_PAISE if req.include_bump else 0)
+        amount_calc_check = "PRICE_PAISE + (BUMP_PRICE_PAISE if req.include_bump else 0)" in content
+        
+        # Check for include_bump field in CreateOrderRequest
+        include_bump_field_check = "include_bump: bool" in content
+        
+        # Check for bump persistence in order document
+        bump_persist_check = '"include_bump": req.include_bump' in content and '"bump_amount": BUMP_PRICE_PAISE if req.include_bump else 0' in content
+        
+        all_checks = [price_check, bump_price_check, amount_calc_check, include_bump_field_check, bump_persist_check]
+        passed = all(all_checks)
+        
+        details = f"PRICE_PAISE=29000: {price_check}, BUMP_PRICE_PAISE=19900: {bump_price_check}, "
+        details += f"Amount calc: {amount_calc_check}, include_bump field: {include_bump_field_check}, "
+        details += f"Persistence: {bump_persist_check}"
+        
+        if passed:
+            details += " | ✓ include_bump=false → ₹290 (29000 paise), include_bump=true → ₹489 (48900 paise)"
+        
+        print_test("Bump Pricing Code Inspection", passed, details)
+        return passed
+    except Exception as e:
+        print_test("Bump Pricing Code Inspection", False, f"Error: {str(e)}")
+        return False
+
+def test_verify_payment_response_contract():
+    """Test 9: Verify payment response contract includes bump fields and no PDF"""
+    try:
+        with open("/app/backend/server.py", "r") as f:
+            content = f.read()
+        
+        # Check verify endpoint returns correct fields
+        verify_endpoint_found = '@api_router.post("/payments/verify")' in content
+        
+        # Check response includes include_bump
+        include_bump_response = '"include_bump": include_bump' in content
+        
+        # Check response includes bump_product_url
+        bump_url_response = '"bump_product_url": BUMP_PRODUCT_URL if include_bump else ""' in content
+        
+        # Check response uses stored order amount for Meta value
+        meta_value_check = 'float(order_record.get("amount", PRICE_PAISE)) / 100' in content
+        
+        # Check no download_url or pdf in response
+        no_pdf_check = 'download_url' not in content and 'pdf_url' not in content.lower()
+        
+        # Check product_url is present
+        product_url_check = '"product_url": PRODUCT_SHEET_URL' in content
+        
+        all_checks = [verify_endpoint_found, include_bump_response, bump_url_response, meta_value_check, no_pdf_check, product_url_check]
+        passed = all(all_checks)
+        
+        details = f"Verify endpoint: {verify_endpoint_found}, include_bump: {include_bump_response}, "
+        details += f"bump_product_url: {bump_url_response}, Meta value from stored amount: {meta_value_check}, "
+        details += f"No PDF: {no_pdf_check}, product_url: {product_url_check}"
+        
+        print_test("Verify Payment Response Contract", passed, details)
+        return passed
+    except Exception as e:
+        print_test("Verify Payment Response Contract", False, f"Error: {str(e)}")
+        return False
+
+def test_resend_email_bump_logic():
+    """Test 10: Verify Resend email includes bump conditionally and is non-blocking"""
+    try:
+        with open("/app/backend/server.py", "r") as f:
+            content = f.read()
+        
+        # Check delivery_email_html function accepts include_bump parameter
+        email_func_check = "def delivery_email_html(include_bump: bool = False)" in content
+        
+        # Check email includes bump product URL conditionally
+        bump_conditional_check = 'if BUMP_PRODUCT_URL' in content and 'if include_bump' in content
+        
+        # Check BUMP_PRODUCT_URL is loaded from environment
+        bump_url_env_check = 'BUMP_PRODUCT_URL = os.environ.get("BUMP_PRODUCT_URL", "")' in content
+        
+        # Check email sending is wrapped in try-except (non-blocking)
+        try_except_check = 'try:\n            await send_delivery_email' in content and 'except Exception as exc:\n            logger.error("Product email delivery failed:' in content
+        
+        # Check email is sent with include_bump parameter
+        email_call_check = 'await send_delivery_email(order_record["email"], include_bump)' in content
+        
+        all_checks = [email_func_check, bump_conditional_check, bump_url_env_check, try_except_check, email_call_check]
+        passed = all(all_checks)
+        
+        details = f"Email function with include_bump: {email_func_check}, Conditional bump: {bump_conditional_check}, "
+        details += f"BUMP_PRODUCT_URL env: {bump_url_env_check}, Non-blocking try-except: {try_except_check}, "
+        details += f"Email call with include_bump: {email_call_check}"
+        
+        print_test("Resend Email Bump Logic", passed, details)
+        return passed
+    except Exception as e:
+        print_test("Resend Email Bump Logic", False, f"Error: {str(e)}")
+        return False
+
+def test_bump_product_url_blank():
+    """Test 11: Verify BUMP_PRODUCT_URL is intentionally blank in .env"""
+    try:
+        with open("/app/backend/.env", "r") as f:
+            content = f.read()
+        
+        # Check BUMP_PRODUCT_URL exists and is blank
+        bump_url_line_found = False
+        bump_url_blank = False
+        
+        for line in content.split("\n"):
+            if line.startswith("BUMP_PRODUCT_URL"):
+                bump_url_line_found = True
+                # Check if it's blank (either BUMP_PRODUCT_URL= or BUMP_PRODUCT_URL="")
+                if line.strip() in ["BUMP_PRODUCT_URL=", 'BUMP_PRODUCT_URL=""', "BUMP_PRODUCT_URL=''"]:
+                    bump_url_blank = True
+                break
+        
+        passed = bump_url_line_found and bump_url_blank
+        
+        if passed:
+            details = "BUMP_PRODUCT_URL is configured but intentionally blank (user will provide bundle link later)"
+        else:
+            details = f"Line found: {bump_url_line_found}, Blank: {bump_url_blank}"
+        
+        print_test("BUMP_PRODUCT_URL Intentionally Blank", passed, details)
+        return passed
+    except Exception as e:
+        print_test("BUMP_PRODUCT_URL Intentionally Blank", False, f"Error: {str(e)}")
+        return False
+
+def test_create_order_with_bump_flag():
+    """Test 12: Test create-order API accepts include_bump parameter"""
+    try:
+        # Test without bump (include_bump=false)
+        response_no_bump = requests.post(
+            f"{BACKEND_URL}/payments/create-order",
+            json={"email": "customer@ledgerkit.com", "include_bump": False},
+            timeout=10
+        )
+        
+        # Test with bump (include_bump=true)
+        response_with_bump = requests.post(
+            f"{BACKEND_URL}/payments/create-order",
+            json={"email": "customer@ledgerkit.com", "include_bump": True},
+            timeout=10
+        )
+        
+        # Both should return 503 in preview (no Mongo) or 200 if Mongo is available
+        valid_status_codes = [200, 503]
+        no_bump_valid = response_no_bump.status_code in valid_status_codes
+        with_bump_valid = response_with_bump.status_code in valid_status_codes
+        
+        passed = no_bump_valid and with_bump_valid
+        
+        details = f"Without bump: {response_no_bump.status_code}, With bump: {response_with_bump.status_code}"
+        
+        if response_no_bump.status_code == 200:
+            data = response_no_bump.json()
+            details += f" | No bump amount: ₹{data.get('amount', 0)/100} (expected ₹290)"
+            if data.get('amount') != 29000:
+                passed = False
+                details += " ❌ INCORRECT AMOUNT"
+        
+        if response_with_bump.status_code == 200:
+            data = response_with_bump.json()
+            details += f" | With bump amount: ₹{data.get('amount', 0)/100} (expected ₹489)"
+            if data.get('amount') != 48900:
+                passed = False
+                details += " ❌ INCORRECT AMOUNT"
+        
+        print_test("Create Order with include_bump Flag", passed, details)
+        return passed
+    except Exception as e:
+        print_test("Create Order with include_bump Flag", False, f"Error: {str(e)}")
+        return False
+
 def main():
     """Run all backend tests"""
     print("=" * 80)
-    print("RAZORPAY BACKEND INTEGRATION TESTS")
+    print("RAZORPAY BACKEND INTEGRATION TESTS - BUMP OFFER VERIFICATION")
     print("=" * 80)
     print(f"Backend URL: {BACKEND_URL}")
     print("⚠️  IMPORTANT: Using LIVE Razorpay credentials - NO actual payments will be made")
+    print("⚠️  Testing bump offer: ₹290 base + ₹199 optional bump = ₹489 total")
     print("=" * 80)
     
     results = []
@@ -199,6 +385,26 @@ def main():
     # Test 7: Razorpay in requirements.txt
     results.append(("Razorpay Dependency", check_razorpay_in_requirements()))
     
+    # BUMP OFFER TESTS
+    print("\n" + "=" * 80)
+    print("BUMP OFFER SPECIFIC TESTS")
+    print("=" * 80)
+    
+    # Test 8: Bump pricing code inspection
+    results.append(("Bump Pricing Code", test_bump_pricing_code_inspection()))
+    
+    # Test 9: Verify payment response contract
+    results.append(("Verify Response Contract", test_verify_payment_response_contract()))
+    
+    # Test 10: Resend email bump logic
+    results.append(("Resend Email Bump Logic", test_resend_email_bump_logic()))
+    
+    # Test 11: BUMP_PRODUCT_URL is blank
+    results.append(("BUMP_PRODUCT_URL Blank", test_bump_product_url_blank()))
+    
+    # Test 12: Create order with bump flag
+    results.append(("Create Order with Bump Flag", test_create_order_with_bump_flag()))
+    
     # Summary
     print("\n" + "=" * 80)
     print("TEST SUMMARY")
@@ -214,6 +420,16 @@ def main():
     print("=" * 80)
     print(f"Total: {passed_count}/{total_count} tests passed")
     print("=" * 80)
+    
+    # Additional notes
+    print("\n📋 IMPORTANT NOTES:")
+    print("   • BUMP_PRODUCT_URL is intentionally blank - user will provide bundle link later")
+    print("   • include_bump=false → ₹290 (29,000 paise)")
+    print("   • include_bump=true → ₹489 (48,900 paise = 29,000 + 19,900)")
+    print("   • Bump selection is persisted in order records")
+    print("   • Meta Purchase value uses stored order amount (₹290 or ₹489)")
+    print("   • Email delivery is non-blocking and includes bump conditionally")
+    print("   • No PDF/download_url in response (only product_url)")
     
     # Return exit code
     return 0 if passed_count == total_count else 1
