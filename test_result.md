@@ -101,7 +101,7 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
-## user_problem_statement: Update the optional ₹199 bump offer copy to highlight 200+ premium Excel templates and bundle contents, show ₹1,997 versus ₹199 promotional pricing, and configure the supplied Google Drive delivery link.
+## user_problem_statement: Refine the checkout bump offer to improve conversion: rename the heading to Productivity & Execution Bundle, make 200+ Excel templates supporting copy, use one image, move limited-time messaging outside the card, and add an explicit Add to cart button.
 ##   - task: "Razorpay bump pricing and order persistence"
 ##     implemented: true
 ##     working: true
@@ -147,6 +147,25 @@
 
 ## frontend:
 ##   - task: "Product link success screen and support footer"
+##   - task: "Conversion-focused bump card refinement"
+##     implemented: true
+##     working: true
+##     file: "frontend/src/components/landing/BuyModal.js"
+##     stuck_count: 0
+##     priority: "high"
+##     needs_retesting: false
+##     status_history:
+##         -working: true
+##         -agent: "main"
+##         -comment: "Renamed the bump headline, moved 200+ Excel templates into supporting copy, reduced the card to one supplied image, moved urgency to a separate banner, clarified the value comparison, and added an explicit Add to cart button."
+##         -working: NA
+##         -agent: "main"
+##         -comment: "Frontend verification is required for the conversion-focused bump refinement; no real payment will be made."
+##         -working: true
+##         -agent: "testing"
+##         -comment: "✅ ALL 12 REQUIREMENTS PASSED - Conversion-focused bump checkout refinement verified successfully. (1) Homepage loads and Buy CTA opens modal ✓, (2) Bump card headline is exactly 'Productivity & Execution Bundle' ✓, (3) '200+ premium Excel templates included' is supporting copy (font-mono text-[10px] uppercase), not main heading ✓, (4) Only one bump image rendered (Productivity & Execution Bundle image) ✓, (5) Old two-image/grid presentation completely absent ✓, (6) Limited-time urgency banner ('LIMITED-TIME BUNDLE DEAL · SAVE ₹1,798 TODAY') appears in separate banner OUTSIDE the bump offer card ✓, (7) ₹1,997 value (strikethrough) and ₹199 price both visible ✓, (8) Explicit 'Add to cart · +₹199' button exists and is unchecked/unselected by default (yellow bg-[#d4ff11]) ✓, (9) Clicking Add to cart changes button to 'Added to cart · ₹199' (black bg-[#0f0f0f]) and updates total from ₹290 to ₹489, pay CTA updates from 'PAY ₹290 SECURELY' to 'PAY ₹489 SECURELY', unchecking reverts to ₹290 ✓, (10) Bundle description readable with 5 items: Habit & Goal Tracker, 3,200+ AI & ChatGPT Prompts, Landing Page Bundle + 1,000+ Ebook Bundle, 1,000+ Email Templates, 1,000+ Business & Reel Ideas ✓, (11) No console errors (0 errors/warnings detected) ✓, (12) No real checkout completed (test stopped before payment submission) ✓. Screenshots captured at 5 stages. No real Razorpay payment made. Implementation is production-ready."
+
+
 ##     implemented: true
 ##     working: true
 ##     file: "frontend/src/components/landing/BuyModal.js"
@@ -176,12 +195,12 @@
 ## metadata:
 ##     created_by: "main_agent"
 ##     version: "1.0"
-##     test_sequence: 14
+##     test_sequence: 15
 ##     run_ui: false
 ##
 ## test_plan:
 ##     current_focus:
-##         - "Bump offer frontend checkout review completed - all 12 requirements passed"
+##         - "Conversion-focused bump card refinement completed - all 12 requirements passed"
 ##     stuck_tasks: []
 ##     test_all: false
 ##     test_priority: "high_first"
@@ -226,3 +245,5 @@
 ##     -message: "✅ CRITICAL BUG FIXED - All backend tests passed (13/13)! Completed interrupted backend retest for updated bump offer. The email template conditional logic has been corrected to 'if include_bump and BUMP_PRODUCT_URL', ensuring proper bump delivery control. CRITICAL verification confirmed: (1) delivery_email_html(include_bump=False) does NOT contain the Google Drive bump link or bump access text ✓, (2) delivery_email_html(include_bump=True) DOES contain the supplied Google Drive link ✓. All other requirements verified: Backend startup clean ✓, GET /api/ returns 200 ✓, Invalid email returns 422 ✓, Pricing contract correct (₹290/₹489/₹199) ✓, Order persistence fields present ✓, Stored amount used for Meta value ✓, bump_product_url in response ✓, Safe 503 with missing Mongo ✓. No files modified. No real payment made. No customer email sent. Backend is production-ready with no remaining blockers."
 ##     -agent: "testing"
 ##     -message: "Bump offer frontend checkout review complete. All 12 requirements from review request verified and passed successfully. Tested: (1) Homepage loads ✓, (2) Buy CTA opens modal ✓, (3) Bump unchecked by default ✓, (4) Headline '200+ Premium Excel Templates for Every Business' ✓, (5) All 6 bundle items present in copy ✓, (6) ₹1,997 vs ₹199 pricing visible ✓, (7) Total changes ₹290→₹489 ✓, (8) Pay button updates ₹290→₹489 ✓, (9) Both product images load ✓, (10) Payload includes include_bump:true ✓, (11) 503 error handled gracefully ✓, (12) Razorpay description bundle-inclusive ✓, (13) Google Drive link configured ✓. Console: 2 errors (1 expected 503, 1 minor web-share warning). Network: API request sent correctly, 503 response expected. 5 screenshots captured. No real payment made. No email sent. Implementation is production-ready."
+##     -agent: "testing"
+##     -message: "Conversion-focused bump card refinement testing complete. ALL 12 REQUIREMENTS PASSED. Verified: (1) Homepage loads and Buy CTA opens modal ✓, (2) Bump headline is 'Productivity & Execution Bundle' ✓, (3) '200+ premium Excel templates included' is supporting copy ✓, (4) Only one bump image rendered ✓, (5) Old two-image grid absent ✓, (6) Limited-time urgency in separate banner outside card ✓, (7) ₹1,997 value and ₹199 price visible ✓, (8) 'Add to cart · +₹199' button unchecked by default ✓, (9) Clicking changes to 'Added to cart · ₹199' and updates total ₹290→₹489 ✓, (10) Bundle description readable ✓, (11) No console errors ✓, (12) No real checkout completed ✓. 5 screenshots captured. No real payment made. Implementation is production-ready."

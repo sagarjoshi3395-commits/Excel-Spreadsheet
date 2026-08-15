@@ -2,7 +2,7 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useBuy } from "@/hooks/useBuy";
 import { X, ShieldCheck, CheckCircle2, Loader2, AlertTriangle, FileSpreadsheet } from "lucide-react";
-import { SHEET_URL, BUMP_PRODUCT_IMAGE, EXCEL_BUNDLE_IMAGE, BUMP_PRICE, PRICE } from "@/lib/landingData";
+import { SHEET_URL, BUMP_PRODUCT_IMAGE, BUMP_PRICE, PRICE } from "@/lib/landingData";
 import { trackMetaEvent } from "@/lib/metaPixel";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
@@ -161,31 +161,43 @@ export default function BuyModal() {
                     <span className="font-display font-black text-4xl">₹{includeBump ? "489" : PRICE}</span>
                     <span className="font-mono text-xs text-[#595959] mb-1.5">one-time</span>
                   </div>
-                  <label className="block cursor-pointer border border-[#0f0f0f] bg-white p-3 mb-5 hover:bg-[#f0efe9] transition-colors" data-testid="bump-offer">
-                    <div className="flex items-start gap-3">
-                      <input
-                        type="checkbox"
-                        checked={includeBump}
-                        onChange={(event) => setIncludeBump(event.target.checked)}
-                        data-testid="bump-checkbox"
-                        className="mt-1 h-4 w-4 accent-[#0f0f0f]"
-                      />
+                  <div className="mb-4 flex items-center justify-between gap-3 border border-[#0f0f0f] bg-[#d4ff11] px-3 py-2">
+                    <span className="font-mono text-[10px] uppercase tracking-[0.12em] font-semibold">Limited-time bundle deal</span>
+                    <span className="font-mono text-[10px] uppercase tracking-[0.08em]">Save ₹1,798 today</span>
+                  </div>
+                  <div className="border border-[#0f0f0f] bg-white p-4 mb-5" data-testid="bump-offer">
+                    <div className="flex gap-4">
+                      <img src={BUMP_PRODUCT_IMAGE} alt="Productivity and Execution Bundle" className="w-24 h-28 object-cover border border-[#0f0f0f] shrink-0" />
                       <div className="min-w-0 flex-1">
-                        <div className="flex items-center justify-between gap-3">
-                          <span className="font-mono text-[10px] uppercase tracking-[0.12em] bg-[#d4ff11] border border-[#0f0f0f] px-1.5 py-0.5">Limited-time offer</span>
-                          <span className="font-display font-black text-xl shrink-0"><span className="line-through text-[#595959] text-sm mr-1">₹1,997</span>₹{BUMP_PRICE}</span>
+                        <div className="flex items-start justify-between gap-3">
+                          <div>
+                            <p className="font-display font-black text-xl leading-tight">Productivity & Execution Bundle</p>
+                            <p className="font-mono text-[10px] uppercase tracking-[0.08em] text-[#595959] mt-1">200+ premium Excel templates included</p>
+                          </div>
+                          <div className="text-right shrink-0">
+                            <p className="font-display font-black text-xl">₹{BUMP_PRICE}</p>
+                            <p className="font-mono text-[10px] text-[#595959] line-through">₹1,997 value</p>
+                          </div>
                         </div>
-                        <p className="font-display font-black text-lg leading-tight mt-2">Add 200+ Premium Excel Templates for Every Business</p>
-                        <p className="font-mono text-[10px] uppercase tracking-[0.08em] text-[#595959] mt-1">Productivity & Execution Bundle · add to order for ₹199</p>
-                        <div className="grid grid-cols-2 gap-2 mt-3">
-                          <img src={BUMP_PRODUCT_IMAGE} alt="Productivity and Execution Bundle" className="w-full h-20 object-cover border border-[#0f0f0f]" />
-                          <img src={EXCEL_BUNDLE_IMAGE} alt="Excel templates and budget planner" className="w-full h-20 object-cover border border-[#0f0f0f]" />
-                        </div>
-                        <p className="text-xs text-[#595959] leading-relaxed mt-3">200+ premium Excel templates for every business, Habit & Goal Tracker, 3,200+ AI & ChatGPT prompts, readymade landing page bundle, 1,000+ ebook bundle, 1,000+ ready-to-use email templates, and 1,000+ business & Reel ideas.</p>
+                        <ul className="mt-3 grid gap-1 text-xs text-[#595959] leading-relaxed">
+                          <li>• Habit & Goal Tracker</li>
+                          <li>• 3,200+ AI & ChatGPT Prompts for Business</li>
+                          <li>• Readymade Landing Page Bundle + 1,000+ Ebook Bundle</li>
+                          <li>• 1,000+ Ready-to-Use Email Templates</li>
+                          <li>• 1,000+ Business & Reel Ideas</li>
+                        </ul>
                       </div>
                     </div>
-                  </label>
-                  <label className="font-mono text-xs uppercase tracking-[0.12em] text-[#595959]">Email for your receipt & file</label>
+                    <button
+                      type="button"
+                      onClick={() => setIncludeBump((selected) => !selected)}
+                      data-testid="bump-add-to-cart"
+                      className={`mt-4 w-full border border-[#0f0f0f] py-3 font-mono text-xs uppercase tracking-[0.12em] font-semibold transition-colors ${includeBump ? "bg-[#0f0f0f] text-[#f6f5f2]" : "bg-[#d4ff11] text-[#0f0f0f] hover:bg-[#c2eb0f]"}`}
+                    >
+                      {includeBump ? "Added to cart · ₹199" : "Add to cart · +₹199"}
+                    </button>
+                  </div>
+                  <label className="block font-mono text-xs uppercase tracking-[0.12em] text-[#595959]">Email for your receipt & file</label>
                   <input
                     type="email"
                     data-testid="buy-email-input"
