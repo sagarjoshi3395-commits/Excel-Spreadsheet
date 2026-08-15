@@ -101,7 +101,7 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
-## user_problem_statement: Refine the checkout bump offer to improve conversion: rename the heading to Productivity & Execution Bundle, make 200+ Excel templates supporting copy, use one image, move limited-time messaging outside the card, and add an explicit Add to cart button.
+## user_problem_statement: Fix the production mobile Razorpay checkout layout where the bump price overflows and the Pay button is below the visible viewport.
 ##   - task: "Razorpay bump pricing and order persistence"
 ##     implemented: true
 ##     working: true
@@ -147,6 +147,24 @@
 
 ## frontend:
 ##   - task: "Product link success screen and support footer"
+##   - task: "Mobile checkout bump layout"
+##     implemented: true
+##     working: true
+##     file: "frontend/src/components/landing/BuyModal.js"
+##     stuck_count: 0
+##     priority: "high"
+##     needs_retesting: false
+##     status_history:
+##         -working: false
+##         -agent: "user"
+##         -comment: "Production mobile screenshot showed the ₹199 bump price clipped outside the checkout card and the Pay button below the visible viewport."
+##         -working: true
+##         -agent: "main"
+##         -comment: "Made the modal height-bounded and vertically scrollable on mobile, reduced responsive padding, stacked bump pricing inside the card, tightened mobile copy, and kept Add to cart/Pay controls reachable."
+##         -working: true
+##         -agent: "testing"
+##         -comment: "✅ ALL 10 REQUIREMENTS PASSED - Mobile checkout layout bug fix verified successfully at 390x844 mobile viewport and 1920x1080 desktop regression. (1) Buy CTA opens modal ✓, (2) Modal stays within viewport bounds (390x844px, no overflow) with max-h-[calc(100dvh-1rem)] and overflow-y-auto ✓, (3) ₹199 bump price and ₹1,997 value remain fully inside offer card with no horizontal clipping (card right: 357px, price right: 183px, value right: 263px) ✓, (4) Only one image displays in bump offer ✓, (5) Add to cart button is reachable and toggles from 'Add to cart · +₹199' to 'Added to cart · ₹199' ✓, (6) Total and pay CTA correctly show ₹290 initially then ₹489 after bump selection ✓, (7) Email field and pay button are reachable by scrolling within modal ✓, (8) No horizontal page/modal overflow detected (body/HTML/modal scroll width = client width) ✓, (9) Desktop checkout remains usable with all elements visible, bump toggle working, pricing updating correctly, and no overflow ✓, (10) No new console errors (0 errors, 0 warnings, 0 network errors) ✓. Screenshots captured at 5 critical stages. No Razorpay checkout completed. No payment charged. No email sent. Production-reported bug (₹199 clipping and Pay button below viewport) is fully resolved. Implementation is production-ready."
+
 ##   - task: "Conversion-focused bump card refinement"
 ##     implemented: true
 ##     working: true
@@ -195,17 +213,19 @@
 ## metadata:
 ##     created_by: "main_agent"
 ##     version: "1.0"
-##     test_sequence: 15
+##     test_sequence: 17
 ##     run_ui: false
 ##
 ## test_plan:
-##     current_focus:
-##         - "Conversion-focused bump card refinement completed - all 12 requirements passed"
+##     current_focus: []
 ##     stuck_tasks: []
 ##     test_all: false
 ##     test_priority: "high_first"
 ##
 ## agent_communication:
+##     -agent: "main"
+##     -message: "User reported the production mobile modal overflowed: ₹199 price clipped outside the card and Pay button below the viewport. Preview fix adds bounded internal scrolling, responsive padding, stacked price/content, and mobile-safe controls. Frontend testing required before completion."
+
 ##     -agent: "main"
 ##     -message: "Added optional ₹199 bump offer with supplied product image and spreadsheet/budget visual, server-side ₹489 pricing, optional order persistence, dynamic Meta value, and conditional email delivery. The user will provide the bump delivery link later, so BUMP_PRODUCT_URL remains blank and the UI is transparent about that pending link. Backend testing must run before frontend testing."
 ##     -agent: "main"
@@ -247,3 +267,6 @@
 ##     -message: "Bump offer frontend checkout review complete. All 12 requirements from review request verified and passed successfully. Tested: (1) Homepage loads ✓, (2) Buy CTA opens modal ✓, (3) Bump unchecked by default ✓, (4) Headline '200+ Premium Excel Templates for Every Business' ✓, (5) All 6 bundle items present in copy ✓, (6) ₹1,997 vs ₹199 pricing visible ✓, (7) Total changes ₹290→₹489 ✓, (8) Pay button updates ₹290→₹489 ✓, (9) Both product images load ✓, (10) Payload includes include_bump:true ✓, (11) 503 error handled gracefully ✓, (12) Razorpay description bundle-inclusive ✓, (13) Google Drive link configured ✓. Console: 2 errors (1 expected 503, 1 minor web-share warning). Network: API request sent correctly, 503 response expected. 5 screenshots captured. No real payment made. No email sent. Implementation is production-ready."
 ##     -agent: "testing"
 ##     -message: "Conversion-focused bump card refinement testing complete. ALL 12 REQUIREMENTS PASSED. Verified: (1) Homepage loads and Buy CTA opens modal ✓, (2) Bump headline is 'Productivity & Execution Bundle' ✓, (3) '200+ premium Excel templates included' is supporting copy ✓, (4) Only one bump image rendered ✓, (5) Old two-image grid absent ✓, (6) Limited-time urgency in separate banner outside card ✓, (7) ₹1,997 value and ₹199 price visible ✓, (8) 'Add to cart · +₹199' button unchecked by default ✓, (9) Clicking changes to 'Added to cart · ₹199' and updates total ₹290→₹489 ✓, (10) Bundle description readable ✓, (11) No console errors ✓, (12) No real checkout completed ✓. 5 screenshots captured. No real payment made. Implementation is production-ready."
+##     -agent: "testing"
+##     -message: "Mobile checkout layout bug fix verification complete. ALL 10 REQUIREMENTS PASSED at 390x844 mobile viewport and 1920x1080 desktop regression. Verified: (1) Buy CTA opens modal ✓, (2) Modal stays within viewport with internal scrolling (max-h-[calc(100dvh-1rem)], overflow-y-auto) ✓, (3) ₹199 and ₹1,997 fully inside card with no clipping ✓, (4) Only one image ✓, (5) Add to cart toggles correctly ✓, (6) Total shows ₹290→₹489 ✓, (7) Email/pay button reachable by scrolling ✓, (8) No horizontal overflow ✓, (9) Desktop usable ✓, (10) No console errors ✓. Production-reported bug (₹199 clipping, Pay button below viewport) is fully resolved. 5 screenshots captured. No payment made. Implementation is production-ready."
+

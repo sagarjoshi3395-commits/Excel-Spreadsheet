@@ -142,7 +142,7 @@ export default function BuyModal() {
             animate={{ scale: 1, y: 0, opacity: 1 }}
             exit={{ scale: 0.95, y: 20, opacity: 0 }}
             transition={{ type: "spring", stiffness: 300, damping: 26 }}
-            className="relative w-full max-w-md bg-[#f6f5f2] border border-[#0f0f0f] hard-shadow"
+            className="relative w-full max-w-md max-h-[calc(100dvh-1rem)] overflow-y-auto overscroll-contain bg-[#f6f5f2] border border-[#0f0f0f] hard-shadow"
           >
             <div className="flex items-center justify-between px-6 py-4 border-b border-[#0f0f0f]">
               <span className="flex items-center gap-1.5 font-mono text-xs uppercase tracking-[0.14em]">
@@ -153,7 +153,7 @@ export default function BuyModal() {
               </button>
             </div>
 
-            <div className="p-6">
+            <div className="p-4 sm:p-6">
               {stage === "form" && (
                 <form onSubmit={submit} data-testid="buy-form">
                   <p className="font-display font-black text-3xl leading-tight tracking-tight">Business Toolkit</p>
@@ -161,29 +161,25 @@ export default function BuyModal() {
                     <span className="font-display font-black text-4xl">₹{includeBump ? "489" : PRICE}</span>
                     <span className="font-mono text-xs text-[#595959] mb-1.5">one-time</span>
                   </div>
-                  <div className="mb-4 flex items-center justify-between gap-3 border border-[#0f0f0f] bg-[#d4ff11] px-3 py-2">
-                    <span className="font-mono text-[10px] uppercase tracking-[0.12em] font-semibold">Limited-time bundle deal</span>
-                    <span className="font-mono text-[10px] uppercase tracking-[0.08em]">Save ₹1,798 today</span>
+                  <div className="mb-4 flex flex-wrap items-center justify-between gap-2 border border-[#0f0f0f] bg-[#d4ff11] px-3 py-2">
+                    <span className="font-mono text-[9px] sm:text-[10px] uppercase tracking-[0.1em] font-semibold">Limited-time bundle deal</span>
+                    <span className="font-mono text-[9px] sm:text-[10px] uppercase tracking-[0.06em]">Save ₹1,798 today</span>
                   </div>
-                  <div className="border border-[#0f0f0f] bg-white p-4 mb-5" data-testid="bump-offer">
-                    <div className="flex gap-4">
-                      <img src={BUMP_PRODUCT_IMAGE} alt="Productivity and Execution Bundle" className="w-24 h-28 object-cover border border-[#0f0f0f] shrink-0" />
+                  <div className="border border-[#0f0f0f] bg-white p-3 sm:p-4 mb-5" data-testid="bump-offer">
+                    <div className="flex items-start gap-3 sm:gap-4">
+                      <img src={BUMP_PRODUCT_IMAGE} alt="Productivity and Execution Bundle" className="w-20 h-24 sm:w-24 sm:h-28 object-cover border border-[#0f0f0f] shrink-0" />
                       <div className="min-w-0 flex-1">
-                        <div className="flex items-start justify-between gap-3">
-                          <div>
-                            <p className="font-display font-black text-xl leading-tight">Productivity & Execution Bundle</p>
-                            <p className="font-mono text-[10px] uppercase tracking-[0.08em] text-[#595959] mt-1">200+ premium Excel templates included</p>
-                          </div>
-                          <div className="text-right shrink-0">
-                            <p className="font-display font-black text-xl">₹{BUMP_PRICE}</p>
-                            <p className="font-mono text-[10px] text-[#595959] line-through">₹1,997 value</p>
-                          </div>
+                        <p className="font-display font-black text-lg sm:text-xl leading-tight">Productivity & Execution Bundle</p>
+                        <p className="font-mono text-[9px] sm:text-[10px] uppercase tracking-[0.08em] text-[#595959] mt-1">200+ premium Excel templates included</p>
+                        <div className="mt-2 flex items-baseline gap-2 flex-wrap">
+                          <span className="font-display font-black text-xl">₹{BUMP_PRICE}</span>
+                          <span className="font-mono text-[10px] text-[#595959] line-through">₹1,997 value</span>
                         </div>
-                        <ul className="mt-3 grid gap-1 text-xs text-[#595959] leading-relaxed">
+                        <ul className="mt-3 grid gap-1 text-[11px] sm:text-xs text-[#595959] leading-relaxed">
                           <li>• Habit & Goal Tracker</li>
-                          <li>• 3,200+ AI & ChatGPT Prompts for Business</li>
-                          <li>• Readymade Landing Page Bundle + 1,000+ Ebook Bundle</li>
-                          <li>• 1,000+ Ready-to-Use Email Templates</li>
+                          <li>• 3,200+ AI & ChatGPT Prompts</li>
+                          <li>• Landing Page + 1,000+ Ebook Bundle</li>
+                          <li>• 1,000+ Email Templates</li>
                           <li>• 1,000+ Business & Reel Ideas</li>
                         </ul>
                       </div>
@@ -192,7 +188,7 @@ export default function BuyModal() {
                       type="button"
                       onClick={() => setIncludeBump((selected) => !selected)}
                       data-testid="bump-add-to-cart"
-                      className={`mt-4 w-full border border-[#0f0f0f] py-3 font-mono text-xs uppercase tracking-[0.12em] font-semibold transition-colors ${includeBump ? "bg-[#0f0f0f] text-[#f6f5f2]" : "bg-[#d4ff11] text-[#0f0f0f] hover:bg-[#c2eb0f]"}`}
+                      className={`mt-4 w-full border border-[#0f0f0f] py-3 font-mono text-xs uppercase tracking-[0.1em] font-semibold transition-colors ${includeBump ? "bg-[#0f0f0f] text-[#f6f5f2]" : "bg-[#d4ff11] text-[#0f0f0f] hover:bg-[#c2eb0f]"}`}
                     >
                       {includeBump ? "Added to cart · ₹199" : "Add to cart · +₹199"}
                     </button>
