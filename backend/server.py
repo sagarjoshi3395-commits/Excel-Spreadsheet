@@ -69,7 +69,7 @@ def delivery_email_html(include_bump: bool = False) -> str:
               <a href="{BUMP_PRODUCT_URL}" style="display:inline-block;padding:12px 22px;font-size:13px;font-weight:bold;color:#0f0f0f;text-decoration:none;letter-spacing:1px;text-transform:uppercase;">
                 Open your Productivity & Execution Bundle
               </a>
-            </td></tr></table>''' if BUMP_PRODUCT_URL else '<p style="margin:0 0 20px;font-size:13px;color:#595959;line-height:1.6;">Your optional Productivity &amp; Execution Bundle is included in your order. Its access link will be added once the bundle link is configured.</p>' if include_bump else ''}
+            </td></tr></table>''' if include_bump and BUMP_PRODUCT_URL else '<p style="margin:0 0 20px;font-size:13px;color:#595959;line-height:1.6;">Your optional Productivity &amp; Execution Bundle is included in your order. Its access link will be added once the bundle link is configured.</p>' if include_bump else ''}
             <p style="margin:0;font-size:12px;color:#999;line-height:1.6;">
               Need help or did not receive your product? Contact {SUPPORT_EMAIL}.
             </p>

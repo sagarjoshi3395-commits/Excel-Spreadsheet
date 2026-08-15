@@ -250,8 +250,8 @@ def test_resend_email_bump_logic():
         # Check delivery_email_html function accepts include_bump parameter
         email_func_check = "def delivery_email_html(include_bump: bool = False)" in content
         
-        # Check email includes bump product URL conditionally
-        bump_conditional_check = 'if BUMP_PRODUCT_URL' in content and 'if include_bump' in content
+        # Check email includes bump product URL conditionally (must check include_bump AND BUMP_PRODUCT_URL together)
+        bump_conditional_check = ('if include_bump and BUMP_PRODUCT_URL' in content) or ('if BUMP_PRODUCT_URL and include_bump' in content)
         
         # Check BUMP_PRODUCT_URL is loaded from environment
         bump_url_env_check = 'BUMP_PRODUCT_URL = os.environ.get("BUMP_PRODUCT_URL", "")' in content
@@ -275,35 +275,39 @@ def test_resend_email_bump_logic():
         print_test("Resend Email Bump Logic", False, f"Error: {str(e)}")
         return False
 
-def test_bump_product_url_blank():
-    """Test 11: Verify BUMP_PRODUCT_URL is intentionally blank in .env"""
+def test_bump_product_url_configured():
+    """Test 11: Verify BUMP_PRODUCT_URL is configured with supplied Google Drive link"""
     try:
         with open("/app/backend/.env", "r") as f:
             content = f.read()
         
-        # Check BUMP_PRODUCT_URL exists and is blank
+        # Check BUMP_PRODUCT_URL exists and contains the supplied Google Drive link
         bump_url_line_found = False
-        bump_url_blank = False
+        bump_url_configured = False
+        bump_url_value = ""
         
         for line in content.split("\n"):
             if line.startswith("BUMP_PRODUCT_URL"):
                 bump_url_line_found = True
-                # Check if it's blank (either BUMP_PRODUCT_URL= or BUMP_PRODUCT_URL="")
-                if line.strip() in ["BUMP_PRODUCT_URL=", 'BUMP_PRODUCT_URL=""', "BUMP_PRODUCT_URL=''"]:
-                    bump_url_blank = True
+                # Extract the URL value
+                if "=" in line:
+                    bump_url_value = line.split("=", 1)[1].strip()
+                    # Check if it's a valid Google Drive link
+                    if "drive.google.com" in bump_url_value and len(bump_url_value) > 10:
+                        bump_url_configured = True
                 break
         
-        passed = bump_url_line_found and bump_url_blank
+        passed = bump_url_line_found and bump_url_configured
         
         if passed:
-            details = "BUMP_PRODUCT_URL is configured but intentionally blank (user will provide bundle link later)"
+            details = f"BUMP_PRODUCT_URL is configured with Google Drive link: {bump_url_value[:60]}..."
         else:
-            details = f"Line found: {bump_url_line_found}, Blank: {bump_url_blank}"
+            details = f"Line found: {bump_url_line_found}, Configured: {bump_url_configured}, Value: {bump_url_value}"
         
-        print_test("BUMP_PRODUCT_URL Intentionally Blank", passed, details)
+        print_test("BUMP_PRODUCT_URL Configured with Google Drive Link", passed, details)
         return passed
     except Exception as e:
-        print_test("BUMP_PRODUCT_URL Intentionally Blank", False, f"Error: {str(e)}")
+        print_test("BUMP_PRODUCT_URL Configured with Google Drive Link", False, f"Error: {str(e)}")
         return False
 
 def test_create_order_with_bump_flag():
@@ -350,6 +354,54 @@ def test_create_order_with_bump_flag():
         return passed
     except Exception as e:
         print_test("Create Order with include_bump Flag", False, f"Error: {str(e)}")
+        return False
+
+def test_email_template_bump_conditional():
+    """Test 13: CRITICAL - Verify email template conditionally includes bump link"""
+    try:
+        # Import the delivery_email_html function from server.py
+        import sys
+        sys.path.insert(0, '/app/backend')
+        from server import delivery_email_html, BUMP_PRODUCT_URL
+        
+        # Get the Google Drive link from .env
+        expected_bump_url = BUMP_PRODUCT_URL
+        
+        if not expected_bump_url or "drive.google.com" not in expected_bump_url:
+            print_test("Email Template Bump Conditional", False, "BUMP_PRODUCT_URL not configured properly")
+            return False
+        
+        # Test 1: include_bump=False should NOT contain bump link
+        email_no_bump = delivery_email_html(include_bump=False)
+        bump_link_in_no_bump = expected_bump_url in email_no_bump
+        bump_text_in_no_bump = "Productivity & Execution Bundle" in email_no_bump or "Productivity &amp; Execution Bundle" in email_no_bump
+        
+        # Test 2: include_bump=True should contain bump link
+        email_with_bump = delivery_email_html(include_bump=True)
+        bump_link_in_with_bump = expected_bump_url in email_with_bump
+        bump_text_in_with_bump = "Productivity & Execution Bundle" in email_with_bump or "Productivity &amp; Execution Bundle" in email_with_bump
+        
+        # CRITICAL: include_bump=False must NOT have bump link
+        no_bump_correct = not bump_link_in_no_bump
+        
+        # CRITICAL: include_bump=True must have bump link
+        with_bump_correct = bump_link_in_with_bump
+        
+        passed = no_bump_correct and with_bump_correct
+        
+        details = f"include_bump=False: Bump link present={bump_link_in_no_bump} (should be False), "
+        details += f"include_bump=True: Bump link present={bump_link_in_with_bump} (should be True)"
+        
+        if not no_bump_correct:
+            details += " | 🚨 CRITICAL BUG: Customers without bump will receive bump link for FREE!"
+        
+        if not with_bump_correct:
+            details += " | 🚨 CRITICAL BUG: Customers with bump will NOT receive bump link!"
+        
+        print_test("Email Template Bump Conditional (CRITICAL)", passed, details)
+        return passed
+    except Exception as e:
+        print_test("Email Template Bump Conditional (CRITICAL)", False, f"Error: {str(e)}")
         return False
 
 def main():
@@ -399,11 +451,14 @@ def main():
     # Test 10: Resend email bump logic
     results.append(("Resend Email Bump Logic", test_resend_email_bump_logic()))
     
-    # Test 11: BUMP_PRODUCT_URL is blank
-    results.append(("BUMP_PRODUCT_URL Blank", test_bump_product_url_blank()))
+    # Test 11: BUMP_PRODUCT_URL is configured
+    results.append(("BUMP_PRODUCT_URL Configured", test_bump_product_url_configured()))
     
     # Test 12: Create order with bump flag
     results.append(("Create Order with Bump Flag", test_create_order_with_bump_flag()))
+    
+    # Test 13: CRITICAL - Email template bump conditional
+    results.append(("Email Template Bump Conditional (CRITICAL)", test_email_template_bump_conditional()))
     
     # Summary
     print("\n" + "=" * 80)
@@ -423,7 +478,7 @@ def main():
     
     # Additional notes
     print("\n📋 IMPORTANT NOTES:")
-    print("   • BUMP_PRODUCT_URL is intentionally blank - user will provide bundle link later")
+    print("   • BUMP_PRODUCT_URL is configured with supplied Google Drive link")
     print("   • include_bump=false → ₹290 (29,000 paise)")
     print("   • include_bump=true → ₹489 (48,900 paise = 29,000 + 19,900)")
     print("   • Bump selection is persisted in order records")

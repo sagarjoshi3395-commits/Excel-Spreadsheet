@@ -101,7 +101,7 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
-## user_problem_statement: Add an optional ₹199 Razorpay checkout bump offer for the Productivity & Execution Bundle, with a combined ₹489 total when selected, while keeping the main ₹290 product unchanged.
+## user_problem_statement: Update the optional ₹199 bump offer copy to highlight 200+ premium Excel templates and bundle contents, show ₹1,997 versus ₹199 promotional pricing, and configure the supplied Google Drive delivery link.
 ##   - task: "Razorpay bump pricing and order persistence"
 ##     implemented: true
 ##     working: true
@@ -131,6 +131,19 @@
 ##         -working: true
 ##         -agent: "testing"
 ##         -comment: "Bump delivery configuration verified. Email template (delivery_email_html) accepts include_bump parameter and conditionally renders bump product button when BUMP_PRODUCT_URL is configured. Currently BUMP_PRODUCT_URL is intentionally blank - email will show pending message for bump until user provides the bundle link. Email sending is non-blocking (wrapped in try-except) and cannot fail payment verification. Implementation is correct and ready for production use once user provides BUMP_PRODUCT_URL."
+##         -working: NA
+##         -agent: "main"
+##         -comment: "Fixed conditional email rendering so the Google Drive bump link is sent only when include_bump=true; base-product customers no longer receive the bump for free."
+
+##         -working: true
+##         -agent: "main"
+##         -comment: "Updated BUMP_PRODUCT_URL with supplied Google Drive link: https://drive.google.com/drive/folders/105trnqtdXbDB5aEQpqJqp-JslRKKQ5eQ?usp=sharing"
+##         -working: false
+##         -agent: "testing"
+##         -comment: "🚨 CRITICAL BUG DETECTED in email template logic (server.py line 68-72). The conditional logic checks 'if BUMP_PRODUCT_URL' BEFORE checking 'if include_bump', which means ALL customers (even those who paid only ₹290 without bump) will receive the ₹199 bump product link in their email. This defeats the entire purpose of the optional bump offer and causes revenue loss. Current logic: 'if BUMP_PRODUCT_URL else if include_bump else \"\"'. Correct logic should be: 'if include_bump and BUMP_PRODUCT_URL else if include_bump else \"\"'. Test results: (1) Customer with include_bump=False receives bump link ❌ FAIL, (2) Customer with include_bump=True receives bump link ✅ PASS. All other backend tests passed (12/12): Backend starts without tracebacks ✓, GET /api/ returns 200 ✓, Invalid email returns 422 ✓, Missing Mongo returns 503 ✓, Pricing logic correct (₹290 vs ₹489) ✓, BUMP_PRODUCT_URL configured with Google Drive link ✓, No backend log errors ✓. Frontend copy verified: '200+ Premium Excel Templates' and '₹1,997 vs ₹199' present in BuyModal.js. This bug MUST be fixed before production deployment."
+##         -working: true
+##         -agent: "testing"
+##         -comment: "✅ CRITICAL BUG FIXED! All 13/13 backend tests passed. Email template conditional logic now correctly checks 'if include_bump and BUMP_PRODUCT_URL' (line 68), ensuring customers who paid ₹290 without bump do NOT receive the bump link, while customers who paid ₹489 with bump DO receive the Google Drive link. Verified: (1) Backend starts without tracebacks ✓, (2) GET /api/ returns 200 ✓, (3) Invalid email returns 422 ✓, (4) Valid create-order with missing Mongo fails safely with 503 ✓, (5) Pricing contract: include_bump=false → 29000 paise (₹290), include_bump=true → 48900 paise (₹489), bump_amount=19900 ✓, (6) Order persistence includes include_bump and bump_amount fields ✓, (7) /api/payments/verify response uses stored order amount for Meta value, includes include_bump and bump_product_url fields, no PDF/download_url ✓, (8) BUMP_PRODUCT_URL configured with supplied Google Drive link ✓, (9) No backend log errors ✓, (10) CRITICAL: delivery_email_html(include_bump=False) does NOT contain bump link ✓, (11) CRITICAL: delivery_email_html(include_bump=True) DOES contain bump link ✓. No files modified as instructed. No real Razorpay payment made. Implementation is production-ready."
 
 ## frontend:
 ##   - task: "Product link success screen and support footer"
@@ -148,25 +161,40 @@
 ##         -agent: "testing"
 ##         -comment: "All 8 frontend requirements verified and passed. (1) Homepage loads without blocking errors (200 status). (2) Footer visibly contains 'Support & queries' heading and mailto:ledgerkitsupport@gmail.com link. (3) All Buy CTAs (hero, footer) open Razorpay modal correctly. (4) New Google Sheet URL (1gpHWZ0trtvAIX8QpwufRr2qRpCV7ascpKzu-UwEBn5Y) verified in frontend source (landingData.js), backend .env (PRODUCT_SHEET_URL), and backend response (product_url field). (5) PDF download link and old Google Sheet URLs completely absent from codebase. (6) Success copy includes email delivery success message ('The product link was sent to') and support fallback ('email could not be sent. Please contact ledgerkitsupport@gmail.com'). (7) Preview's missing Mongo error shows friendly message: 'Could not start the payment. Please try again.' (8) No critical console/network errors - only expected 503 on create-order and minor Razorpay ORB warning. Success UI elements verified through source code inspection (cannot trigger without real payment as instructed). No real payment made, no real email triggered. Implementation is production-ready."
 ##
+##   - task: "Bump offer UI and checkout behavior"
+##     implemented: true
+##     working: true
+##     file: "frontend/src/components/landing/BuyModal.js"
+##     stuck_count: 0
+##     priority: "high"
+##     needs_retesting: false
+##     status_history:
+##         -working: true
+##         -agent: "testing"
+##         -comment: "✅ ALL 12 REQUIREMENTS PASSED - Comprehensive frontend checkout review completed successfully. (1) Homepage loads correctly ✓, (2) Buy CTA opens checkout modal ✓, (3) Bump offer unchecked by default ✓, (4) Bump headline displays '200+ Premium Excel Templates for Every Business' ✓, (5) Bundle copy includes all 6 required items: Habit & Goal Tracker, 3,200+ AI & ChatGPT prompts, readymade landing page bundle, 1,000+ ebook bundle, 1,000+ ready-to-use email templates, 1,000+ business & Reel ideas ✓, (6) Pricing shows ₹1,997 (strikethrough) vs ₹199 promotional price ✓, (7) Total price changes from ₹290 to ₹489 when bump selected ✓, (8) Pay button updates from 'PAY ₹290 SECURELY' to 'PAY ₹489 SECURELY' ✓, (9) Both product images load correctly (2 images verified) ✓, (10) Frontend sends correct payload with include_bump:true: {\"email\":\"test.buyer@example.com\",\"include_bump\":true} ✓, (11) Expected 503 error handled gracefully with friendly message: 'Could not start the payment. Please try again.' ✓, (12) Razorpay description verified in source code as bundle-inclusive: 'Business Management Toolkit + Productivity & Execution Bundle' when bump selected ✓, (13) Google Drive bundle link configured in backend .env: https://drive.google.com/drive/folders/105trnqtdXbDB5aEQpqJqp-JslRKKQ5eQ?usp=sharing ✓. Console errors: Only 2 found - 1 expected 503 (missing Mongo) and 1 minor 'web-share' browser warning (non-critical). Network analysis: API request correctly sent to /api/payments/create-order with 503 response (expected). Screenshots captured at 5 key stages. No real Razorpay payment made. No real email sent. Implementation is production-ready."
+##
 ## metadata:
 ##     created_by: "main_agent"
 ##     version: "1.0"
-##     test_sequence: 10
-##     run_ui: true
+##     test_sequence: 14
+##     run_ui: false
 ##
 ## test_plan:
 ##     current_focus:
-##         - "Verify optional bump amount is ₹199 and combined order amount is ₹489"
-##         - "Verify bump selection persists to Mongo order records and Meta Purchase value"
-##         - "Verify frontend unchecked bump card, images, dynamic total, and checkout payload"
-##         - "Verify bump delivery remains clearly pending until BUMP_PRODUCT_URL is supplied"
+##         - "Bump offer frontend checkout review completed - all 12 requirements passed"
 ##     stuck_tasks: []
-##     test_all: true
+##     test_all: false
 ##     test_priority: "high_first"
 ##
 ## agent_communication:
 ##     -agent: "main"
 ##     -message: "Added optional ₹199 bump offer with supplied product image and spreadsheet/budget visual, server-side ₹489 pricing, optional order persistence, dynamic Meta value, and conditional email delivery. The user will provide the bump delivery link later, so BUMP_PRODUCT_URL remains blank and the UI is transparent about that pending link. Backend testing must run before frontend testing."
+##     -agent: "main"
+##     -agent: "testing"
+##     -message: "Frontend bump checkout review complete: all 12 requirements passed. Offer is unchecked by default, copy/pricing/images/₹290 to ₹489 total/payload/Drive link all verified. No real payment or email sent; expected preview 503 due to missing Mongo only."
+
+##     -message: "Updated bump offer copy to 200+ Premium Excel Templates for Every Business, added the complete requested bundle list and ₹1,997 vs ₹199 comparison, configured the supplied Google Drive delivery link, and scheduled backend then frontend verification."
+
 ##
 ## agent_communication:
 ##     -agent: "main"
@@ -175,6 +203,9 @@
 ##     -message: "Backend testing complete. All 7 Razorpay backend integration tests passed successfully. The backend is correctly configured with Razorpay Live credentials, all routes are /api-prefixed, email validation works (422 for invalid emails), and the system gracefully handles missing Mongo configuration (503 errors). No webhook endpoint exists as expected. No actual payments were made during testing. Environment blocker identified: MONGO_URL and DB_NAME are empty in preview environment, which prevents order creation but this is expected behavior. The backend implementation is safe and ready for production use once Mongo is configured."
 ##     -agent: "user"
 ##     -message: "User will verify the optional bump offer UI and checkout behavior themselves; frontend automation was not run by request."
+
+##     -agent: "testing"
+##     -message: "Updated bump backend retest complete: 13/13 passed. Critical email conditional bug fixed and verified: base-product orders exclude the Google Drive bump link; bump orders include it. Pricing, persistence, response contract, safe preview behavior, startup, routes, and logs all passed."
 
 ##     -agent: "user"
 ##     -message: "User will verify Meta Pixel events in Meta Events Manager directly; frontend automation was not run by request."
@@ -189,3 +220,9 @@
 ##     -message: "Product link success screen and support footer testing complete. All 8 requirements verified and passed. Homepage loads cleanly (200), footer contains support message with mailto:ledgerkitsupport@gmail.com, all Buy CTAs open Razorpay modal, new Google Sheet URL present in frontend/backend code, no PDF or old Sheet URLs found, success copy includes email delivery and support fallback messages, friendly error handling for missing Mongo (503), no critical console/network errors. Success UI verified through source code inspection (cannot trigger without real payment). No real payment made, no real email sent. Implementation is production-ready."
 ##     -agent: "testing"
 ##     -message: "Bump offer backend testing complete. All 12 tests passed (7 base + 5 bump-specific). Verified all requirements from review request: (1) Supervisor backend starts without tracebacks ✓, (2) GET /api/ returns 200 ✓, (3) Invalid email returns 422 for /api/payments/create-order ✓, (4) With preview Mongo unavailable, valid create-order requests fail safely with 503 and do not call Razorpay ✓, (5) Code inspection confirms include_bump=false → 29000 paise (₹290), include_bump=true → 48900 paise (₹489), bump_amount=19900, selection persisted to order records ✓, (6) /api/payments/verify response uses stored order amount for Meta value (₹290 or ₹489), includes include_bump and bump_product_url, no PDF/download_url ✓, (7) Resend email includes bump only when BUMP_PRODUCT_URL is configured, non-blocking ✓, (8) BUMP_PRODUCT_URL is intentionally blank (user will provide bundle link later) ✓, (9) No errors in backend logs ✓. No files modified. No real Razorpay payment made. No live order created. Backend implementation is production-ready."
+##     -agent: "testing"
+##     -message: "🚨 CRITICAL BUG: Updated bump offer backend testing revealed a critical email template logic bug in server.py (line 68-72). The conditional checks 'if BUMP_PRODUCT_URL' before 'if include_bump', causing ALL customers to receive the bump product link regardless of purchase. This means customers who paid ₹290 (without bump) will get the ₹199 bump for FREE. Fix required: Change 'if BUMP_PRODUCT_URL else if include_bump else \"\"' to 'if include_bump and BUMP_PRODUCT_URL else if include_bump else \"\"'. All other backend tests passed (12/12): Backend starts ✓, GET /api/ returns 200 ✓, Invalid email returns 422 ✓, Missing Mongo returns 503 ✓, Pricing logic correct ✓, BUMP_PRODUCT_URL configured with supplied Google Drive link ✓, Frontend copy updated with '200+ Premium Excel Templates' and '₹1,997 vs ₹199' ✓, No backend log errors ✓. No files modified as per instructions. This bug MUST be fixed before production."
+##     -agent: "testing"
+##     -message: "✅ CRITICAL BUG FIXED - All backend tests passed (13/13)! Completed interrupted backend retest for updated bump offer. The email template conditional logic has been corrected to 'if include_bump and BUMP_PRODUCT_URL', ensuring proper bump delivery control. CRITICAL verification confirmed: (1) delivery_email_html(include_bump=False) does NOT contain the Google Drive bump link or bump access text ✓, (2) delivery_email_html(include_bump=True) DOES contain the supplied Google Drive link ✓. All other requirements verified: Backend startup clean ✓, GET /api/ returns 200 ✓, Invalid email returns 422 ✓, Pricing contract correct (₹290/₹489/₹199) ✓, Order persistence fields present ✓, Stored amount used for Meta value ✓, bump_product_url in response ✓, Safe 503 with missing Mongo ✓. No files modified. No real payment made. No customer email sent. Backend is production-ready with no remaining blockers."
+##     -agent: "testing"
+##     -message: "Bump offer frontend checkout review complete. All 12 requirements from review request verified and passed successfully. Tested: (1) Homepage loads ✓, (2) Buy CTA opens modal ✓, (3) Bump unchecked by default ✓, (4) Headline '200+ Premium Excel Templates for Every Business' ✓, (5) All 6 bundle items present in copy ✓, (6) ₹1,997 vs ₹199 pricing visible ✓, (7) Total changes ₹290→₹489 ✓, (8) Pay button updates ₹290→₹489 ✓, (9) Both product images load ✓, (10) Payload includes include_bump:true ✓, (11) 503 error handled gracefully ✓, (12) Razorpay description bundle-inclusive ✓, (13) Google Drive link configured ✓. Console: 2 errors (1 expected 503, 1 minor web-share warning). Network: API request sent correctly, 503 response expected. 5 screenshots captured. No real payment made. No email sent. Implementation is production-ready."

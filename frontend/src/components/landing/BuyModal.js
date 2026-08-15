@@ -173,15 +173,15 @@ export default function BuyModal() {
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center justify-between gap-3">
                           <span className="font-mono text-[10px] uppercase tracking-[0.12em] bg-[#d4ff11] border border-[#0f0f0f] px-1.5 py-0.5">Limited-time offer</span>
-                          <span className="font-display font-black text-xl shrink-0">+₹{BUMP_PRICE}</span>
+                          <span className="font-display font-black text-xl shrink-0"><span className="line-through text-[#595959] text-sm mr-1">₹1,997</span>₹{BUMP_PRICE}</span>
                         </div>
-                        <p className="font-display font-black text-lg leading-tight mt-2">Add Productivity & Execution Bundle</p>
-                        <p className="font-mono text-[10px] uppercase tracking-[0.08em] text-[#595959] mt-1">One payment · delivered with your toolkit</p>
+                        <p className="font-display font-black text-lg leading-tight mt-2">Add 200+ Premium Excel Templates for Every Business</p>
+                        <p className="font-mono text-[10px] uppercase tracking-[0.08em] text-[#595959] mt-1">Productivity & Execution Bundle · add to order for ₹199</p>
                         <div className="grid grid-cols-2 gap-2 mt-3">
                           <img src={BUMP_PRODUCT_IMAGE} alt="Productivity and Execution Bundle" className="w-full h-20 object-cover border border-[#0f0f0f]" />
                           <img src={EXCEL_BUNDLE_IMAGE} alt="Excel templates and budget planner" className="w-full h-20 object-cover border border-[#0f0f0f]" />
                         </div>
-                        <p className="text-xs text-[#595959] leading-relaxed mt-3">Lead tracker, bookkeeping & habit tracker, 3,200+ AI prompts, 1,000+ email templates, 1,600+ business and Reel ideas, plus 1,000+ Excel templates and a budget planner.</p>
+                        <p className="text-xs text-[#595959] leading-relaxed mt-3">200+ premium Excel templates for every business, Habit & Goal Tracker, 3,200+ AI & ChatGPT prompts, readymade landing page bundle, 1,000+ ebook bundle, 1,000+ ready-to-use email templates, and 1,000+ business & Reel ideas.</p>
                       </div>
                     </div>
                   </label>
