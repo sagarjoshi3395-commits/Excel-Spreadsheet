@@ -158,12 +158,12 @@ export default function BuyModal() {
                 <form onSubmit={submit} data-testid="buy-form">
                   <p className="font-display font-black text-2xl sm:text-3xl leading-tight tracking-tight">Business Toolkit</p>
                   <div className="flex items-end gap-2 mt-1 mb-3">
-                    <span className="font-display font-black text-3xl sm:text-4xl">₹{includeBump ? "489" : PRICE}</span>
+                    <span className="font-display font-black text-3xl sm:text-4xl">₹{includeBump ? "439" : PRICE}</span>
                     <span className="font-mono text-[10px] text-[#595959] mb-1.5">one-time total</span>
                   </div>
                   <div className="mb-3 flex items-center justify-between gap-2 border border-[#0f0f0f] bg-[#d4ff11] px-2.5 py-1.5">
                     <span className="font-mono text-[8px] sm:text-[10px] uppercase tracking-[0.08em] font-semibold">Limited-time bundle deal</span>
-                    <span className="font-mono text-[8px] sm:text-[10px] uppercase tracking-[0.04em]">Save ₹1,798</span>
+                    <span className="font-mono text-[8px] sm:text-[10px] uppercase tracking-[0.04em]">Save ₹1,848</span>
                   </div>
                   <div className="border border-[#0f0f0f] bg-white p-2.5 sm:p-3 mb-3" data-testid="bump-offer">
                     <div className="flex items-center gap-2.5">
@@ -196,7 +196,7 @@ export default function BuyModal() {
                         data-testid="bump-add-to-cart"
                         className={`flex-1 border border-[#0f0f0f] py-2 font-mono text-[10px] uppercase tracking-[0.08em] font-semibold transition-colors ${includeBump ? "bg-[#0f0f0f] text-[#f6f5f2]" : "bg-[#d4ff11] text-[#0f0f0f] hover:bg-[#c2eb0f]"}`}
                       >
-                        {includeBump ? "Added · ₹199" : "Add to cart · ₹199"}
+                        {includeBump ? "Added · ₹" : "Add to cart · ₹"}{BUMP_PRICE}
                       </button>
                     </div>
                   </div>
@@ -215,7 +215,7 @@ export default function BuyModal() {
                     data-testid="buy-submit"
                     className="mt-3 w-full bg-[#d4ff11] text-[#0f0f0f] border border-[#0f0f0f] py-3 font-mono text-xs sm:text-sm uppercase tracking-[0.08em] font-semibold hover:bg-[#c2eb0f] transition-colors"
                   >
-                    Pay ₹{includeBump ? "489" : PRICE} securely
+                    Pay ₹{includeBump ? "439" : PRICE} securely
                   </button>
                   <p className="mt-1.5 flex items-center justify-center gap-1.5 font-mono text-[9px] uppercase tracking-[0.08em] text-[#595959]">
                     <ShieldCheck className="w-3 h-3" /> Payments secured by Razorpay

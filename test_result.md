@@ -101,11 +101,32 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
-## user_problem_statement: Fix the production mobile Razorpay checkout layout where the bump price overflows and the Pay button is below the visible viewport.
+## user_problem_statement: Fix preview checkout total showing ₹489 after selecting the new ₹149 bump; expected total is ₹439.
 ##   - task: "Razorpay bump pricing and order persistence"
 ##     implemented: true
 ##     working: true
 ##     file: "backend/server.py"
+##   - task: "₹149 bump price"
+##     implemented: true
+##     working: true
+##     file: "frontend/src/components/landing/BuyModal.js"
+##     stuck_count: 0
+##     priority: "high"
+##     needs_retesting: false
+##     status_history:
+##         -working: false
+##         -agent: "user"
+##         -comment: "Preview bug: after selecting Add to cart for the ₹149 bump, the displayed total and Pay button still show ₹489. Expected combined total is ₹439."
+##         -working: true
+##         -agent: "main"
+##         -comment: "Changed the server-authoritative bump amount to 14900 paise and updated frontend pricing/savings labels to ₹149 and ₹1,848, with no checkout flow changes."
+##         -working: true
+##         -agent: "testing"
+##         -comment: "✅ ALL 13 BACKEND TESTS PASSED - ₹149 bump price change verified successfully. Confirmed: (1) Backend starts cleanly without tracebacks ✓, (2) GET /api/ returns 200 ✓, (3) Invalid create-order email returns 422 ✓, (4) Preview missing Mongo causes valid requests to return safe 503 (no Razorpay order created) ✓, (5) Code/API contract inspection confirms: include_bump=false → 29000 paise (₹290) ✓, include_bump=true → 43900 paise (₹439 = ₹290 + ₹149) ✓, bump_amount is 14900 paise ✓, order persistence includes include_bump and bump_amount fields ✓, (6) Verified payment Meta value uses stored order amount (line 259: float(order_record.get('amount')) / 100) ✓, (7) Delivery link/email logic remains unchanged: email template checks 'if include_bump and BUMP_PRODUCT_URL' (line 68) ✓, BUMP_PRODUCT_URL configured with Google Drive link ✓, email sending is non-blocking (wrapped in try-except) ✓, (8) No backend log errors detected ✓. CRITICAL email template test passed: include_bump=False does NOT contain bump link, include_bump=True DOES contain bump link. No files modified as instructed. No real Razorpay payment made. Implementation is production-ready."
+##         -working: true
+##         -agent: "testing"
+##         -comment: "✅ ALL 10 FRONTEND REQUIREMENTS PASSED - ₹149 bump price UI verification complete on mobile (390x844) and desktop (1920x1080). Verified: (1) Buy CTA opens checkout modal ✓, (2) Initial bump-off state shows base total and Pay button ₹290 ✓, (3) Bump price displays ₹149 ✓, (4) After clicking bump checkbox/Add to cart, displayed total changes to ₹439 (NOT ₹489) ✓, (5) Pay button changes to 'PAY ₹439 SECURELY' ✓, (6) Add button shows ₹149 price ('Add to cart · ₹149' / 'Added · ₹149') ✓, (7) No stale ₹489/₹199 prices remain in rendered checkout UI ✓, (8) Base state can toggle back to ₹290 (checkbox unchecks, pay button reverts) ✓, (9) No layout overflow on mobile or desktop ✓, (10) No console/network errors besides expected CDN request (non-critical) ✓. Screenshots captured at 7 critical stages showing correct pricing behavior. Checkbox toggles correctly, button state changes from 'Add to cart' to 'Added', total and pay CTA update synchronously. No Razorpay checkout completed. No payment charged. No email sent. User-reported bug (₹489 showing instead of ₹439) is FULLY RESOLVED. Implementation is production-ready."
+
 ##     stuck_count: 0
 ##     priority: "high"
 ##     needs_retesting: false
@@ -219,17 +240,19 @@
 ## metadata:
 ##     created_by: "main_agent"
 ##     version: "1.0"
-##     test_sequence: 18
+##     test_sequence: 22
 ##     run_ui: false
 ##
 ## test_plan:
-##     current_focus:
-##         - "Compact mobile checkout refinement verified - no further testing needed"
+##     current_focus: []
 ##     stuck_tasks: []
 ##     test_all: false
 ##     test_priority: "high_first"
 ##
 ## agent_communication:
+##     -agent: "main"
+##     -message: "User reported preview still showed ₹489 after selecting the new ₹149 bump. Fixed stale frontend hardcoded totals so selected total and Pay CTA now use ₹439; backend already uses 43900 paise. Frontend verification required."
+
 ##     -agent: "main"
 ##     -message: "User reported the production mobile modal overflowed: ₹199 price clipped outside the card and Pay button below the viewport. Preview fix adds bounded internal scrolling, responsive padding, stacked price/content, and mobile-safe controls. Frontend testing required before completion."
 
@@ -278,4 +301,8 @@
 ##     -message: "Mobile checkout layout bug fix verification complete. ALL 10 REQUIREMENTS PASSED at 390x844 mobile viewport and 1920x1080 desktop regression. Verified: (1) Buy CTA opens modal ✓, (2) Modal stays within viewport with internal scrolling (max-h-[calc(100dvh-1rem)], overflow-y-auto) ✓, (3) ₹199 and ₹1,997 fully inside card with no clipping ✓, (4) Only one image ✓, (5) Add to cart toggles correctly ✓, (6) Total shows ₹290→₹489 ✓, (7) Email/pay button reachable by scrolling ✓, (8) No horizontal overflow ✓, (9) Desktop usable ✓, (10) No console errors ✓. Production-reported bug (₹199 clipping, Pay button below viewport) is fully resolved. 5 screenshots captured. No payment made. Implementation is production-ready."
 ##     -agent: "testing"
 ##     -message: "Compact mobile checkout refinement verification complete. ALL 12 REQUIREMENTS PASSED at 390x844 mobile and 1920x1080 desktop. Verified: (1) Buy CTA opens modal ✓, (2) Full form fits in viewport WITHOUT scrolling (modal 522.8px < viewport 844px, overflow-hidden, no overflow-y auto/scroll) ✓, (3) Bump offer compact, content stays inside card ✓, (4) Exactly one bump image ✓, (5) ₹199 and ₹1,997 visible inside card ✓, (6) Checkbox beside Add to cart button, unchecked by default (8px gap) ✓, (7) Checkbox toggles bump and button state (Add to cart · ₹199 → Added · ₹199) ✓, (8) Total and Pay CTA switch ₹290→₹489 and remain visible without scrolling ✓, (9) No horizontal overflow ✓, (10) Desktop regression usable, all elements visible and functional ✓, (11) No console/network errors (0 errors, 0 warnings) ✓, (12) No real payment completed ✓. Modal now uses overflow-hidden instead of overflow-y-auto, entire form fits in single viewport without requiring any scrolling. 5 screenshots captured. Implementation is production-ready."
+##     -agent: "testing"
+##     -message: "₹149 bump price backend testing complete. ALL 13/13 TESTS PASSED. Verified all requirements from review request: (1) Backend starts cleanly without tracebacks ✓, (2) GET /api/ returns 200 ✓, (3) Invalid create-order email returns 422 ✓, (4) Preview missing Mongo causes valid requests to return safe 503 without calling Razorpay ✓, (5) Code/API contract confirms include_bump=false → 29000 paise (₹290), include_bump=true → 43900 paise (₹439 = ₹290 + ₹149), bump_amount is 14900 paise, order persistence uses new values ✓, (6) Verified payment Meta value uses stored order amount ✓, (7) Delivery link/email logic remains unchanged (conditional check 'if include_bump and BUMP_PRODUCT_URL') ✓, (8) No backend log errors ✓. CRITICAL email template test passed: customers without bump do NOT receive bump link, customers with bump DO receive Google Drive link. No files modified. No real payment made. Backend implementation is production-ready."
+##     -agent: "testing"
+##     -message: "₹149 bump price FRONTEND testing complete. ALL 10/10 REQUIREMENTS PASSED on mobile (390x844) and desktop (1920x1080). User-reported bug FULLY RESOLVED: checkout now correctly shows ₹439 (not ₹489) when ₹149 bump is selected. Verified: Buy CTA opens modal ✓, Initial state ₹290 ✓, Bump price ₹149 ✓, Total changes to ₹439 after selection ✓, Pay button ₹439 ✓, Add button shows ₹149 ✓, No stale ₹489/₹199 prices ✓, Toggle back to ₹290 works ✓, No layout overflow ✓, No critical errors ✓. 7 screenshots captured. No payment made. Implementation is production-ready."
 

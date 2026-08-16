@@ -26,5 +26,5 @@ export const TABS = [
 
 export const SHEET_URL = "https://docs.google.com/spreadsheets/d/1gpHWZ0trtvAIX8QpwufRr2qRpCV7ascpKzu-UwEBn5Y/edit?usp=sharing";
 export const BUMP_PRODUCT_IMAGE = "https://customer-assets-agu9un31.emergentagent.net/job_gh-sync-14/artifacts/tjnb4wzy_bump-productivity-JBwN7a7T-2026-14-03-10-43-38%20%281%29.jpeg";
-export const BUMP_PRICE = "199";
+export const BUMP_PRICE = "149";
 export const PRICE = "290";

@@ -176,8 +176,8 @@ def test_bump_pricing_code_inspection():
         # Check for PRICE_PAISE = 29000
         price_check = "PRICE_PAISE = 29000" in content
         
-        # Check for BUMP_PRICE_PAISE = 19900
-        bump_price_check = "BUMP_PRICE_PAISE = 19900" in content
+        # Check for BUMP_PRICE_PAISE = 14900
+        bump_price_check = "BUMP_PRICE_PAISE = 14900" in content
         
         # Check for amount calculation: PRICE_PAISE + (BUMP_PRICE_PAISE if req.include_bump else 0)
         amount_calc_check = "PRICE_PAISE + (BUMP_PRICE_PAISE if req.include_bump else 0)" in content
@@ -191,12 +191,12 @@ def test_bump_pricing_code_inspection():
         all_checks = [price_check, bump_price_check, amount_calc_check, include_bump_field_check, bump_persist_check]
         passed = all(all_checks)
         
-        details = f"PRICE_PAISE=29000: {price_check}, BUMP_PRICE_PAISE=19900: {bump_price_check}, "
+        details = f"PRICE_PAISE=29000: {price_check}, BUMP_PRICE_PAISE=14900: {bump_price_check}, "
         details += f"Amount calc: {amount_calc_check}, include_bump field: {include_bump_field_check}, "
         details += f"Persistence: {bump_persist_check}"
         
         if passed:
-            details += " | ✓ include_bump=false → ₹290 (29000 paise), include_bump=true → ₹489 (48900 paise)"
+            details += " | ✓ include_bump=false → ₹290 (29000 paise), include_bump=true → ₹439 (43900 paise)"
         
         print_test("Bump Pricing Code Inspection", passed, details)
         return passed
@@ -345,8 +345,8 @@ def test_create_order_with_bump_flag():
         
         if response_with_bump.status_code == 200:
             data = response_with_bump.json()
-            details += f" | With bump amount: ₹{data.get('amount', 0)/100} (expected ₹489)"
-            if data.get('amount') != 48900:
+            details += f" | With bump amount: ₹{data.get('amount', 0)/100} (expected ₹439)"
+            if data.get('amount') != 43900:
                 passed = False
                 details += " ❌ INCORRECT AMOUNT"
         
@@ -411,7 +411,7 @@ def main():
     print("=" * 80)
     print(f"Backend URL: {BACKEND_URL}")
     print("⚠️  IMPORTANT: Using LIVE Razorpay credentials - NO actual payments will be made")
-    print("⚠️  Testing bump offer: ₹290 base + ₹199 optional bump = ₹489 total")
+    print("⚠️  Testing bump offer: ₹290 base + ₹149 optional bump = ₹439 total")
     print("=" * 80)
     
     results = []
@@ -480,9 +480,9 @@ def main():
     print("\n📋 IMPORTANT NOTES:")
     print("   • BUMP_PRODUCT_URL is configured with supplied Google Drive link")
     print("   • include_bump=false → ₹290 (29,000 paise)")
-    print("   • include_bump=true → ₹489 (48,900 paise = 29,000 + 19,900)")
+    print("   • include_bump=true → ₹439 (43,900 paise = 29,000 + 14,900)")
     print("   • Bump selection is persisted in order records")
-    print("   • Meta Purchase value uses stored order amount (₹290 or ₹489)")
+    print("   • Meta Purchase value uses stored order amount (₹290 or ₹439)")
     print("   • Email delivery is non-blocking and includes bump conditionally")
     print("   • No PDF/download_url in response (only product_url)")
     

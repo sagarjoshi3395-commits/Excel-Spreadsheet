@@ -37,7 +37,7 @@ razorpay_client = (
     else None
 )
 PRICE_PAISE = 29000
-BUMP_PRICE_PAISE = 19900
+BUMP_PRICE_PAISE = 14900
 RESEND_API_KEY = os.environ.get("RESEND_API_KEY")
 SENDER_EMAIL = os.environ.get("SENDER_EMAIL")
 SUPPORT_EMAIL = os.environ.get("SUPPORT_EMAIL", "ledgerkitsupport@gmail.com")
