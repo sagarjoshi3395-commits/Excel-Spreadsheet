@@ -101,11 +101,27 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
-## user_problem_statement: Fix preview checkout total showing ₹489 after selecting the new ₹149 bump; expected total is ₹439.
+## user_problem_statement: Replace the slow sliding dashboard showcase with a fast named grid showing all 10 product images separately at once for better conversion.
 ##   - task: "Razorpay bump pricing and order persistence"
 ##     implemented: true
 ##     working: true
 ##     file: "backend/server.py"
+## frontend:
+##   - task: "All dashboard showcase grid"
+##     implemented: true
+##     working: true
+##     file: "frontend/src/components/landing/Showcase.js"
+##     stuck_count: 0
+##     priority: "high"
+##     needs_retesting: false
+##     status_history:
+##         -working: true
+##         -agent: "main"
+##         -comment: "Replaced the auto-sliding single preview and tab list with a named responsive grid rendering all 10 dashboard images separately, using eager loading for the first visible cards and no carousel state."
+##         -working: true
+##         -agent: "testing"
+##         -comment: "✅ ALL 9 REQUIREMENTS PASSED - Dashboard showcase grid verification complete on mobile (390x844) and desktop (1920x1080). Verified: (1) Landing page loads with no critical errors ✓, (2) Showcase section present with exact heading 'One file. Ten dashboards. Zero formulas to write.' ✓, (3) Exactly 10 separate dashboard cards render simultaneously in grid layout ✓, (4) All 10 card names correct and visible: Setup, Income, Expenses, Monthly, Annual, 5-Year, Comparison, Custom, Balance, Sales Tax ✓, (5) All 10 images load successfully with no broken images (verified naturalWidth/naturalHeight > 0 for all) ✓, (6) No old slider/tab-list/auto-rotation behavior detected (0 carousel elements, 0 tab lists, 0 autoplay elements, 0 navigation dots) - 'Auto' text matches were from legitimate feature descriptions like 'AUTO-CALCULATED' and 'automatically' in card descriptions, not UI controls ✓, (7) Cards readable on both mobile (1 column grid) and desktop (3 column grid) with no horizontal overflow (scrollWidth = clientWidth on both viewports) ✓, (8) All 10 card descriptions visible and readable ✓, (9) No console or network errors detected ✓. Desktop grid displays 3 columns with cards sized 453x436px (readable). All 10 cards visible simultaneously confirming no carousel/slider behavior. Screenshots captured showing top 6 cards and bottom 7 cards. No payment made. Implementation is production-ready."
+
 ##   - task: "₹149 bump price"
 ##     implemented: true
 ##     working: true
@@ -240,11 +256,15 @@
 ## metadata:
 ##     created_by: "main_agent"
 ##     version: "1.0"
-##     test_sequence: 22
+##     test_sequence: 23
 ##     run_ui: false
+##     -agent: "testing"
+##     -message: "Dashboard showcase grid frontend test passed 9/9 on mobile and desktop: exactly 10 named cards, all images loaded, descriptions visible, no slider/autoplay/tab list, no horizontal overflow, and no console/network errors."
+
 ##
 ## test_plan:
-##     current_focus: []
+##     current_focus:
+##         - "All dashboard showcase grid testing complete"
 ##     stuck_tasks: []
 ##     test_all: false
 ##     test_priority: "high_first"
@@ -305,4 +325,7 @@
 ##     -message: "₹149 bump price backend testing complete. ALL 13/13 TESTS PASSED. Verified all requirements from review request: (1) Backend starts cleanly without tracebacks ✓, (2) GET /api/ returns 200 ✓, (3) Invalid create-order email returns 422 ✓, (4) Preview missing Mongo causes valid requests to return safe 503 without calling Razorpay ✓, (5) Code/API contract confirms include_bump=false → 29000 paise (₹290), include_bump=true → 43900 paise (₹439 = ₹290 + ₹149), bump_amount is 14900 paise, order persistence uses new values ✓, (6) Verified payment Meta value uses stored order amount ✓, (7) Delivery link/email logic remains unchanged (conditional check 'if include_bump and BUMP_PRODUCT_URL') ✓, (8) No backend log errors ✓. CRITICAL email template test passed: customers without bump do NOT receive bump link, customers with bump DO receive Google Drive link. No files modified. No real payment made. Backend implementation is production-ready."
 ##     -agent: "testing"
 ##     -message: "₹149 bump price FRONTEND testing complete. ALL 10/10 REQUIREMENTS PASSED on mobile (390x844) and desktop (1920x1080). User-reported bug FULLY RESOLVED: checkout now correctly shows ₹439 (not ₹489) when ₹149 bump is selected. Verified: Buy CTA opens modal ✓, Initial state ₹290 ✓, Bump price ₹149 ✓, Total changes to ₹439 after selection ✓, Pay button ₹439 ✓, Add button shows ₹149 ✓, No stale ₹489/₹199 prices ✓, Toggle back to ₹290 works ✓, No layout overflow ✓, No critical errors ✓. 7 screenshots captured. No payment made. Implementation is production-ready."
+
+##     -agent: "testing"
+##     -message: "Dashboard showcase grid testing complete. ALL 9/9 REQUIREMENTS PASSED on mobile (390x844) and desktop (1920x1080). Verified: Landing page loads cleanly ✓, Showcase heading 'One file. Ten dashboards. Zero formulas to write.' present ✓, Exactly 10 cards render simultaneously ✓, All names correct (Setup, Income, Expenses, Monthly, Annual, 5-Year, Comparison, Custom, Balance, Sales Tax) ✓, All 10 images load successfully ✓, No slider/carousel/auto-rotation UI (0 carousel elements, 0 tab lists, 0 autoplay) - 'Auto' text from feature descriptions only ✓, Mobile (1 column) and desktop (3 columns) layouts work with no horizontal overflow ✓, All descriptions visible ✓, No console/network errors ✓. All 10 cards visible simultaneously. Implementation is production-ready."
 
