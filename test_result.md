@@ -101,12 +101,28 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
-## user_problem_statement: Rename dashboard showcase image headings to clearly identify tabs, dashboards, sheet, and tracker, and reduce excess blank image space before descriptions.
+## user_problem_statement: Fix preview mobile showcase images so every dashboard preview is fully visible and not cropped inside its card.
 ##   - task: "Razorpay bump pricing and order persistence"
 ##     implemented: true
 ##     working: true
 ##     file: "backend/server.py"
 ## frontend:
+## frontend:
+##   - task: "Fully visible mobile showcase images"
+##     implemented: true
+##     working: true
+##     file: "frontend/src/components/landing/Showcase.js"
+##     stuck_count: 0
+##     priority: "high"
+##     needs_retesting: false
+##     status_history:
+##         -working: true
+##         -agent: "main"
+##         -comment: "Changed showcase image rendering from object-cover to object-contain with centered alignment so full dashboard previews are visible on mobile without cropping."
+##         -working: true
+##         -agent: "testing"
+##         -comment: "✅ ALL 7 REQUIREMENTS PASSED - Fully visible showcase images verified successfully on mobile (390x844) and desktop (1920x1080). USER-REPORTED BUG FULLY RESOLVED. Verified: (1) All 10 named cards remain present (Setup Tab, Income Tab, Expenses Tab, Monthly Dashboard, Annual Dashboard, 5 Year Dashboard, Comparison Dashboard, Custom Dashboard, Balance Sheet, Sales Tax Tracker) ✓, (2) All 10 images load successfully with proper dimensions (verified naturalWidth/naturalHeight > 0 for all) ✓, (3) CRITICAL: All 10 image elements use object-contain presentation (NOT object-cover) ensuring full dashboard content is visible with NO cropped left/right/top/bottom content ✓, (4) Cards have no horizontal overflow on mobile (scrollWidth=390, clientWidth=390) or desktop (scrollWidth=1920, clientWidth=1920) ✓, (5) All 10 descriptions remain visible below images ✓, (6) Desktop layout remains usable with 3-column grid (453px columns) ✓, (7) No console errors (0 errors, 0 warnings) and only non-critical CDN network errors (cdn-cgi/rum) ✓. Mobile displays 1 column grid, desktop displays 3 column grid. Screenshots captured showing mobile top/bottom cards and desktop full view. No payment made. The change from object-cover to object-contain successfully resolves the cropping issue - all dashboard previews are now fully visible inside their cards. Implementation is production-ready."
+
 ##   - task: "Named dashboard image headings"
 ##     implemented: true
 ##     working: true
@@ -269,6 +285,9 @@
 ##         -working: true
 ##         -agent: "main"
 ##         -comment: "Removed the PDF download, switched to the new editable Google Sheet URL, surfaced email delivery status, and added the support message/address to the footer."
+##     -agent: "testing"
+##     -message: "Preview mobile image-cropping fix verified 7/7 on 390x844 and desktop: all 10 images load with object-contain, full dashboard content visible, descriptions remain below, no overflow, and no console errors."
+
 ##         -working: true
 ##         -agent: "testing"
 ##         -comment: "All 8 frontend requirements verified and passed. (1) Homepage loads without blocking errors (200 status). (2) Footer visibly contains 'Support & queries' heading and mailto:ledgerkitsupport@gmail.com link. (3) All Buy CTAs (hero, footer) open Razorpay modal correctly. (4) New Google Sheet URL (1gpHWZ0trtvAIX8QpwufRr2qRpCV7ascpKzu-UwEBn5Y) verified in frontend source (landingData.js), backend .env (PRODUCT_SHEET_URL), and backend response (product_url field). (5) PDF download link and old Google Sheet URLs completely absent from codebase. (6) Success copy includes email delivery success message ('The product link was sent to') and support fallback ('email could not be sent. Please contact ledgerkitsupport@gmail.com'). (7) Preview's missing Mongo error shows friendly message: 'Could not start the payment. Please try again.' (8) No critical console/network errors - only expected 503 on create-order and minor Razorpay ORB warning. Success UI elements verified through source code inspection (cannot trigger without real payment as instructed). No real payment made, no real email triggered. Implementation is production-ready."
@@ -291,7 +310,7 @@
 ## metadata:
 ##     created_by: "main_agent"
 ##     version: "1.0"
-##     test_sequence: 25
+##     test_sequence: 26
 ##     run_ui: false
 ##     -agent: "testing"
 ##     -message: "Dashboard showcase grid frontend test passed 9/9 on mobile and desktop: exactly 10 named cards, all images loaded, descriptions visible, no slider/autoplay/tab list, no horizontal overflow, and no console/network errors."
@@ -299,7 +318,7 @@
 ##
 ## test_plan:
 ##     current_focus:
-##         - "Named dashboard image headings testing complete"
+##         - "Fully visible mobile showcase images testing complete"
 ##     stuck_tasks: []
 ##     test_all: false
 ##     test_priority: "high_first"
@@ -369,5 +388,8 @@
 
 ##     -agent: "testing"
 ##     -message: "Named dashboard image headings testing complete. ALL 8/8 REQUIREMENTS PASSED on mobile (390x844) and desktop (1920x1080). Verified: Exactly 10 separate showcase cards remain ✓, All headings now read Setup Tab, Income Tab, Expenses Tab, Monthly Dashboard, Annual Dashboard, 5 Year Dashboard, Comparison Dashboard, Custom Dashboard, Balance Sheet, and Sales Tax Tracker ✓, All 10 images load successfully ✓, Image frames visibly shorter with 5:3 aspect ratio (1.667) instead of old 4:3 (1.333) reducing blank space before descriptions while keeping spreadsheet content legible ✓, All 10 descriptions remain visible ✓, No old short headings remain ✓, No horizontal overflow or broken images ✓, No console or network errors ✓. Mobile displays 1 column grid (348x209px images), desktop displays 3 column grid (451x271px images). 2 screenshots captured. No payment made. Implementation is production-ready."
+
+##     -agent: "testing"
+##     -message: "Fully visible mobile showcase images testing complete. ALL 7/7 REQUIREMENTS PASSED on mobile (390x844) and desktop (1920x1080). USER-REPORTED BUG FULLY RESOLVED: dashboard images are now fully visible without cropping. Verified: All 10 named cards present ✓, All 10 images load ✓, CRITICAL: All images use object-contain (NOT object-cover) ensuring NO cropped content ✓, No horizontal overflow ✓, All descriptions visible ✓, Desktop 3-column layout usable ✓, No console/network errors ✓. The change from object-cover to object-contain successfully resolves the cropping issue. Implementation is production-ready."
 
 

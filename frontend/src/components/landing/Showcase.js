@@ -30,13 +30,13 @@ export default function Showcase() {
                   </span>
                   <h3 className="font-display font-extrabold text-base sm:text-lg tracking-tight">{tab.label}</h3>
                 </div>
-                <div className="bg-[#f4f4f2] aspect-[5/3] overflow-hidden border-b border-[#0f0f0f]">
+                <div className="bg-[#f4f4f2] aspect-[5/3] overflow-hidden border-b border-[#0f0f0f] flex items-center justify-center">
                   <img
                     src={tab.img}
                     alt={`${tab.label} preview`}
                     loading={index < 3 ? "eager" : "lazy"}
                     decoding="async"
-                    className="block w-full h-full object-cover object-center group-hover:scale-[1.02] transition-transform duration-300"
+                    className="block w-full h-full object-contain group-hover:scale-[1.01] transition-transform duration-300"
                     data-testid={`showcase-image-${index}`}
                   />
                 </div>
