@@ -101,11 +101,27 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
-## user_problem_statement: Replace the slow sliding dashboard showcase with a fast named grid showing all 10 product images separately at once for better conversion.
+## user_problem_statement: Temporarily disable the optional Razorpay bump offer in checkout; keep the main ₹290 purchase active until the user requests re-enabling it.
 ##   - task: "Razorpay bump pricing and order persistence"
 ##     implemented: true
 ##     working: true
 ##     file: "backend/server.py"
+## frontend:
+##   - task: "Temporarily disabled bump offer"
+##     implemented: true
+##     working: true
+##     file: "frontend/src/components/landing/BuyModal.js"
+##     stuck_count: 0
+##     priority: "high"
+##     needs_retesting: false
+##     status_history:
+##         -working: true
+##         -agent: "main"
+##         -comment: "Set ENABLE_BUMP_OFFER=false so the optional bump card and limited-time banner are hidden; the base ₹290 checkout remains active and re-enable is a one-line change when requested."
+##         -working: true
+##         -agent: "testing"
+##         -comment: "✅ ALL 7 REQUIREMENTS PASSED - Bump offer disablement verified successfully on mobile (390x844) and desktop (1920x1080). Verified: (1) Homepage loads with no critical errors ✓, (2) Buy CTA opens checkout modal ✓, (3) Bump offer card (data-testid='bump-offer'), checkbox (data-testid='bump-checkbox'), Add to cart button (data-testid='bump-add-to-cart'), limited-time banner ('Save ₹1,848'), ₹149 price text, ₹1,997 value text, ₹439 combined price, and 'Productivity & Execution Bundle' text are ALL NOT rendered ✓, (4) Modal shows only base ₹290 total and 'Pay ₹290 securely' button ✓, (5) Test email entered but form NOT submitted as instructed (no payment made, preview Mongo unavailable) ✓, (6) No horizontal/vertical overflow detected on mobile or desktop (body/HTML/modal scrollWidth = clientWidth on both viewports) ✓, (7) Main checkout form remains fully usable (form container visible, email input functional, pay button visible and enabled) ✓. Console analysis: 0 errors, 0 warnings, 0 network errors. 6 screenshots captured documenting mobile and desktop states. ENABLE_BUMP_OFFER=false flag successfully hides all bump-related UI elements while keeping base ₹290 checkout fully functional. Implementation is production-ready and can be re-enabled with one-line change (ENABLE_BUMP_OFFER=true) when requested."
+
 ## frontend:
 ##   - task: "All dashboard showcase grid"
 ##     implemented: true
@@ -256,7 +272,7 @@
 ## metadata:
 ##     created_by: "main_agent"
 ##     version: "1.0"
-##     test_sequence: 23
+##     test_sequence: 24
 ##     run_ui: false
 ##     -agent: "testing"
 ##     -message: "Dashboard showcase grid frontend test passed 9/9 on mobile and desktop: exactly 10 named cards, all images loaded, descriptions visible, no slider/autoplay/tab list, no horizontal overflow, and no console/network errors."
@@ -264,7 +280,7 @@
 ##
 ## test_plan:
 ##     current_focus:
-##         - "All dashboard showcase grid testing complete"
+##         - "Bump offer disablement testing complete"
 ##     stuck_tasks: []
 ##     test_all: false
 ##     test_priority: "high_first"
@@ -328,4 +344,7 @@
 
 ##     -agent: "testing"
 ##     -message: "Dashboard showcase grid testing complete. ALL 9/9 REQUIREMENTS PASSED on mobile (390x844) and desktop (1920x1080). Verified: Landing page loads cleanly ✓, Showcase heading 'One file. Ten dashboards. Zero formulas to write.' present ✓, Exactly 10 cards render simultaneously ✓, All names correct (Setup, Income, Expenses, Monthly, Annual, 5-Year, Comparison, Custom, Balance, Sales Tax) ✓, All 10 images load successfully ✓, No slider/carousel/auto-rotation UI (0 carousel elements, 0 tab lists, 0 autoplay) - 'Auto' text from feature descriptions only ✓, Mobile (1 column) and desktop (3 columns) layouts work with no horizontal overflow ✓, All descriptions visible ✓, No console/network errors ✓. All 10 cards visible simultaneously. Implementation is production-ready."
+
+##     -agent: "testing"
+##     -message: "Bump offer disablement testing complete. ALL 7/7 REQUIREMENTS PASSED on mobile (390x844) and desktop (1920x1080). Verified: Homepage loads with no critical errors ✓, Buy CTA opens checkout modal ✓, All bump elements NOT rendered (bump-offer card, bump-checkbox, bump-add-to-cart button, limited-time banner, ₹149, ₹1,997, ₹439, Productivity & Execution Bundle text all absent) ✓, Modal shows only base ₹290 total and 'Pay ₹290 securely' ✓, Test email entered but NOT submitted (no payment, preview Mongo unavailable) ✓, No horizontal/vertical overflow on mobile or desktop ✓, Main checkout form fully usable (form visible, email functional, pay button enabled) ✓. Console: 0 errors, 0 warnings, 0 network errors. 6 screenshots captured. ENABLE_BUMP_OFFER=false successfully hides all bump UI while keeping base ₹290 checkout functional. Can be re-enabled with one-line change (ENABLE_BUMP_OFFER=true). Implementation is production-ready."
 

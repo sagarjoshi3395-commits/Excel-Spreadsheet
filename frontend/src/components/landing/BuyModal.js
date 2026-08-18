@@ -6,6 +6,7 @@ import { SHEET_URL, BUMP_PRODUCT_IMAGE, BUMP_PRICE, PRICE } from "@/lib/landingD
 import { trackMetaEvent } from "@/lib/metaPixel";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+const ENABLE_BUMP_OFFER = false;
 
 function loadRazorpay() {
   return new Promise((resolve) => {
@@ -161,45 +162,49 @@ export default function BuyModal() {
                     <span className="font-display font-black text-3xl sm:text-4xl">₹{includeBump ? "439" : PRICE}</span>
                     <span className="font-mono text-[10px] text-[#595959] mb-1.5">one-time total</span>
                   </div>
-                  <div className="mb-3 flex items-center justify-between gap-2 border border-[#0f0f0f] bg-[#d4ff11] px-2.5 py-1.5">
-                    <span className="font-mono text-[8px] sm:text-[10px] uppercase tracking-[0.08em] font-semibold">Limited-time bundle deal</span>
-                    <span className="font-mono text-[8px] sm:text-[10px] uppercase tracking-[0.04em]">Save ₹1,848</span>
-                  </div>
-                  <div className="border border-[#0f0f0f] bg-white p-2.5 sm:p-3 mb-3" data-testid="bump-offer">
-                    <div className="flex items-center gap-2.5">
-                      <img src={BUMP_PRODUCT_IMAGE} alt="Productivity and Execution Bundle" className="w-14 h-16 sm:w-16 sm:h-20 object-cover border border-[#0f0f0f] shrink-0" />
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-start justify-between gap-2">
-                          <div className="min-w-0">
-                            <p className="font-display font-black text-base sm:text-lg leading-tight">Productivity & Execution Bundle</p>
-                            <p className="font-mono text-[8px] sm:text-[9px] uppercase tracking-[0.06em] text-[#595959] mt-0.5">200+ premium Excel templates included</p>
-                          </div>
-                          <div className="text-right shrink-0">
-                            <p className="font-display font-black text-base sm:text-lg">₹{BUMP_PRICE}</p>
-                            <p className="font-mono text-[8px] text-[#595959] line-through">₹1,997</p>
+                  {ENABLE_BUMP_OFFER && (
+                    <>
+                      <div className="mb-3 flex items-center justify-between gap-2 border border-[#0f0f0f] bg-[#d4ff11] px-2.5 py-1.5">
+                        <span className="font-mono text-[8px] sm:text-[10px] uppercase tracking-[0.08em] font-semibold">Limited-time bundle deal</span>
+                        <span className="font-mono text-[8px] sm:text-[10px] uppercase tracking-[0.04em]">Save ₹1,848</span>
+                      </div>
+                      <div className="border border-[#0f0f0f] bg-white p-2.5 sm:p-3 mb-3" data-testid="bump-offer">
+                        <div className="flex items-center gap-2.5">
+                          <img src={BUMP_PRODUCT_IMAGE} alt="Productivity and Execution Bundle" className="w-14 h-16 sm:w-16 sm:h-20 object-cover border border-[#0f0f0f] shrink-0" />
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-start justify-between gap-2">
+                              <div className="min-w-0">
+                                <p className="font-display font-black text-base sm:text-lg leading-tight">Productivity & Execution Bundle</p>
+                                <p className="font-mono text-[8px] sm:text-[9px] uppercase tracking-[0.06em] text-[#595959] mt-0.5">200+ premium Excel templates included</p>
+                              </div>
+                              <div className="text-right shrink-0">
+                                <p className="font-display font-black text-base sm:text-lg">₹{BUMP_PRICE}</p>
+                                <p className="font-mono text-[8px] text-[#595959] line-through">₹1,997</p>
+                              </div>
+                            </div>
+                            <p className="mt-1 text-[10px] sm:text-[11px] text-[#595959] leading-snug">Habit & Goal Tracker · 3,200+ AI prompts · Landing Page + Ebook Bundle · 1,000+ Emails · 1,000+ Reel Ideas</p>
                           </div>
                         </div>
-                        <p className="mt-1 text-[10px] sm:text-[11px] text-[#595959] leading-snug">Habit & Goal Tracker · 3,200+ AI prompts · Landing Page + Ebook Bundle · 1,000+ Emails · 1,000+ Reel Ideas</p>
+                        <div className="mt-2 flex items-center gap-2 border-t border-[#0f0f0f]/15 pt-2">
+                          <input
+                            type="checkbox"
+                            checked={includeBump}
+                            onChange={(event) => setIncludeBump(event.target.checked)}
+                            data-testid="bump-checkbox"
+                            className="h-4 w-4 accent-[#0f0f0f] shrink-0"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setIncludeBump((selected) => !selected)}
+                            data-testid="bump-add-to-cart"
+                            className={`flex-1 border border-[#0f0f0f] py-2 font-mono text-[10px] uppercase tracking-[0.08em] font-semibold transition-colors ${includeBump ? "bg-[#0f0f0f] text-[#f6f5f2]" : "bg-[#d4ff11] text-[#0f0f0f] hover:bg-[#c2eb0f]"}`}
+                          >
+                            {includeBump ? "Added · ₹" : "Add to cart · ₹"}{BUMP_PRICE}
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                    <div className="mt-2 flex items-center gap-2 border-t border-[#0f0f0f]/15 pt-2">
-                      <input
-                        type="checkbox"
-                        checked={includeBump}
-                        onChange={(event) => setIncludeBump(event.target.checked)}
-                        data-testid="bump-checkbox"
-                        className="h-4 w-4 accent-[#0f0f0f] shrink-0"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setIncludeBump((selected) => !selected)}
-                        data-testid="bump-add-to-cart"
-                        className={`flex-1 border border-[#0f0f0f] py-2 font-mono text-[10px] uppercase tracking-[0.08em] font-semibold transition-colors ${includeBump ? "bg-[#0f0f0f] text-[#f6f5f2]" : "bg-[#d4ff11] text-[#0f0f0f] hover:bg-[#c2eb0f]"}`}
-                      >
-                        {includeBump ? "Added · ₹" : "Add to cart · ₹"}{BUMP_PRICE}
-                      </button>
-                    </div>
-                  </div>
+                    </>
+                  )}
                   <label className="block font-mono text-[10px] uppercase tracking-[0.1em] text-[#595959]">Email for receipt & delivery</label>
                   <input
                     type="email"
