@@ -101,11 +101,27 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
-## user_problem_statement: Temporarily disable the optional Razorpay bump offer in checkout; keep the main ₹290 purchase active until the user requests re-enabling it.
+## user_problem_statement: Rename dashboard showcase image headings to clearly identify tabs, dashboards, sheet, and tracker, and reduce excess blank image space before descriptions.
 ##   - task: "Razorpay bump pricing and order persistence"
 ##     implemented: true
 ##     working: true
 ##     file: "backend/server.py"
+## frontend:
+##   - task: "Named dashboard image headings"
+##     implemented: true
+##     working: true
+##     file: "frontend/src/components/landing/Showcase.js"
+##     stuck_count: 0
+##     priority: "high"
+##     needs_retesting: false
+##     status_history:
+##         -working: true
+##         -agent: "main"
+##         -comment: "Renamed showcase cards to Setup Tab, Income Tab, Expenses Tab, Monthly Dashboard, Annual Dashboard, 5 Year Dashboard, Comparison Dashboard, Custom Dashboard, Balance Sheet, and Sales Tax Tracker; reduced image-frame height from 4:3 to 5:3 with cover cropping to reduce blank space before descriptions."
+##         -working: true
+##         -agent: "testing"
+##         -comment: "✅ ALL 8 REQUIREMENTS PASSED - Named dashboard image headings verification complete on mobile (390x844) and desktop (1920x1080). Verified: (1) Exactly 10 separate showcase cards remain ✓, (2) All headings now read Setup Tab, Income Tab, Expenses Tab, Monthly Dashboard, Annual Dashboard, 5 Year Dashboard, Comparison Dashboard, Custom Dashboard, Balance Sheet, and Sales Tax Tracker ✓, (3) All 10 images load successfully (verified naturalWidth/naturalHeight > 0 for all) ✓, (4) Image frames visibly shorter with 5:3 aspect ratio (1.667) instead of old 4:3 (1.333) - mobile 348x209px, desktop 451x271px - reducing blank space before descriptions while keeping spreadsheet content legible ✓, (5) All 10 descriptions remain visible and readable ✓, (6) No old short headings remain (verified no exact matches for Setup, Income, Expenses, Monthly, Annual, 5-Year, Comparison, Custom, Balance, Sales Tax without suffixes) ✓, (7) No horizontal overflow or broken images detected (body/HTML scrollWidth = clientWidth on both viewports) ✓, (8) No console or network errors detected ✓. Mobile displays 1 column grid, desktop displays 3 column grid. Screenshots captured showing mobile top 2 cards and desktop top 6 cards. No payment made. Implementation is production-ready."
+
 ## frontend:
 ##   - task: "Temporarily disabled bump offer"
 ##     implemented: true
@@ -267,12 +283,15 @@
 ##     status_history:
 ##         -working: true
 ##         -agent: "testing"
+##     -agent: "testing"
+##     -message: "Named dashboard headings and compact image frames verified 8/8 on mobile and desktop: all 10 images load, names include Tab/Dashboard/Sheet/Tracker labels, frames are shorter with readable content, descriptions remain visible, and there is no overflow or console/network error."
+
 ##         -comment: "✅ ALL 12 REQUIREMENTS PASSED - Comprehensive frontend checkout review completed successfully. (1) Homepage loads correctly ✓, (2) Buy CTA opens checkout modal ✓, (3) Bump offer unchecked by default ✓, (4) Bump headline displays '200+ Premium Excel Templates for Every Business' ✓, (5) Bundle copy includes all 6 required items: Habit & Goal Tracker, 3,200+ AI & ChatGPT prompts, readymade landing page bundle, 1,000+ ebook bundle, 1,000+ ready-to-use email templates, 1,000+ business & Reel ideas ✓, (6) Pricing shows ₹1,997 (strikethrough) vs ₹199 promotional price ✓, (7) Total price changes from ₹290 to ₹489 when bump selected ✓, (8) Pay button updates from 'PAY ₹290 SECURELY' to 'PAY ₹489 SECURELY' ✓, (9) Both product images load correctly (2 images verified) ✓, (10) Frontend sends correct payload with include_bump:true: {\"email\":\"test.buyer@example.com\",\"include_bump\":true} ✓, (11) Expected 503 error handled gracefully with friendly message: 'Could not start the payment. Please try again.' ✓, (12) Razorpay description verified in source code as bundle-inclusive: 'Business Management Toolkit + Productivity & Execution Bundle' when bump selected ✓, (13) Google Drive bundle link configured in backend .env: https://drive.google.com/drive/folders/105trnqtdXbDB5aEQpqJqp-JslRKKQ5eQ?usp=sharing ✓. Console errors: Only 2 found - 1 expected 503 (missing Mongo) and 1 minor 'web-share' browser warning (non-critical). Network analysis: API request correctly sent to /api/payments/create-order with 503 response (expected). Screenshots captured at 5 key stages. No real Razorpay payment made. No real email sent. Implementation is production-ready."
 ##
 ## metadata:
 ##     created_by: "main_agent"
 ##     version: "1.0"
-##     test_sequence: 24
+##     test_sequence: 25
 ##     run_ui: false
 ##     -agent: "testing"
 ##     -message: "Dashboard showcase grid frontend test passed 9/9 on mobile and desktop: exactly 10 named cards, all images loaded, descriptions visible, no slider/autoplay/tab list, no horizontal overflow, and no console/network errors."
@@ -280,7 +299,7 @@
 ##
 ## test_plan:
 ##     current_focus:
-##         - "Bump offer disablement testing complete"
+##         - "Named dashboard image headings testing complete"
 ##     stuck_tasks: []
 ##     test_all: false
 ##     test_priority: "high_first"
@@ -347,4 +366,8 @@
 
 ##     -agent: "testing"
 ##     -message: "Bump offer disablement testing complete. ALL 7/7 REQUIREMENTS PASSED on mobile (390x844) and desktop (1920x1080). Verified: Homepage loads with no critical errors ✓, Buy CTA opens checkout modal ✓, All bump elements NOT rendered (bump-offer card, bump-checkbox, bump-add-to-cart button, limited-time banner, ₹149, ₹1,997, ₹439, Productivity & Execution Bundle text all absent) ✓, Modal shows only base ₹290 total and 'Pay ₹290 securely' ✓, Test email entered but NOT submitted (no payment, preview Mongo unavailable) ✓, No horizontal/vertical overflow on mobile or desktop ✓, Main checkout form fully usable (form visible, email functional, pay button enabled) ✓. Console: 0 errors, 0 warnings, 0 network errors. 6 screenshots captured. ENABLE_BUMP_OFFER=false successfully hides all bump UI while keeping base ₹290 checkout functional. Can be re-enabled with one-line change (ENABLE_BUMP_OFFER=true). Implementation is production-ready."
+
+##     -agent: "testing"
+##     -message: "Named dashboard image headings testing complete. ALL 8/8 REQUIREMENTS PASSED on mobile (390x844) and desktop (1920x1080). Verified: Exactly 10 separate showcase cards remain ✓, All headings now read Setup Tab, Income Tab, Expenses Tab, Monthly Dashboard, Annual Dashboard, 5 Year Dashboard, Comparison Dashboard, Custom Dashboard, Balance Sheet, and Sales Tax Tracker ✓, All 10 images load successfully ✓, Image frames visibly shorter with 5:3 aspect ratio (1.667) instead of old 4:3 (1.333) reducing blank space before descriptions while keeping spreadsheet content legible ✓, All 10 descriptions remain visible ✓, No old short headings remain ✓, No horizontal overflow or broken images ✓, No console or network errors ✓. Mobile displays 1 column grid (348x209px images), desktop displays 3 column grid (451x271px images). 2 screenshots captured. No payment made. Implementation is production-ready."
+
 
