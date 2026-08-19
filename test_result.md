@@ -101,12 +101,28 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
-## user_problem_statement: Fix preview mobile showcase images so every dashboard preview is fully visible and not cropped inside its card.
+## user_problem_statement: Restore the previous sliding Take A Look Inside section and revert the recent showcase grid/heading/image presentation changes; Meta ad rejection reason includes financial product and misleading-practice classifications.
 ##   - task: "Razorpay bump pricing and order persistence"
 ##     implemented: true
 ##     working: true
 ##     file: "backend/server.py"
 ## frontend:
+## frontend:
+##   - task: "Restore sliding showcase"
+##     implemented: true
+##     working: true
+##     file: "frontend/src/components/landing/Showcase.js"
+##     stuck_count: 0
+##     priority: "high"
+##     needs_retesting: false
+##     status_history:
+##         -working: true
+##         -agent: "main"
+##         -comment: "Restored the earlier auto-sliding single dashboard preview with tab selector, pause-on-mouse behavior, original short labels, and full-image containment. No payment or delivery code changed."
+##         -working: true
+##         -agent: "testing"
+##         -comment: "✅ ALL 9/9 REQUIREMENTS PASSED - Selective rollback verification complete on mobile (390x844) and desktop (1920x1080). VERIFIED: (1) Take A Look Inside uses restored sliding single-preview layout with tab list (10 tabs) and one active image (NOT a grid of 10 simultaneous cards) ✓, (2) Auto-rotation working (tab changes every ~1 second), Auto indicator visible with animate-pulse, pause behavior exists (Paused indicator appears on hover) ✓, (3) Old grid with 10 simultaneous showcase cards completely absent (only 1 showcase image visible at a time) ✓, (4) Original short labels verified: Setup, Income, Expenses, Monthly, Annual, 5-Year, Comparison, Custom, Balance, Sales Tax (NO long labels like 'Setup Tab', 'Monthly Dashboard', 'Balance Sheet', 'Sales Tax Tracker') ✓, (5) Active image fully contained and not clipped (desktop: object-contain, mobile: fill but fully visible, naturalWidth/Height loaded correctly) ✓, (6) Clicking a tab changes both preview image and caption (tested tab 0 click, caption changed from 'Comparison' to 'Setup', image src changed) ✓, (7) Mobile and desktop have no horizontal overflow (body/HTML/showcase scrollWidth = clientWidth on both 390x844 and 1920x1080) ✓, (8) No console or network errors (0 console errors, only 1 non-critical CDN request to cdn-cgi/rum) ✓, (9) Razorpay checkout/base purchase UI remains available and unchanged (Buy CTA opens modal, shows ₹290 base price, email input present, pay button present, Razorpay branding visible, bump offer correctly hidden with ENABLE_BUMP_OFFER=false) ✓. Screenshots captured: desktop showcase (1920x1080), mobile showcase (390x844), checkout modal verification. No payment made. Selective rollback is PRODUCTION-READY."
+
 ## frontend:
 ##   - task: "Fully visible mobile showcase images"
 ##     implemented: true
@@ -273,6 +289,9 @@
 ##         -working: true
 ##         -agent: "testing"
 ##         -comment: "✅ ALL 12 REQUIREMENTS PASSED - Conversion-focused bump checkout refinement verified successfully. (1) Homepage loads and Buy CTA opens modal ✓, (2) Bump card headline is exactly 'Productivity & Execution Bundle' ✓, (3) '200+ premium Excel templates included' is supporting copy (font-mono text-[10px] uppercase), not main heading ✓, (4) Only one bump image rendered (Productivity & Execution Bundle image) ✓, (5) Old two-image/grid presentation completely absent ✓, (6) Limited-time urgency banner ('LIMITED-TIME BUNDLE DEAL · SAVE ₹1,798 TODAY') appears in separate banner OUTSIDE the bump offer card ✓, (7) ₹1,997 value (strikethrough) and ₹199 price both visible ✓, (8) Explicit 'Add to cart · +₹199' button exists and is unchecked/unselected by default (yellow bg-[#d4ff11]) ✓, (9) Clicking Add to cart changes button to 'Added to cart · ₹199' (black bg-[#0f0f0f]) and updates total from ₹290 to ₹489, pay CTA updates from 'PAY ₹290 SECURELY' to 'PAY ₹489 SECURELY', unchecking reverts to ₹290 ✓, (10) Bundle description readable with 5 items: Habit & Goal Tracker, 3,200+ AI & ChatGPT Prompts, Landing Page Bundle + 1,000+ Ebook Bundle, 1,000+ Email Templates, 1,000+ Business & Reel Ideas ✓, (11) No console errors (0 errors/warnings detected) ✓, (12) No real checkout completed (test stopped before payment submission) ✓. Screenshots captured at 5 stages. No real Razorpay payment made. Implementation is production-ready."
+##     -agent: "testing"
+##     -message: "Selective rollback verified 9/9 on mobile and desktop: sliding single-preview restored, 10 tab list/Auto indicator/pause behavior work, grid absent, original short labels restored, image contained, tab clicks change preview, no overflow/errors, and Razorpay base checkout unchanged."
+
 
 
 ##     implemented: true
@@ -310,7 +329,7 @@
 ## metadata:
 ##     created_by: "main_agent"
 ##     version: "1.0"
-##     test_sequence: 26
+##     test_sequence: 27
 ##     run_ui: false
 ##     -agent: "testing"
 ##     -message: "Dashboard showcase grid frontend test passed 9/9 on mobile and desktop: exactly 10 named cards, all images loaded, descriptions visible, no slider/autoplay/tab list, no horizontal overflow, and no console/network errors."
@@ -318,7 +337,7 @@
 ##
 ## test_plan:
 ##     current_focus:
-##         - "Fully visible mobile showcase images testing complete"
+##         - "Restore sliding showcase testing complete"
 ##     stuck_tasks: []
 ##     test_all: false
 ##     test_priority: "high_first"
@@ -391,5 +410,8 @@
 
 ##     -agent: "testing"
 ##     -message: "Fully visible mobile showcase images testing complete. ALL 7/7 REQUIREMENTS PASSED on mobile (390x844) and desktop (1920x1080). USER-REPORTED BUG FULLY RESOLVED: dashboard images are now fully visible without cropping. Verified: All 10 named cards present ✓, All 10 images load ✓, CRITICAL: All images use object-contain (NOT object-cover) ensuring NO cropped content ✓, No horizontal overflow ✓, All descriptions visible ✓, Desktop 3-column layout usable ✓, No console/network errors ✓. The change from object-cover to object-contain successfully resolves the cropping issue. Implementation is production-ready."
+
+##     -agent: "testing"
+##     -message: "Restore sliding showcase testing complete. ALL 9/9 REQUIREMENTS PASSED on mobile (390x844) and desktop (1920x1080). Selective rollback successfully verified: (1) Sliding single-preview layout with tab list and one active image restored ✓, (2) Auto-rotation, Auto indicator, and pause behavior working ✓, (3) Old grid with 10 simultaneous cards completely absent ✓, (4) Original short labels verified (Setup, Income, Expenses, Monthly, Annual, 5-Year, Comparison, Custom, Balance, Sales Tax) ✓, (5) Active image fully contained and not clipped ✓, (6) Tab click changes preview/caption ✓, (7) No horizontal overflow on mobile or desktop ✓, (8) No console/network errors ✓, (9) Razorpay checkout remains available and unchanged (₹290 base price, bump offer correctly hidden) ✓. 3 screenshots captured. No payment made. Implementation is production-ready."
 
 

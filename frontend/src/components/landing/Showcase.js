@@ -1,10 +1,54 @@
+import { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
 import { Reveal, Chapter } from "./Reveal";
 import { TABS } from "@/lib/landingData";
 import { Receipt } from "lucide-react";
 
+const DURATION = 1000;
+
 export default function Showcase() {
+  const [active, setActive] = useState(3);
+  const [paused, setPaused] = useState(false);
+  const [inView, setInView] = useState(false);
+  const sectionRef = useRef(null);
+  const tab = TABS[active];
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          setInView(true);
+          io.disconnect();
+        }
+      },
+      { rootMargin: "300px" }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!inView) return;
+    TABS.forEach((t) => {
+      const img = new Image();
+      img.src = t.img;
+    });
+  }, [inView]);
+
+  useEffect(() => {
+    if (paused || !inView) return;
+    const t = setTimeout(() => setActive((a) => (a + 1) % TABS.length), DURATION);
+    return () => clearTimeout(t);
+  }, [active, paused, inView]);
+
+  const onEnter = (e) => e.pointerType === "mouse" && setPaused(true);
+  const onLeave = (e) => e.pointerType === "mouse" && setPaused(false);
+
   return (
     <section
+      ref={sectionRef}
       id="showcase"
       className="px-5 sm:px-8 py-20 sm:py-32 bg-[#ebeae6] border-y border-[#0f0f0f]"
       data-testid="showcase-section"
@@ -16,34 +60,79 @@ export default function Showcase() {
             One file. Ten dashboards. Zero formulas to write.
           </h2>
           <p className="mt-5 text-[#595959] text-base sm:text-lg leading-relaxed">
-            See every dashboard at a glance. Each tab updates itself the moment you type a number.
+            Every tab updates itself the moment you type a number. Watch it cycle through
+            the real sheets — or tap any tab to explore.
           </p>
         </Reveal>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5" data-testid="showcase-grid">
-          {TABS.map((tab, index) => (
-            <Reveal key={tab.label} delay={Math.min(index * 0.03, 0.2)}>
-              <article className="group h-full bg-white border border-[#0f0f0f] hard-shadow-sm hover:-translate-y-1 transition-transform duration-200" data-testid={`showcase-card-${index}`}>
-                <div className="flex items-center justify-between gap-3 px-3 py-2.5 border-b border-[#0f0f0f] bg-[#f6f5f2]">
-                  <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-[#595959]">
-                    {String(index + 1).padStart(2, "0")}
+        <div
+          className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 items-start"
+          onPointerEnter={onEnter}
+          onPointerLeave={onLeave}
+        >
+          <Reveal className="lg:col-span-3 min-w-0 w-full">
+            <div className="flex lg:flex-col gap-2 overflow-x-auto lg:overflow-visible pb-2 lg:pb-0 -mx-1 px-1 max-w-full" data-testid="showcase-tabs">
+              {TABS.map((t, i) => (
+                <button
+                  key={t.label}
+                  data-testid={`showcase-tab-${i}`}
+                  onClick={() => setActive(i)}
+                  className={`relative shrink-0 lg:w-full text-left flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2.5 sm:py-3 border border-[#0f0f0f] font-mono text-[11px] sm:text-xs uppercase tracking-[0.1em] transition-colors duration-200 ${
+                    active === i ? "bg-[#0f0f0f] text-[#f6f5f2]" : "bg-white text-[#0f0f0f] hover:bg-[#d4ff11]"
+                  }`}
+                >
+                  <span className={active === i ? "text-[#d4ff11]" : "text-[#595959]"}>
+                    {String(i + 1).padStart(2, "0")}
                   </span>
-                  <h3 className="font-display font-extrabold text-base sm:text-lg tracking-tight">{tab.label}</h3>
-                </div>
-                <div className="bg-[#f4f4f2] aspect-[5/3] overflow-hidden border-b border-[#0f0f0f] flex items-center justify-center">
-                  <img
-                    src={tab.img}
-                    alt={`${tab.label} preview`}
-                    loading={index < 3 ? "eager" : "lazy"}
-                    decoding="async"
-                    className="block w-full h-full object-contain group-hover:scale-[1.01] transition-transform duration-300"
-                    data-testid={`showcase-image-${index}`}
-                  />
-                </div>
-                <p className="px-3 py-3 text-sm text-[#595959] leading-relaxed">{tab.desc}</p>
-              </article>
-            </Reveal>
-          ))}
+                  {t.label}
+                </button>
+              ))}
+            </div>
+          </Reveal>
+
+          <Reveal className="lg:col-span-9 min-w-0 w-full" delay={0.1}>
+            <div className="border border-[#0f0f0f] bg-white hard-shadow">
+              <div className="flex items-center gap-3 px-3 sm:px-4 py-2.5 sm:py-3 border-b border-[#0f0f0f] bg-[#f6f5f2]">
+                <span className="flex gap-1.5">
+                  <span className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full border border-[#0f0f0f] bg-white" />
+                  <span className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full border border-[#0f0f0f] bg-[#d4ff11]" />
+                  <span className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full border border-[#0f0f0f] bg-white" />
+                </span>
+                <span className="font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.12em] text-[#595959] truncate">
+                  {tab.label} tab
+                </span>
+                <span className="ml-auto flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-[#595959]">
+                  <span className={`w-1.5 h-1.5 rounded-full ${paused ? "bg-[#595959]" : "bg-[#d4ff11] animate-pulse"}`} />
+                  {paused ? "Paused" : "Auto"}
+                </span>
+              </div>
+
+              <div className="relative bg-[#f4f4f2] sm:aspect-[16/9]">
+                <motion.img
+                  key={tab.img}
+                  src={tab.img}
+                  alt={`${tab.label} dashboard`}
+                  loading="lazy"
+                  decoding="async"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.35, ease: "easeOut" }}
+                  className="block w-full h-auto sm:absolute sm:inset-0 sm:w-full sm:h-full sm:object-contain object-top"
+                  data-testid="showcase-image"
+                />
+              </div>
+
+              <div className="flex items-center justify-between gap-4 px-4 sm:px-5 py-3 sm:py-4 border-t border-[#0f0f0f]">
+                <p className="text-[#0f0f0f] text-sm sm:text-base font-medium" data-testid="showcase-caption">
+                  <span className="font-display font-extrabold">{tab.label} · </span>
+                  <span className="text-[#595959]">{tab.desc}</span>
+                </p>
+                <span className="hidden sm:block font-mono text-[11px] uppercase tracking-[0.12em] text-[#595959] whitespace-nowrap">
+                  {active + 1} / {TABS.length}
+                </span>
+              </div>
+            </div>
+          </Reveal>
         </div>
 
         <Reveal delay={0.15}>
