@@ -7,11 +7,12 @@ import {
 } from "@/components/ui/accordion";
 
 const faqs = [
-  { q: "Do I need any special software?", a: "No. It's a single Excel file that also works in Google Sheets. If you can open a spreadsheet, you can use this." },
+  { q: "Do I need any special software?", a: "No. Business Toolkit is an editable Excel and Google Sheets template. If you can open either format, you can use it." },
   { q: "Is it really fully editable?", a: "Yes. Change categories, colours, labels and formulas however you like. It's your file forever." },
+  { q: "What exactly am I buying?", a: "A digital, editable Excel and Google Sheets Business Toolkit with record-keeping tabs, summary dashboards, categories, formulas, and charts. It is not a financial product or professional advice service." },
   { q: "How do I receive the file after buying?", a: "After your Razorpay payment is verified, the editable Google Sheet link appears immediately and is also sent to your registered email address." },
-  { q: "Is this a one-time payment?", a: "Absolutely. Pay ₹290 once via Razorpay and it's yours for life. No subscriptions, no recurring charges." },
-  { q: "Will my numbers calculate automatically?", a: "Yes. Just enter your income and expenses — profit & loss, taxes and every dashboard update themselves with graphs." },
+  { q: "Is this a one-time payment?", a: "Yes. Pay ₹290 once for the digital Business Toolkit. There is no subscription or recurring charge." },
+  { q: "Will my numbers update automatically?", a: "The template includes formulas and summaries that update as you enter your own records. It is an organizational spreadsheet, not accounting, tax, investment, or financial advice." },
 ];
 
 export default function FAQ() {

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { Reveal, Chapter } from "./Reveal";
-import { TABS } from "@/lib/landingData";
+import { TABS, SHEET_URL } from "@/lib/landingData";
 import { Receipt } from "lucide-react";
 
 const DURATION = 1000;
@@ -102,8 +102,8 @@ export default function Showcase() {
                   {tab.label} tab
                 </span>
                 <span className="ml-auto flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-[#595959]">
-                  <span className={`w-1.5 h-1.5 rounded-full ${paused ? "bg-[#595959]" : "bg-[#d4ff11] animate-pulse"}`} />
-                  {paused ? "Paused" : "Auto"}
+                  <span className={`w-1.5 h-1.5 rounded-full bg-[#d4ff11]`} />
+                  Template preview
                 </span>
               </div>
 
@@ -141,10 +141,13 @@ export default function Showcase() {
               <Receipt className="w-6 h-6 text-[#0f0f0f]" />
             </span>
             <p className="font-display font-extrabold text-xl sm:text-2xl leading-tight text-[#0f0f0f]">
-              Even your taxes are calculated for you.
+              See the real template before you buy.
               <span className="text-[#595959] font-body font-normal text-base sm:text-lg block sm:inline sm:ml-2">
-                Tax collected vs paid, tracked every month — no accountant needed.
+                Open the editable Google Sheet preview and review the tabs, layout, and included fields.
               </span>
+              <a href={SHEET_URL} target="_blank" rel="noopener noreferrer" className="block sm:inline sm:ml-3 mt-2 sm:mt-0 font-mono text-[10px] uppercase tracking-[0.1em] text-[#0f0f0f] underline underline-offset-2 hover:text-[#595959]">
+                Open template preview
+              </a>
             </p>
           </div>
         </Reveal>

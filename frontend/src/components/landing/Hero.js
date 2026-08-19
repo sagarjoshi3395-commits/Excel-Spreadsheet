@@ -86,22 +86,20 @@ export default function Hero() {
           </motion.h1>
 
           <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1, duration: 0.7 }} className="mt-6 text-base sm:text-lg text-[#595959] max-w-md leading-relaxed">
-            Track income, expenses, profit &amp; loss, taxes and monthly, quarterly &amp;
-            annual dashboards — all automatically, with clean graphs. Works in Excel or
-            Google Sheets.
+            Organize income, expenses, categories and monthly summaries in one editable spreadsheet. This is a digital Excel/Google Sheets template for business organization — not financial, tax, investment, or accounting advice.
           </motion.p>
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.15, duration: 0.7 }} className="mt-8 flex flex-wrap items-center gap-4 sm:gap-5">
             <VoltButton testid="hero-cta-buy" onClick={() => setOpen(true)}>
-              Get lifetime access · ₹{PRICE}
+              Get the Business Toolkit · ₹{PRICE}
             </VoltButton>
             <div className="font-mono text-xs uppercase tracking-[0.12em] text-[#595959]">
-              <span className="line-through opacity-50">₹999</span> · one-time
+              <span className="text-[#595959]">One-time digital template access</span>
             </div>
           </motion.div>
 
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.3 }} className="mt-7 flex flex-wrap gap-x-6 gap-y-2 font-mono text-[11px] sm:text-xs uppercase tracking-[0.1em] text-[#595959]">
-            {["Fully editable", "Auto-calculated", "Instant download"].map((f) => (
+            {["Fully editable", "Organize business records", "Instant email delivery"].map((f) => (
               <span key={f} className="inline-flex items-center gap-1.5">
                 <Check className="w-3.5 h-3.5 text-[#0f0f0f]" /> {f}
               </span>
@@ -139,7 +137,7 @@ export default function Hero() {
             />
 
             {/* floating stat chips */}
-            <Chip icon={TrendingUp} value="+9.5%" label="Net profit" className="-bottom-6 -left-4 sm:-left-6" delay={1.4} />
+            <Chip icon={TrendingUp} value="Ready" label="Organize clearly" className="-bottom-6 -left-4 sm:-left-6" delay={1.4} />
             <Chip icon={LayoutGrid} value="10" label="Dashboards" className="-top-5 -right-3 sm:-right-5" delay={1.6} />
             <Chip icon={Zap} value="Live" label="Auto updates" className="top-1/2 -right-4 sm:-right-8" delay={1.8} />
           </motion.div>

@@ -2,27 +2,25 @@ import { Reveal, Chapter } from "./Reveal";
 import { Star, Quote } from "lucide-react";
 
 const stats = [
-  { n: "2,400+", l: "Businesses running on it" },
-  { n: "4.9/5", l: "Average owner rating" },
-  { n: "10", l: "Auto dashboards inside" },
-  { n: "₹290", l: "One-time · no subscription" },
+  { n: "10", l: "Editable template views" },
+  { n: "2", l: "Excel + Google Sheets formats" },
+  { n: "1", l: "Digital product" },
+  { n: "₹290", l: "One-time template access" },
 ];
 
 const featured = {
   quote:
-    "I cancelled my ₹1,500/month accounting app the same day. This one sheet shows my profit, expenses and taxes better than any software I've paid for.",
-  name: "Rohan Mehta",
-  role: "Founder, Urban Threads",
-  init: "RM",
+    "A clear place to organize business entries and review the included spreadsheet views before making your own copy.",
+  name: "Business Toolkit",
+  role: "LedgerKit digital template",
+  init: "BT",
 };
 
 const reviews = [
-  { quote: "I finally understand where my money goes. The graphs update on their own — I just type the numbers.", name: "Priya Nair", role: "Bakery owner, Kochi", init: "PN", rating: 5 },
-  { quote: "Set it up in 5 minutes. The monthly and annual dashboards are genuinely beautiful.", name: "Arjun Verma", role: "Freelance consultant", init: "AV", rating: 5 },
-  { quote: "No software, no logins, works in Google Sheets on my phone. Worth way more than ₹290.", name: "Sneha Kulkarni", role: "Boutique, Pune", init: "SK", rating: 5 },
-  { quote: "The tax tracker alone saved me hours before filing. Everything is calculated automatically.", name: "Imran Shaikh", role: "Café owner, Hyderabad", init: "IS", rating: 5 },
-  { quote: "Compared three years of my shop's growth in seconds. My CA was impressed.", name: "Divya Rao", role: "Retail store, Bengaluru", init: "DR", rating: 5 },
-  { quote: "Clean, fast and fully editable. I changed the categories to match my business easily.", name: "Karan Singh", role: "D2C brand", init: "KS", rating: 5 },
+  { quote: "The categories and editable fields make it simple to adapt the sheet to my workflow.", name: "Template feature", role: "Editable fields", init: "EF", rating: 5 },
+  { quote: "I can open the same product in Excel or Google Sheets and review the layout before using it.", name: "Template feature", role: "Two compatible formats", init: "TF", rating: 5 },
+  { quote: "The named tabs make it easy to find the view I need without learning new software.", name: "Template feature", role: "Clear navigation", init: "CN", rating: 5 },
+  { quote: "The product is delivered digitally to the email used at checkout.", name: "Delivery detail", role: "Digital access", init: "DA", rating: 5 },
 ];
 
 function Stars() {
@@ -47,7 +45,7 @@ export default function Testimonials() {
   return (
     <section id="reviews" className="px-5 sm:px-8 py-24 sm:py-32" data-testid="testimonials-section">
       <div className="max-w-[1400px] mx-auto">
-        <Chapter number="04" label="The Proof" />
+        <Chapter number="04" label="What's Included" />
 
         {/* stats */}
         <Reveal className="grid grid-cols-2 md:grid-cols-4 border border-[#0f0f0f] mb-14 bg-white">

@@ -2,10 +2,10 @@ import { Reveal, Chapter } from "./Reveal";
 import { X } from "lucide-react";
 
 const pains = [
-  "Paying ₹500–₹2000 every month for accounting software you barely use.",
-  "Copy-pasting numbers between apps and still not knowing your real profit.",
+  "Paying monthly for software features you barely use.",
+  "Copy-pasting records between apps and still spending hours formatting sheets.",
   "Confusing dashboards, hidden features and steep learning curves.",
-  "No clear picture of taxes, expenses or where the money actually goes.",
+  "No simple place to organize business entries and recurring categories.",
 ];
 
 export default function Problem() {
@@ -18,7 +18,7 @@ export default function Problem() {
             <h2 className="font-display font-black text-4xl sm:text-6xl leading-[0.95] tracking-tighter">
               Running a business is hard.
               <br />
-              <span className="text-[#595959]">Managing the money shouldn't be.</span>
+              <span className="text-[#595959]">Organize your business records without a subscription.</span>
             </h2>
           </Reveal>
           <div className="lg:col-span-5 space-y-4">

@@ -4,38 +4,10 @@ import { useBuy } from "@/hooks/useBuy";
 import { PRICE } from "@/lib/landingData";
 import { FileSpreadsheet, Clock } from "lucide-react";
 
-const WINDOW_MS = 15 * 60 * 1000;
-
-function useCountdown() {
-  const [left, setLeft] = useState(WINDOW_MS);
-  useEffect(() => {
-    let dl = Number(localStorage.getItem("lk_deadline"));
-    if (!dl || dl < Date.now()) {
-      dl = Date.now() + WINDOW_MS;
-      localStorage.setItem("lk_deadline", String(dl));
-    }
-    const tick = () => {
-      let rem = dl - Date.now();
-      if (rem <= 0) {
-        dl = Date.now() + WINDOW_MS;
-        localStorage.setItem("lk_deadline", String(dl));
-        rem = WINDOW_MS;
-      }
-      setLeft(rem);
-    };
-    tick();
-    const id = setInterval(tick, 1000);
-    return () => clearInterval(id);
-  }, []);
-  const m = String(Math.floor(left / 60000)).padStart(2, "0");
-  const s = String(Math.floor((left % 60000) / 1000)).padStart(2, "0");
-  return { m, s };
-}
 
 export default function StickyBuy() {
   const { setOpen, open } = useBuy();
   const [show, setShow] = useState(false);
-  const { m, s } = useCountdown();
 
   useEffect(() => {
     const onScroll = () => {
@@ -70,10 +42,7 @@ export default function StickyBuy() {
                 </p>
                 <p className="flex items-center gap-1.5 font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.08em] text-[#0f0f0f] mt-1">
                   <Clock className="w-3 h-3 text-[#0f0f0f]" />
-                  Price rises to ₹999 in
-                  <span className="bg-[#0f0f0f] text-[#d4ff11] px-1.5 py-0.5 tabular-nums" data-testid="countdown">
-                    {m}:{s}
-                  </span>
+                  Instant digital access
                 </p>
               </div>
             </div>

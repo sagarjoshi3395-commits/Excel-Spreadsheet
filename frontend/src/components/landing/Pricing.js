@@ -5,14 +5,14 @@ import { PRICE } from "@/lib/landingData";
 import { Check } from "lucide-react";
 
 const includes = [
-  "Income & expense tracker",
-  "Auto profit & loss statement",
-  "Monthly sales dashboard",
-  "Quarterly & annual dashboards",
-  "Tax summary calculator",
+  "Income & expense organization tabs",
+  "Automatic summary views",
+  "Monthly, quarterly & annual dashboards",
+  "Category and tax-record fields",
   "Ready-made graphs & charts",
   "Works in Excel & Google Sheets",
-  "Fully editable · lifetime updates",
+  "Fully editable digital template",
+  "One-time access with email delivery",
 ];
 
 export default function Pricing() {
@@ -29,8 +29,8 @@ export default function Pricing() {
               </span>
               <Reveal className="mt-6">
                 <h2 className="font-display font-black text-4xl sm:text-6xl leading-[0.92] tracking-tighter text-[#0f0f0f]">
-                  Your entire business finance system.
-                  <span className="text-[#595959]"> One file.</span>
+                  Your business organization toolkit.
+                  <span className="text-[#595959]"> One editable file.</span>
                 </h2>
               </Reveal>
               <div className="mt-9 grid sm:grid-cols-2 gap-x-8 gap-y-3">
@@ -48,13 +48,13 @@ export default function Pricing() {
             {/* right price - volt panel */}
             <div className="lg:col-span-5 border-t lg:border-t-0 lg:border-l border-[#0f0f0f] p-7 sm:p-14 flex flex-col justify-center bg-[#d4ff11]">
               <div className="font-mono text-sm uppercase tracking-[0.12em] text-[#0f0f0f]/70">
-                <span className="line-through">₹999</span> Launch price
+                One-time digital template
               </div>
               <div className="flex items-end gap-2 mt-2">
                 <span className="font-display font-black text-7xl sm:text-8xl leading-none text-[#0f0f0f]">₹{PRICE}</span>
                 <span className="font-mono text-sm text-[#0f0f0f]/70 mb-3">/ one-time</span>
               </div>
-              <p className="text-[#0f0f0f]/80 mt-4 leading-relaxed">Pay once. Own it forever. No monthly fees, no logins, no lock-in.</p>
+              <p className="text-[#0f0f0f]/80 mt-4 leading-relaxed">A practical editable spreadsheet for organizing business records. It is not accounting, tax, investment, or financial advice.</p>
               <motion.button
                 data-testid="pricing-cta-buy"
                 onClick={() => setOpen(true)}
@@ -64,8 +64,8 @@ export default function Pricing() {
               >
                 Buy now · Instant access
               </motion.button>
-              <p className="text-center font-mono text-[11px] uppercase tracking-[0.1em] text-[#0f0f0f]/60 mt-4">
-                Google Sheet emailed + open on screen
+              <p className="text-center font-mono text-[10px] uppercase tracking-[0.08em] text-[#0f0f0f]/60 mt-4">
+                Digital template · Not financial, tax, investment, or accounting advice
               </p>
             </div>
           </div>

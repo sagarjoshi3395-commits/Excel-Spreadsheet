@@ -5,9 +5,9 @@ import { CreditCard, Mail, Download } from "lucide-react";
 import { PRICE } from "@/lib/landingData";
 
 const steps = [
-  { icon: CreditCard, n: "01", t: "Buy for ₹290", d: "One-time payment. No subscription, no hidden fees, ever." },
-  { icon: Mail, n: "02", t: "Get it on email", d: "Your download link lands in your inbox within seconds." },
-  { icon: Download, n: "03", t: "Download & use", d: "Open in Excel or Google Sheets. Start entering numbers. Done." },
+  { icon: CreditCard, n: "01", t: "Choose the template", d: "Purchase the Business Toolkit as a one-time digital product through Razorpay." },
+  { icon: Mail, n: "02", t: "Get the access link", d: "Your editable Google Sheet link is sent to the email used at checkout." },
+  { icon: Download, n: "03", t: "Customize your copy", d: "Open it in Excel or Google Sheets and adapt the categories for your own records." },
 ];
 
 export default function HowItWorks() {
@@ -18,7 +18,7 @@ export default function HowItWorks() {
         <Chapter number="03" label="How It Works" />
         <Reveal className="mb-14 max-w-2xl">
           <h2 className="font-display font-black text-4xl sm:text-6xl leading-[0.95] tracking-tighter">
-            From payment to profit in under a minute.
+            Organize your records in under a minute.
           </h2>
         </Reveal>
 

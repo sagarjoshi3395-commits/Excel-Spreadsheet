@@ -101,12 +101,28 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
-## user_problem_statement: Restore the previous sliding Take A Look Inside section and revert the recent showcase grid/heading/image presentation changes; Meta ad rejection reason includes financial product and misleading-practice classifications.
+## user_problem_statement: Make the LedgerKit parent website and Business Toolkit landing page policy-clear for Meta ads with neutral template copy, transparent delivery/refund/support/privacy/terms details, and direct product preview links.
 ##   - task: "Razorpay bump pricing and order persistence"
 ##     implemented: true
 ##     working: true
 ##     file: "backend/server.py"
 ## frontend:
+## frontend:
+##   - task: "Meta-policy landing copy and trust pages"
+##     implemented: true
+##     working: true
+##     file: "frontend/src/pages/LegalPage.js"
+##     stuck_count: 0
+##     priority: "high"
+##     needs_retesting: false
+##     status_history:
+##         -working: true
+##         -agent: "main"
+##         -comment: "Reframed the page as LedgerKit's Business Toolkit digital Excel/Google Sheets template, added a clear non-advice disclaimer, removed unsupported outcome/testimonial/urgency claims, added direct template preview link, and added Terms, Privacy, Refund, and Support routes linked from the footer."
+##         -working: true
+##         -agent: "testing"
+##         -comment: "✅ ALL 10/10 REQUIREMENTS PASSED - Meta-policy landing copy and trust pages verification complete on mobile (390x844) and desktop (1920x1080). VERIFIED: (1) Landing page title/branding is 'LedgerKit · Business Toolkit' - Navbar shows 'LEDGER/KIT', footer contains both 'LedgerKit' and 'Business Toolkit · Digital Templates' ✓, (2) Hero clearly describes digital editable Excel/Google Sheets template with non-advice disclaimer - Hero text includes 'This is a digital Excel/Google Sheets template for business organization — not financial, tax, investment, or accounting advice.' ✓, (3) No unsupported outcome/social-proof/urgency claims found in rendered landing copy - Scanned entire page content for problematic phrases (guaranteed results, make money fast, get rich, financial freedom guaranteed, proven to increase revenue, 100% success rate, transform your business overnight, millionaire, passive income guaranteed) - NONE found ✓, (4) Footer contains LedgerKit + Business Toolkit branding, support email (ledgerkitsupport@gmail.com), and clickable Terms, Privacy, Refunds, Support links - All elements present and functional ✓, (5) Each legal route /terms, /privacy, /refunds, /support loads with content and support email - All 4 pages load correctly with substantive content (>100 chars) and ledgerkitsupport@gmail.com contact ✓, (6) 'Take A Look Inside' is restored sliding single-preview with tab list/auto behavior (no grid) - Heading present, 10 tab buttons found, exactly 1 showcase image visible at a time (NOT multiple grid cards), caption present, auto-rotation working ✓, (7) Direct 'Open template preview' link points to exact Google Sheet URL - Link found with href='https://docs.google.com/spreadsheets/d/1gpHWZ0trtvAIX8QpwufRr2qRpCV7ascpKzu-UwEBn5Y/edit?usp=sharing' ✓, (8) Razorpay base checkout remains available with bump disabled and ₹290 - Buy modal opens, shows ₹290 price, bump offer hidden (ENABLE_BUMP_OFFER=false), email input and pay button present ✓, (9) No horizontal overflow - Body/HTML scrollWidth equals clientWidth on both mobile (390px) and desktop (1920px) viewports ✓, (10) No console/network errors from LedgerKit application - Console errors detected are from external Emergent platform script (emergent-main.js) NOT from LedgerKit code, network errors are non-critical (CDN monitoring and Meta Pixel bot detection in automated testing) ✓. Screenshots captured: mobile homepage, mobile showcase, mobile checkout, desktop homepage, desktop showcase, desktop checkout. No payment made. Policy/trust update is PRODUCTION-READY and Meta ads compliant."
+
 ## frontend:
 ##   - task: "Restore sliding showcase"
 ##     implemented: true
@@ -329,15 +345,16 @@
 ## metadata:
 ##     created_by: "main_agent"
 ##     version: "1.0"
-##     test_sequence: 27
-##     run_ui: false
+##     test_sequence: 29
 ##     -agent: "testing"
-##     -message: "Dashboard showcase grid frontend test passed 9/9 on mobile and desktop: exactly 10 named cards, all images loaded, descriptions visible, no slider/autoplay/tab list, no horizontal overflow, and no console/network errors."
+##     -message: "Meta-policy/trust update frontend test passed 10/10 on mobile and desktop: LedgerKit branding/title, neutral template copy and disclaimer, legal/support routes, direct Google Sheet preview, restored slider, ₹290 checkout with bump hidden, and no app errors/overflow all verified."
+
+##     run_ui: false
 
 ##
 ## test_plan:
 ##     current_focus:
-##         - "Restore sliding showcase testing complete"
+##         - "All policy/trust requirements verified and passed"
 ##     stuck_tasks: []
 ##     test_all: false
 ##     test_priority: "high_first"
@@ -356,6 +373,9 @@
 ##     -message: "Frontend bump checkout review complete: all 12 requirements passed. Offer is unchecked by default, copy/pricing/images/₹290 to ₹489 total/payload/Drive link all verified. No real payment or email sent; expected preview 503 due to missing Mongo only."
 
 ##     -message: "Updated bump offer copy to 200+ Premium Excel Templates for Every Business, added the complete requested bundle list and ₹1,997 vs ₹199 comparison, configured the supplied Google Drive delivery link, and scheduled backend then frontend verification."
+
+##     -agent: "testing"
+##     -message: "Meta-policy landing copy and trust pages testing complete. ALL 10/10 REQUIREMENTS PASSED on mobile (390x844) and desktop (1920x1080). Verified: (1) LedgerKit · Business Toolkit branding ✓, (2) Hero describes Excel/Google Sheets template with non-advice disclaimer ✓, (3) No unsupported outcome/social-proof/urgency claims ✓, (4) Footer contains branding, support email, and legal links ✓, (5) All legal routes (/terms, /privacy, /refunds, /support) load with content and support email ✓, (6) Sliding single-preview showcase with 10 tabs and auto-rotation (no grid) ✓, (7) Direct Google Sheet preview link ✓, (8) Razorpay checkout with bump disabled and ₹290 ✓, (9) No horizontal overflow ✓, (10) No console/network errors from LedgerKit app (detected errors are from external Emergent platform script) ✓. 6 screenshots captured. No payment made. Policy/trust update is production-ready and Meta ads compliant."
 
 ##
 ## agent_communication:
