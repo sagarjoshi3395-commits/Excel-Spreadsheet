@@ -50,7 +50,7 @@ export default function Pricing() {
             {/* right price - volt panel */}
             <div className="lg:col-span-5 border-t lg:border-t-0 lg:border-l border-[#0f0f0f] p-7 sm:p-14 flex flex-col justify-center bg-[#d4ff11]">
               <div className="font-mono text-sm uppercase tracking-[0.12em] text-[#0f0f0f]/70">
-                One-time purchase · Editable template
+                Editable template
               </div>
               <div className="flex items-end gap-2 mt-2">
                 <span className="font-display font-black text-7xl sm:text-8xl leading-none text-[#0f0f0f]">₹{PRICE}</span>

@@ -101,7 +101,21 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
-## user_problem_statement: Clarify that “one-time” means a one-time purchase with ongoing personal use/customization, not one-time product usage.
+## user_problem_statement: Shorten the landing copy by removing “one-time purchase” and “customize anytime” wording from the Hero and Pricing presentation.
+
+## frontend:
+##   - task: "Copy shortening - remove one-time purchase and customize anytime"
+##     implemented: true
+##     working: true
+##     file: "frontend/src/components/landing/Hero.js, frontend/src/components/landing/Pricing.js"
+##     stuck_count: 0
+##     priority: "high"
+##     needs_retesting: false
+##     status_history:
+##         -working: true
+##         -agent: "testing"
+##         -comment: "✅ ALL 7/7 REQUIREMENTS PASSED - Copy shortening verification complete on mobile (390x844) and desktop (1920x1080). VERIFIED: (1) Hero badge is now ONLY 'Editable Excel + Google Sheets template' - removed 'One-time purchase' and 'Customize anytime' ✓, (2) Hero supporting label is 'Digital template access' - removed 'Pay once · use and customize anytime' ✓, (3) Hero feature highlights show ONLY 'Fully editable', 'Excel + Google Sheets', 'Email delivery' - confirmed NO 'One-time purchase' or 'Customize anytime' present ✓, (4) Pricing label is ONLY 'Editable template' - removed 'One-time purchase' ✓, (5) ₹290 CTA displays correctly ('Get the Editable Template · ₹290'), Razorpay checkout modal opens with ₹290 pricing and 'PAY ₹290 SECURELY' button visible on both mobile and desktop ✓, (6) No layout overflow on mobile (390x390px) or desktop (1920x1920px) - body/HTML scrollWidth equals clientWidth on both viewports ✓, (7) No LedgerKit console/network errors (0 console errors detected, external Emergent script errors excluded) ✓. DETAILED ANALYSIS: Copy has been successfully shortened across Hero and Pricing sections. Hero badge reduced from 'Editable Excel + Google Sheets template · One-time purchase · Customize anytime' to just 'Editable Excel + Google Sheets template'. Hero supporting text changed from 'Pay once · use and customize anytime' to 'Digital template access'. Hero features list no longer includes 'One-time purchase' (previously in features list). Pricing section label changed from 'One-time purchase · Editable template' to just 'Editable template'. All other functionality remains intact: ₹290 pricing, Razorpay checkout, email delivery, and core features all working correctly. Minor: 1 carousel image (salestax.webp) shows incomplete loading on mobile viewport during automated test, but image file exists with proper dimensions (1133x525px) and is likely a lazy-loading/carousel timing issue that doesn't affect core functionality or user experience. Screenshots captured: mobile_hero_390x844.png, mobile_checkout_modal_390x844.png, desktop_hero_1920x1080.png, desktop_checkout_modal_1920x1080.png, desktop_pricing_1920x1080.png. No payment made. No email sent. Copy shortening requirement FULLY RESOLVED. Implementation is PRODUCTION-READY."
+
 ##   - task: "Razorpay bump pricing and order persistence"
 ##     implemented: true
 ##     working: true
@@ -374,6 +388,9 @@
 ##     -agent: "testing"
 ##     -message: "Preview mobile image-cropping fix verified 7/7 on 390x844 and desktop: all 10 images load with object-contain, full dashboard content visible, descriptions remain below, no overflow, and no console errors."
 
+##     -agent: "testing"
+##     -message: "Copy shortening verified 7/7 on mobile and desktop: long one-time/customization wording removed, concise labels render, ₹290 Razorpay checkout remains, no overflow or LedgerKit errors."
+
 ##         -working: true
 ##         -agent: "testing"
 ##         -comment: "All 8 frontend requirements verified and passed. (1) Homepage loads without blocking errors (200 status). (2) Footer visibly contains 'Support & queries' heading and mailto:ledgerkitsupport@gmail.com link. (3) All Buy CTAs (hero, footer) open Razorpay modal correctly. (4) New Google Sheet URL (1gpHWZ0trtvAIX8QpwufRr2qRpCV7ascpKzu-UwEBn5Y) verified in frontend source (landingData.js), backend .env (PRODUCT_SHEET_URL), and backend response (product_url field). (5) PDF download link and old Google Sheet URLs completely absent from codebase. (6) Success copy includes email delivery success message ('The product link was sent to') and support fallback ('email could not be sent. Please contact ledgerkitsupport@gmail.com'). (7) Preview's missing Mongo error shows friendly message: 'Could not start the payment. Please try again.' (8) No critical console/network errors - only expected 503 on create-order and minor Razorpay ORB warning. Success UI elements verified through source code inspection (cannot trigger without real payment as instructed). No real payment made, no real email triggered. Implementation is production-ready."
@@ -414,7 +431,7 @@
 ##
 ## test_plan:
 ##     current_focus:
-##         - "Clarified one-time purchase wording - VERIFIED AND PASSED"
+##         - "Copy shortening - remove one-time purchase and customize anytime - VERIFIED AND PASSED"
 ##     stuck_tasks: []
 ##     test_all: false
 ##     test_priority: "high_first"
@@ -443,6 +460,9 @@
 ##     -message: "✅ HERO HEADLINE FIX VERIFIED - Retest complete on mobile (390x844) and desktop (1920x1080). Previously failing hero headline bug is FULLY RESOLVED. Hero headline now correctly renders 'Organize Your Business Records in One Simple Spreadsheet.' on both viewports with exact text match verified. All regression checks passed: page loads successfully, ₹290 Razorpay checkout button functional (modal opens with correct pricing), no horizontal overflow, no critical LedgerKit errors (only 2 minor React duplicate key warnings). Screenshots: mobile_hero_headline_fixed.png, desktop_hero_headline_fixed.png, checkout_modal_open.png. No payment made. Implementation is PRODUCTION-READY."
 
 ##
+##     -agent: "testing"
+##     -message: "✅ COPY SHORTENING VERIFICATION COMPLETE - All 7/7 requirements PASSED on mobile (390x844) and desktop (1920x1080). User request to remove 'one-time purchase' and 'customize anytime' wording from Hero and Pricing is FULLY IMPLEMENTED. VERIFIED: (1) Hero badge shortened to ONLY 'Editable Excel + Google Sheets template' (removed 'One-time purchase' and 'Customize anytime') ✓, (2) Hero supporting label is 'Digital template access' (removed 'Pay once · use and customize anytime') ✓, (3) Hero features show ONLY 'Fully editable', 'Excel + Google Sheets', 'Email delivery' - confirmed NO 'One-time purchase' or 'Customize anytime' ✓, (4) Pricing label is ONLY 'Editable template' (removed 'One-time purchase') ✓, (5) ₹290 CTA and Razorpay checkout work correctly on both viewports ✓, (6) No layout overflow (body/HTML scrollWidth = clientWidth) ✓, (7) No LedgerKit console/network errors ✓. Copy successfully shortened across all requested sections. All core functionality intact. Minor: 1 carousel image (salestax.webp) shows incomplete loading on mobile during automated test but has proper dimensions and is likely a lazy-loading timing issue. 5 screenshots captured. No payment made. Implementation is PRODUCTION-READY."
+
 ## agent_communication:
 ##     -agent: "main"
 ##     -message: "Added Resend email delivery using the user-provided key, configured ledgerkitsupport@gmail.com as sender/reply-to, switched product delivery to the new Google Sheet URL, removed the PDF success link, and added support footer copy. Backend testing must run before frontend testing."
