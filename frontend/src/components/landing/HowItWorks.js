@@ -2,12 +2,11 @@ import { Reveal, Chapter } from "./Reveal";
 import { useBuy } from "@/hooks/useBuy";
 import { VoltButton } from "./VoltButton";
 import { CreditCard, Mail, Download } from "lucide-react";
-import { PRICE } from "@/lib/landingData";
 
 const steps = [
-  { icon: CreditCard, n: "01", t: "Choose the template", d: "Purchase the Business Toolkit as a one-time digital product through Razorpay." },
-  { icon: Mail, n: "02", t: "Get the access link", d: "Your editable Google Sheet link is sent to the email used at checkout." },
-  { icon: Download, n: "03", t: "Customize your copy", d: "Open it in Excel or Google Sheets and adapt the categories for your own records." },
+  { icon: CreditCard, n: "01", t: "Choose the template", d: "Purchase the editable Business Record Template as a one-time digital product." },
+  { icon: Mail, n: "02", t: "Receive your access", d: "Your access details are sent to the email used during checkout." },
+  { icon: Download, n: "03", t: "Customize your copy", d: "Open the template in Excel or Google Sheets and customize the categories and fields for your own record-keeping workflow." },
 ];
 
 export default function HowItWorks() {
@@ -18,7 +17,7 @@ export default function HowItWorks() {
         <Chapter number="03" label="How It Works" />
         <Reveal className="mb-14 max-w-2xl">
           <h2 className="font-display font-black text-4xl sm:text-6xl leading-[0.95] tracking-tighter">
-            Organize your records in under a minute.
+            Choose, receive, and customize your template.
           </h2>
         </Reveal>
 
@@ -39,7 +38,7 @@ export default function HowItWorks() {
 
         <Reveal delay={0.2} className="mt-12">
           <VoltButton testid="how-cta-buy" onClick={() => setOpen(true)}>
-            Start now · ₹{PRICE}
+            Get the Editable Template
           </VoltButton>
         </Reveal>
       </div>

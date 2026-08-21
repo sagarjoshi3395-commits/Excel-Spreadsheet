@@ -5,14 +5,16 @@ import { PRICE } from "@/lib/landingData";
 import { Check } from "lucide-react";
 
 const includes = [
-  "Income & expense organization tabs",
-  "Automatic summary views",
-  "Monthly, quarterly & annual dashboards",
-  "Category and tax-record fields",
-  "Ready-made graphs & charts",
-  "Works in Excel & Google Sheets",
-  "Fully editable digital template",
-  "One-time access with email delivery",
+  "Editable Business Records",
+  "Automatic Spreadsheet Calculations",
+  "Monthly Overview",
+  "Quarterly Overview",
+  "Annual Overview",
+  "Category Tracking",
+  "Customizable Fields",
+  "Excel + Google Sheets",
+  "Ready-Made Charts",
+  "No Subscription",
 ];
 
 export default function Pricing() {
@@ -29,8 +31,8 @@ export default function Pricing() {
               </span>
               <Reveal className="mt-6">
                 <h2 className="font-display font-black text-4xl sm:text-6xl leading-[0.92] tracking-tighter text-[#0f0f0f]">
-                  Your business organization toolkit.
-                  <span className="text-[#595959]"> One editable file.</span>
+                  Everything You Need to Organize Your Business Records.
+              <span className="text-[#595959]"> One editable file.</span>
                 </h2>
               </Reveal>
               <div className="mt-9 grid sm:grid-cols-2 gap-x-8 gap-y-3">
@@ -54,7 +56,7 @@ export default function Pricing() {
                 <span className="font-display font-black text-7xl sm:text-8xl leading-none text-[#0f0f0f]">₹{PRICE}</span>
                 <span className="font-mono text-sm text-[#0f0f0f]/70 mb-3">/ one-time</span>
               </div>
-              <p className="text-[#0f0f0f]/80 mt-4 leading-relaxed">A practical editable spreadsheet for organizing business records. It is not accounting, tax, investment, or financial advice.</p>
+              <p className="text-[#0f0f0f]/80 mt-4 leading-relaxed">Get the LedgerKit Business Record Template for ₹290. A practical editable spreadsheet for organizing business records.</p>
               <motion.button
                 data-testid="pricing-cta-buy"
                 onClick={() => setOpen(true)}
@@ -62,7 +64,7 @@ export default function Pricing() {
                 whileHover={{ y: -2 }}
                 className="mt-8 w-full bg-[#0f0f0f] text-[#f6f5f2] border border-[#0f0f0f] py-4 font-mono text-sm uppercase tracking-[0.12em] font-semibold hover:bg-[#161616] transition-colors duration-300"
               >
-                Buy now · Instant access
+                Get the Editable Template
               </motion.button>
               <p className="text-center font-mono text-[10px] uppercase tracking-[0.08em] text-[#0f0f0f]/60 mt-4">
                 Digital template · Not financial, tax, investment, or accounting advice

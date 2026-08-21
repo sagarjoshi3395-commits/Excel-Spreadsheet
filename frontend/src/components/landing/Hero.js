@@ -4,7 +4,7 @@ import { VoltButton } from "./VoltButton";
 import { IMAGES, PRICE } from "@/lib/landingData";
 import { Check, TrendingUp, LayoutGrid, Zap } from "lucide-react";
 
-const lines = ["The last", "spreadsheet", "you'll ever", "need."];
+const lines = ["Organize Your", "Business Records", "in One Simple", "Spreadsheet."];
 
 const lineParent = { hidden: {}, show: { transition: { staggerChildren: 0.12, delayChildren: 0.3 } } };
 const lineChild = { hidden: { y: "110%" }, show: { y: "0%", transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] } } };
@@ -72,26 +72,26 @@ export default function Hero() {
             className="inline-flex items-center gap-2 font-mono text-[11px] sm:text-xs uppercase tracking-[0.16em] border border-[#0f0f0f] px-3 py-1.5 mb-7 bg-[#d4ff11]"
           >
             <span className="w-1.5 h-1.5 bg-[#0f0f0f] rounded-full" />
-            One Excel file · No software · Lifetime
+            Editable Excel + Google Sheets template · One-time digital product
           </motion.div>
 
           <motion.h1 variants={lineParent} initial="hidden" animate="show" className="font-display font-black text-[3rem] sm:text-7xl lg:text-[5.5rem] leading-[0.9] tracking-tighter">
             {lines.map((l, i) => (
               <span key={i} className="block overflow-hidden">
                 <motion.span variants={lineChild} className="block">
-                  {i === 3 ? (<span>need<span className="text-[#0f0f0f] bg-[#d4ff11] px-1">.</span></span>) : l}
+                  {i === 3 ? (<span>Spreadsheet<span className="text-[#0f0f0f] bg-[#d4ff11] px-1">.</span></span>) : l}
                 </motion.span>
               </span>
             ))}
           </motion.h1>
 
           <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1, duration: 0.7 }} className="mt-6 text-base sm:text-lg text-[#595959] max-w-md leading-relaxed">
-            Organize income, expenses, categories and monthly summaries in one editable spreadsheet. This is a digital Excel/Google Sheets template for business organization — not financial, tax, investment, or accounting advice.
+            Organize business records, categories, and recurring entries in one editable Excel and Google Sheets template. LedgerKit is a digital spreadsheet for business organization — not financial, tax, investment, or accounting advice.
           </motion.p>
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.15, duration: 0.7 }} className="mt-8 flex flex-wrap items-center gap-4 sm:gap-5">
             <VoltButton testid="hero-cta-buy" onClick={() => setOpen(true)}>
-              Get the Business Toolkit · ₹{PRICE}
+              Get the Editable Template · ₹{PRICE}
             </VoltButton>
             <div className="font-mono text-xs uppercase tracking-[0.12em] text-[#595959]">
               <span className="text-[#595959]">One-time digital template access</span>
@@ -99,7 +99,7 @@ export default function Hero() {
           </motion.div>
 
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.3 }} className="mt-7 flex flex-wrap gap-x-6 gap-y-2 font-mono text-[11px] sm:text-xs uppercase tracking-[0.1em] text-[#595959]">
-            {["Fully editable", "Organize business records", "Instant email delivery"].map((f) => (
+            {["Fully editable", "Excel + Google Sheets", "One-time digital product", "Email delivery"].map((f) => (
               <span key={f} className="inline-flex items-center gap-1.5">
                 <Check className="w-3.5 h-3.5 text-[#0f0f0f]" /> {f}
               </span>

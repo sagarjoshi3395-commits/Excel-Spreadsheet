@@ -12,11 +12,12 @@ export default function Footer() {
           <div>
             <p className="font-mono text-xs uppercase tracking-[0.16em] text-[#d4ff11] mb-4">Ready when you are</p>
             <h2 className="font-display font-black text-4xl sm:text-6xl leading-[0.92] tracking-tighter max-w-2xl">
-              Stop guessing. Start seeing your numbers clearly.
+              Keep Your Business Records Organized in One Editable File.
+              <span className="text-[#f6f5f2]/60 block text-base sm:text-lg font-body font-normal mt-4">Get the LedgerKit Business Record Template for ₹290.</span>
             </h2>
           </div>
           <VoltButton testid="footer-cta-buy" onClick={() => setOpen(true)} dark>
-            Get it for ₹{PRICE}
+            Get the Editable Template
           </VoltButton>
         </div>
 

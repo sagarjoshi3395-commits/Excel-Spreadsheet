@@ -57,11 +57,10 @@ export default function Showcase() {
         <Chapter number="02" label="Take A Look Inside" />
         <Reveal className="mb-10 max-w-3xl">
           <h2 className="font-display font-black text-4xl sm:text-6xl leading-[0.95] tracking-tighter">
-            One file. Ten dashboards. Zero formulas to write.
+            One Editable File With Organized Views.
           </h2>
           <p className="mt-5 text-[#595959] text-base sm:text-lg leading-relaxed">
-            Every tab updates itself the moment you type a number. Watch it cycle through
-            the real sheets — or tap any tab to explore.
+            Choose the sections you need, customize the categories, and enter your records. Built-in spreadsheet formulas update the relevant views automatically.
           </p>
         </Reveal>
 
@@ -99,7 +98,7 @@ export default function Showcase() {
                   <span className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full border border-[#0f0f0f] bg-white" />
                 </span>
                 <span className="font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.12em] text-[#595959] truncate">
-                  {tab.label} tab
+                  {tab.label} view
                 </span>
                 <span className="ml-auto flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-[#595959]">
                   <span className={`w-1.5 h-1.5 rounded-full bg-[#d4ff11]`} />

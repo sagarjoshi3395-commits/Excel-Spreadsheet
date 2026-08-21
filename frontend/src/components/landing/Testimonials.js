@@ -1,5 +1,5 @@
 import { Reveal, Chapter } from "./Reveal";
-import { Star, Quote } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 
 const stats = [
   { n: "10", l: "Editable template views" },
@@ -17,28 +17,14 @@ const featured = {
 };
 
 const reviews = [
-  { quote: "The categories and editable fields make it simple to adapt the sheet to my workflow.", name: "Template feature", role: "Editable fields", init: "EF", rating: 5 },
-  { quote: "I can open the same product in Excel or Google Sheets and review the layout before using it.", name: "Template feature", role: "Two compatible formats", init: "TF", rating: 5 },
-  { quote: "The named tabs make it easy to find the view I need without learning new software.", name: "Template feature", role: "Clear navigation", init: "CN", rating: 5 },
-  { quote: "The product is delivered digitally to the email used at checkout.", name: "Delivery detail", role: "Digital access", init: "DA", rating: 5 },
+  { quote: "The categories and editable fields make it simple to adapt the sheet to my workflow.", name: "Editable fields", role: "Product feature", init: "EF", rating: 5 },
+  { quote: "I can open the same product in Excel or Google Sheets and review the layout before using it.", name: "Two compatible formats", role: "Product feature", init: "TF", rating: 5 },
+  { quote: "The named tabs make it easy to find the view I need without learning new software.", name: "Clear navigation", role: "Product feature", init: "CN", rating: 5 },
+  { quote: "The product is delivered digitally to the email used at checkout.", name: "Digital access", role: "Delivery detail", init: "DA", rating: 5 },
 ];
 
-function Stars() {
-  return (
-    <div className="flex gap-0.5">
-      {[...Array(5)].map((_, i) => (
-        <Star key={i} className="w-3.5 h-3.5 fill-[#0f0f0f] text-[#0f0f0f]" />
-      ))}
-    </div>
-  );
-}
-
-function Avatar({ init, dark }) {
-  return (
-    <span className={`grid place-items-center w-11 h-11 border border-[#0f0f0f] font-mono text-sm font-semibold shrink-0 ${dark ? "bg-[#d4ff11] text-[#0f0f0f]" : "bg-[#0f0f0f] text-[#f6f5f2]"}`}>
-      {init}
-    </span>
-  );
+function FeatureMark() {
+  return <CheckCircle2 className="w-5 h-5 text-[#0f0f0f] shrink-0" />;
 }
 
 export default function Testimonials() {
@@ -61,17 +47,13 @@ export default function Testimonials() {
           {/* featured */}
           <Reveal className="lg:col-span-5">
             <div className="h-full bg-[#d4ff11] text-[#0f0f0f] border border-[#0f0f0f] hard-shadow p-8 sm:p-10 flex flex-col">
-              <Quote className="w-10 h-10 text-[#0f0f0f]" />
-              <Stars2 />
+              <FeatureMark />
               <p className="font-display font-bold text-2xl sm:text-3xl leading-snug mt-4">
-                “{featured.quote}”
+                {featured.quote}
               </p>
-              <div className="flex items-center gap-4 mt-auto pt-8">
-                <Avatar init={featured.init} />
-                <div>
-                  <p className="font-semibold">{featured.name}</p>
-                  <p className="font-mono text-xs uppercase tracking-[0.1em] text-[#0f0f0f]/60">{featured.role}</p>
-                </div>
+              <div className="mt-auto pt-8">
+                <p className="font-semibold">{featured.name}</p>
+                <p className="font-mono text-xs uppercase tracking-[0.1em] text-[#0f0f0f]/60">{featured.role}</p>
               </div>
             </div>
           </Reveal>
@@ -81,14 +63,11 @@ export default function Testimonials() {
             {reviews.map((r, i) => (
               <Reveal key={r.name} delay={i * 0.06}>
                 <div className="h-full bg-white border border-[#0f0f0f] p-6 hover:hard-shadow-sm hover:-translate-y-1 transition-all duration-300" data-testid={`testimonial-${i}`}>
-                  <Stars />
-                  <p className="text-[#0f0f0f] leading-relaxed mt-4">“{r.quote}”</p>
-                  <div className="flex items-center gap-3 mt-6">
-                    <Avatar init={r.init} />
-                    <div>
-                      <p className="font-semibold text-sm">{r.name}</p>
-                      <p className="font-mono text-[11px] uppercase tracking-[0.1em] text-[#595959]">{r.role}</p>
-                    </div>
+                  <FeatureMark />
+                  <p className="text-[#0f0f0f] leading-relaxed mt-4">{r.quote}</p>
+                  <div className="mt-6">
+                    <p className="font-semibold text-sm">{r.name}</p>
+                    <p className="font-mono text-[11px] uppercase tracking-[0.1em] text-[#595959]">{r.role}</p>
                   </div>
                 </div>
               </Reveal>
@@ -97,15 +76,5 @@ export default function Testimonials() {
         </div>
       </div>
     </section>
-  );
-}
-
-function Stars2() {
-  return (
-    <div className="flex gap-0.5 mt-5">
-      {[...Array(5)].map((_, i) => (
-        <Star key={i} className="w-4 h-4 fill-[#0f0f0f] text-[#0f0f0f]" />
-      ))}
-    </div>
   );
 }

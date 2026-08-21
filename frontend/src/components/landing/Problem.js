@@ -2,10 +2,11 @@ import { Reveal, Chapter } from "./Reveal";
 import { X } from "lucide-react";
 
 const pains = [
-  "Paying monthly for software features you barely use.",
-  "Copy-pasting records between apps and still spending hours formatting sheets.",
-  "Confusing dashboards, hidden features and steep learning curves.",
-  "No simple place to organize business entries and recurring categories.",
+  "Business entries spread across different files.",
+  "Repeatedly formatting the same spreadsheet.",
+  "Difficulty keeping categories consistent.",
+  "No simple place to keep recurring business records.",
+  "Spending unnecessary time maintaining spreadsheets.",
 ];
 
 export default function Problem() {
@@ -16,9 +17,9 @@ export default function Problem() {
         <div className="grid lg:grid-cols-12 gap-10">
           <Reveal className="lg:col-span-7">
             <h2 className="font-display font-black text-4xl sm:text-6xl leading-[0.95] tracking-tighter">
-              Running a business is hard.
+              Keep Your Business Records Organized
               <br />
-              <span className="text-[#595959]">Organize your business records without a subscription.</span>
+              <span className="text-[#595959]">Without Another Software Subscription.</span>
             </h2>
           </Reveal>
           <div className="lg:col-span-5 space-y-4">

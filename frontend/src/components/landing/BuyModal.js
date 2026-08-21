@@ -78,10 +78,10 @@ export default function BuyModal() {
         amount: order.amount,
         currency: order.currency,
         order_id: order.order_id,
-        name: "LedgerKit",
+        name: "Business Record Template",
         description: includeBump
-          ? "Business Management Toolkit + Productivity & Execution Bundle"
-          : "Business Management Toolkit — lifetime access",
+          ? "Business Record Template + Productivity & Execution Bundle"
+          : "Business Record Template — editable Excel and Google Sheets file",
         prefill: { email },
         theme: { color: "#0f0f0f" },
         modal: { ondismiss: () => setStage("form") },

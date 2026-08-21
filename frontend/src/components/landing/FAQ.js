@@ -7,12 +7,14 @@ import {
 } from "@/components/ui/accordion";
 
 const faqs = [
-  { q: "Do I need any special software?", a: "No. Business Toolkit is an editable Excel and Google Sheets template. If you can open either format, you can use it." },
-  { q: "Is it really fully editable?", a: "Yes. Change categories, colours, labels and formulas however you like. It's your file forever." },
-  { q: "What exactly am I buying?", a: "A digital, editable Excel and Google Sheets Business Toolkit with record-keeping tabs, summary dashboards, categories, formulas, and charts. It is not a financial product or professional advice service." },
-  { q: "How do I receive the file after buying?", a: "After your Razorpay payment is verified, the editable Google Sheet link appears immediately and is also sent to your registered email address." },
-  { q: "Is this a one-time payment?", a: "Yes. Pay ₹290 once for the digital Business Toolkit. There is no subscription or recurring charge." },
-  { q: "Will my numbers update automatically?", a: "The template includes formulas and summaries that update as you enter your own records. It is an organizational spreadsheet, not accounting, tax, investment, or financial advice." },
+  { q: "Is this an Excel file or Google Sheets template?", a: "Both. LedgerKit is a digital template that can be opened and edited in Excel or Google Sheets." },
+  { q: "Can I edit the template?", a: "Yes. The fields, categories, labels, formulas, and available views are editable for your own workflow." },
+  { q: "Can I customize the categories?", a: "Yes. You can adapt categories and recurring-entry fields to match how you organize your own business records." },
+  { q: "How do I receive the template?", a: "After your Razorpay payment is verified, the Google Sheet access link appears on screen and is sent to the email used during checkout." },
+  { q: "Is this a one-time purchase?", a: "Yes. Pay ₹290 once for the digital Business Toolkit. There is no subscription or recurring charge." },
+  { q: "Do I need special software?", a: "No. You only need Excel or Google Sheets to open and customize the template." },
+  { q: "What is included in the template?", a: "The product includes 10 editable spreadsheet views, ready-made charts, customizable fields, and Excel + Google Sheets compatibility." },
+  { q: "Do I receive financial or tax advice?", a: "No. LedgerKit is a digital spreadsheet template for organizing information. It does not provide financial, investment, tax, accounting, or other professional advice." },
 ];
 
 export default function FAQ() {
