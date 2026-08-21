@@ -101,13 +101,32 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
-## user_problem_statement: Update the LedgerKit landing page to use neutral, factual business-record template positioning, add transparent trust/legal pages, keep the restored sliding showcase, and preserve the ₹290 checkout/delivery flow.
+## user_problem_statement: Fix preview showcase cards having excessive blank space above/below the full dashboard images before the description text.
 ##   - task: "Razorpay bump pricing and order persistence"
 ##     implemented: true
 ##     working: true
 ##     file: "backend/server.py"
 ## frontend:
 ## frontend:
+## frontend:
+##   - task: "Compact showcase image spacing"
+##     implemented: true
+##     working: true
+##     file: "frontend/src/components/landing/Showcase.js"
+##     stuck_count: 0
+##     priority: "high"
+##     needs_retesting: false
+##     status_history:
+##         -working: false
+##         -agent: "user"
+##         -comment: "Preview dashboard cards had excessive blank space above and below images before the description text."
+##         -working: true
+##         -agent: "main"
+##         -comment: "Removed fixed minimum image heights, image padding, max-height, and extra description padding so each card wraps tightly around the full contained dashboard image."
+##         -working: true
+##         -agent: "testing"
+##         -comment: "✅ ALL 8/8 REQUIREMENTS PASSED - Compact showcase image spacing verified successfully on mobile (390x844) and desktop (1920x1080). USER-REPORTED BUG FULLY RESOLVED. VERIFIED: (1) Exactly 10 separate dashboard cards remain (Setup, Income, Expenses, Monthly, Annual, 5-Year, Comparison, Custom, Balance, Sales Tax) ✓, (2) All 10 images load and remain fully visible with object-contain (naturalWidth/Height > 0 for all, object-fit: contain confirmed) - NO cropping ✓, (3) Image containers have NO fixed min-height (0px), NO extra image padding (0px), NO max-height (none) causing blank space ✓, (4) Each image ends closely above its description with only normal small spacing (1px border spacing between image and description, no excessive gaps) ✓, (5) No excessive blank area above/below images in mobile cards (container height matches image height + 1px border) ✓, (6) No horizontal overflow/broken images (mobile: scrollWidth=390px=clientWidth, desktop: scrollWidth=1920px=clientWidth, all images loaded successfully) ✓, (7) Preview template link remains visible and correct (href='https://docs.google.com/spreadsheets/d/1gpHWZ0trtvAIX8QpwufRr2qRpCV7ascpKzu-UwEBn5Y/edit?usp=sharing', text='Preview the template', visible in viewport) ✓, (8) No LedgerKit console/network errors (0 console errors, 0 network errors detected) ✓. DETAILED ANALYSIS: Mobile images display 348px wide with heights 144-244px (responsive), desktop images display 451px wide with heights 186-316px. Space between image bottom and description top is exactly 1px (border only, not excessive). Container styling confirmed: minHeight=0px, maxHeight=none, padding=0px on all tested cards. Grid layout: mobile 1-column, desktop 3-column, both responsive with no overflow. Screenshots captured: mobile_showcase_cards_390x844.png (showing cards 3-6), desktop_showcase_cards_1920x1080.png (showing all 10 cards in 3-column grid). No payment made. No email sent. The fix successfully eliminated excessive blank space - images now wrap tightly with minimal spacing. Implementation is PRODUCTION-READY."
+
 ##   - task: "Meta-policy landing copy and trust pages"
 ##     implemented: true
 ##     working: true
@@ -349,6 +368,9 @@
 ##     needs_retesting: false
 ##     status_history:
 ##         -working: true
+##     -agent: "testing"
+##     -message: "Compact showcase spacing fix verified 8/8 on mobile and desktop: no fixed min/max heights or padding, full images remain contained, descriptions sit directly below images, preview link works, no overflow or LedgerKit errors."
+
 ##         -agent: "testing"
 ##     -agent: "testing"
 ##     -message: "Final policy-safe landing regression passed 20/20 on mobile and desktop: exact hero headline, neutral copy/disclaimer, no fake testimonials or duplicate-key warnings, restored slider, direct preview link, legal/support pages, ₹290 checkout with bump disabled, no overflow/broken images, and zero LedgerKit console/network errors."
@@ -361,7 +383,7 @@
 ## metadata:
 ##     created_by: "main_agent"
 ##     version: "1.0"
-##     test_sequence: 31
+##     test_sequence: 33
 ##     -agent: "testing"
 ##     -message: "Meta-policy/trust update frontend test passed 10/10 on mobile and desktop: LedgerKit branding/title, neutral template copy and disclaimer, legal/support routes, direct Google Sheet preview, restored slider, ₹290 checkout with bump hidden, and no app errors/overflow all verified."
 
@@ -369,14 +391,17 @@
 
 ##
 ## test_plan:
-##     current_focus: []
+##     current_focus:
+##         - "Compact showcase image spacing - VERIFIED AND PASSED"
 ##     stuck_tasks: []
 ##     test_all: false
 ##     test_priority: "high_first"
 ##
 ## agent_communication:
 ##     -agent: "main"
-##     -message: "User reported preview still showed ₹489 after selecting the new ₹149 bump. Fixed stale frontend hardcoded totals so selected total and Pay CTA now use ₹439; backend already uses 43900 paise. Frontend verification required."
+##     -message: "User reported preview showcase cards having excessive blank space above/below the full dashboard images before the description text. Fixed by removing fixed minimum image heights, image padding, max-height, and extra description padding so each card wraps tightly around the full contained dashboard image. Frontend verification required on mobile (390x844) and desktop (1920x1080)."
+##     -agent: "testing"
+##     -message: "✅ COMPACT SHOWCASE IMAGE SPACING FIX VERIFIED - All 8/8 requirements PASSED on mobile (390x844) and desktop (1920x1080). User-reported bug FULLY RESOLVED. Verified: (1) Exactly 10 cards remain ✓, (2) All images load with object-contain/no crop ✓, (3) No fixed min-height/max-height/extra padding ✓, (4) Only 1px spacing between image and description ✓, (5) No excessive blank area in mobile cards ✓, (6) No horizontal overflow/broken images ✓, (7) Preview link visible and correct (Google Sheets URL) ✓, (8) No LedgerKit console/network errors ✓. Detailed analysis: Container styling confirmed minHeight=0px, maxHeight=none, padding=0px. Space between image and description is exactly 1px (border only). Mobile displays 1-column grid, desktop displays 3-column grid, both responsive. Screenshots captured showing tight spacing with no excessive blank areas. Implementation is PRODUCTION-READY."
 
 ##     -agent: "main"
 ##     -message: "User reported the production mobile modal overflowed: ₹199 price clipped outside the card and Pay button below the viewport. Preview fix adds bounded internal scrolling, responsive padding, stacked price/content, and mobile-safe controls. Frontend testing required before completion."
@@ -451,6 +476,10 @@
 
 ##     -agent: "testing"
 ##     -message: "Restore sliding showcase testing complete. ALL 9/9 REQUIREMENTS PASSED on mobile (390x844) and desktop (1920x1080). Selective rollback successfully verified: (1) Sliding single-preview layout with tab list and one active image restored ✓, (2) Auto-rotation, Auto indicator, and pause behavior working ✓, (3) Old grid with 10 simultaneous cards completely absent ✓, (4) Original short labels verified (Setup, Income, Expenses, Monthly, Annual, 5-Year, Comparison, Custom, Balance, Sales Tax) ✓, (5) Active image fully contained and not clipped ✓, (6) Tab click changes preview/caption ✓, (7) No horizontal overflow on mobile or desktop ✓, (8) No console/network errors ✓, (9) Razorpay checkout remains available and unchanged (₹290 base price, bump offer correctly hidden) ✓. 3 screenshots captured. No payment made. Implementation is production-ready."
+
+##     -agent: "testing"
+##     -message: "✅ ALL 9/9 REQUIREMENTS PASSED - Final showcase grid verification complete on mobile (390x844) and desktop (1920x1080). User request to remove sliding UI and restore separate dashboard cards in grid is FULLY IMPLEMENTED. VERIFIED: (1) Sliding/carousel/tab-list/auto UI is completely gone - 0 carousel elements, 0 tab lists, 0 auto/pause buttons detected ✓, (2) Exactly 10 separate dashboard image cards render simultaneously in responsive grid (grid-cols-1 on mobile, grid-cols-3 on desktop) - all 10 cards visible at once, no carousel behavior ✓, (3) All 10 cards have correct neutral headings (Setup, Income, Expenses, Monthly, Annual, 5-Year, Comparison, Custom, Balance, Sales Tax) and descriptions present ✓, (4) All 10 images load successfully (naturalWidth/Height > 0) with object-contain styling on both mobile and desktop - NO cropping, full dashboard content visible ✓, (5) No horizontal overflow on mobile (390x390) or desktop (1920x1920), descriptions remain below each image ✓, (6) Upper 'Preview the template' link present with exact Google Sheet URL (1gpHWZ0trtvAIX8QpwufRr2qRpCV7ascpKzu-UwEBn5Y) ✓, (7) Lower preview section present with 'See the real template before you buy' text and Google Sheet preview description ✓, (8) ₹290 Razorpay checkout opens correctly on both mobile and desktop with bump offer disabled (ENABLE_BUMP_OFFER=false) - no bump card, no bump checkbox, no bump add button, only base ₹290 price and 'PAY ₹290 SECURELY' button ✓, (9) No LedgerKit console or network errors detected (0 app-specific errors, external Emergent platform errors excluded) ✓. 6 screenshots captured: mobile_showcase_grid.png, desktop_showcase_grid.png, lower_preview_section.png, checkout_modal_verification.png, mobile_before_click.png, mobile_modal_open.png. No payment made. No email sent. Implementation is PRODUCTION-READY."
+
 ##     -agent: "testing"
 ##     -message: "🚨 CRITICAL ISSUE FOUND - Complete LedgerKit landing page rewrite verification on mobile (390x844) and desktop (1920x1080). RESULTS: 21/22 tests PASSED (95.5%), 1 CRITICAL FAILURE. ❌ CRITICAL FAILURE: Hero headline says 'Organize Your Business Records in One Simple need.' but review request requirement #2 explicitly requires 'Organize Your Business Records in One Simple Spreadsheet.' The word 'Spreadsheet' has been replaced with 'need' in Hero.js line 82. This MUST be fixed before production. ✅ PASSED (21/22): (1) Branding 'LedgerKit · Business Toolkit' present in navbar and footer ✓, (2) Hero description includes editable Excel/Google Sheets template with non-advice disclaimer ✓, Hero CTA 'Get the Editable Template · ₹290' with 'One-time digital template access' ✓, (3) Feature highlights use neutral organizational labels (MONTHLY DASHBOARDS, AUTO-CALCULATIONS, etc.) ✓, (4) Problem section 'Keep Your Business Records Organized Without Another Software Subscription' with correct pain points ✓, (5) 'Take A Look Inside' restored sliding single-preview with 10 tabs, 1 active image, 'One Editable File With Organized Views' copy, tab click behavior, and direct Google Sheet preview link (1gpHWZ0trtvAIX8QpwufRr2qRpCV7ascpKzu-UwEBn5Y) ✓, (6) How It Works has 3 correct steps (Choose, Receive, Customize) ✓, (7) What's Included shows 10 views, Excel + Google Sheets, 1 digital template, ₹290 one-time purchase ✓, (8) No fake testimonial-style names (uses 'Template feature', 'Delivery detail', 'Business Toolkit' labels) ✓, (9) Pricing uses ₹290 and 'One-time digital template' with neutral copy, no urgency ✓, (10) FAQ includes 8 questions covering template/editing/delivery/advice topics ✓, (11) Footer CTA 'Keep Your Business Records Organized in One Editable File' with LedgerKit branding, ledgerkitsupport@gmail.com, and clickable Terms/Privacy/Refunds/Support links ✓, (12) All 4 legal routes (/terms, /privacy, /refunds, /support) load with substantive content (500-714 chars) and support email ✓, (13) Razorpay checkout opens at ₹290 with bump offer disabled (ENABLE_BUMP_OFFER=false), email input and pay button present ✓, (14) Google Sheet preview link correct (1gpHWZ0trtvAIX8QpwufRr2qRpCV7ascpKzu-UwEBn5Y) ✓, (15) No horizontal overflow on mobile (390x390) or desktop (1920x1920), 0 broken images, no app console errors (external Emergent script errors excluded) ✓. 4 screenshots captured: mobile homepage, desktop homepage, checkout modal, hero headline closeup. No payment made. BLOCKER: Hero headline MUST say 'Spreadsheet' not 'need' per review request requirement #2."
 
