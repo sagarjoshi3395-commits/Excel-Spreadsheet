@@ -72,7 +72,7 @@ export default function Hero() {
             className="inline-flex items-center gap-2 font-mono text-[11px] sm:text-xs uppercase tracking-[0.16em] border border-[#0f0f0f] px-3 py-1.5 mb-7 bg-[#d4ff11]"
           >
             <span className="w-1.5 h-1.5 bg-[#0f0f0f] rounded-full" />
-            Editable Excel + Google Sheets template · One-time digital product
+            Editable Excel + Google Sheets template · One-time purchase · Customize anytime
           </motion.div>
 
           <motion.h1 variants={lineParent} initial="hidden" animate="show" className="font-display font-black text-[3rem] sm:text-7xl lg:text-[5.5rem] leading-[0.9] tracking-tighter">
@@ -94,12 +94,12 @@ export default function Hero() {
               Get the Editable Template · ₹{PRICE}
             </VoltButton>
             <div className="font-mono text-xs uppercase tracking-[0.12em] text-[#595959]">
-              <span className="text-[#595959]">One-time digital template access</span>
+              <span className="text-[#595959]">Pay once · use and customize anytime</span>
             </div>
           </motion.div>
 
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.3 }} className="mt-7 flex flex-wrap gap-x-6 gap-y-2 font-mono text-[11px] sm:text-xs uppercase tracking-[0.1em] text-[#595959]">
-            {["Fully editable", "Excel + Google Sheets", "One-time digital product", "Email delivery"].map((f) => (
+            {["Fully editable", "Excel + Google Sheets", "One-time purchase", "Email delivery"].map((f) => (
               <span key={f} className="inline-flex items-center gap-1.5">
                 <Check className="w-3.5 h-3.5 text-[#0f0f0f]" /> {f}
               </span>

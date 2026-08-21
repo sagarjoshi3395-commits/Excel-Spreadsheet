@@ -101,7 +101,7 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
-## user_problem_statement: Fix preview showcase cards having excessive blank space above/below the full dashboard images before the description text.
+## user_problem_statement: Clarify that “one-time” means a one-time purchase with ongoing personal use/customization, not one-time product usage.
 ##   - task: "Razorpay bump pricing and order persistence"
 ##     implemented: true
 ##     working: true
@@ -111,6 +111,25 @@
 ## frontend:
 ##   - task: "Compact showcase image spacing"
 ##     implemented: true
+## frontend:
+##   - task: "Clarified one-time purchase wording"
+##     implemented: true
+##     working: true
+##     file: "frontend/src/components/landing/Hero.js"
+##     stuck_count: 0
+##     priority: "medium"
+##     needs_retesting: false
+##     status_history:
+##         -working: true
+##         -agent: "main"
+##         -comment: "Changed ambiguous one-time digital product wording to clearly say one-time purchase, customize anytime, and pay once/use anytime. Pricing label also clarifies editable template purchase."
+##         -working: false
+##         -agent: "testing"
+##         -comment: "Initial test found 5/7 requirements passed but CRITICAL ISSUE: ambiguous phrase 'One-time digital product' was still present in Hero.js line 102 features list, violating requirement #3. This phrase needed to be removed or changed to clarify one-time PURCHASE not one-time usage."
+##         -working: true
+##         -agent: "testing"
+##         -comment: "✅ ALL 7/7 REQUIREMENTS PASSED - One-time purchase clarification verified successfully on mobile (390x844) and desktop (1920x1080). CRITICAL FIX APPLIED AND VERIFIED. VERIFIED: (1) Hero badge clearly says 'Editable Excel + Google Sheets template · One-time purchase · Customize anytime' ✓, (2) Hero supporting text says 'Pay once · use and customize anytime' ✓, (3) CRITICAL: Ambiguous phrase 'One-time digital product' is now ABSENT from rendered landing copy - changed to 'One-time purchase' in Hero.js line 102 features list ✓, (4) Pricing section says 'One-time purchase · Editable template' ✓, (5) ₹290 CTA displays correctly ('Get the Editable Template · ₹290'), Razorpay checkout modal opens with ₹290 pricing and Razorpay branding visible ✓, (6) No layout overflow on mobile (390x390px) or desktop (1920x1920px), no broken images (0 broken images detected) ✓, (7) No LedgerKit console/network errors (0 LedgerKit errors, external Emergent script errors excluded) ✓. DETAILED ANALYSIS: The phrase 'One-time purchase' now appears 3 times in the landing page (hero badge, features list, pricing section), providing consistent messaging that clarifies this is a one-time PURCHASE with ongoing personal use and customization rights, not one-time product usage. Features list now shows: 'Fully editable', 'Excel + Google Sheets', 'One-time purchase', 'Email delivery'. All other copy elements remain unchanged and correct. Screenshots captured: mobile_hero_390x844.png, mobile_hero_features_fixed_390x844.png, desktop_hero_1920x1080.png, desktop_hero_features_fixed_1920x1080.png. No payment made. No email sent. User-reported clarification requirement FULLY RESOLVED. Implementation is PRODUCTION-READY."
+
 ##     working: true
 ##     file: "frontend/src/components/landing/Showcase.js"
 ##     stuck_count: 0
@@ -367,6 +386,9 @@
 ##     priority: "high"
 ##     needs_retesting: false
 ##     status_history:
+##     -agent: "testing"
+##     -message: "One-time purchase wording verification passed 7/7 on mobile and desktop: badge/support/pricing are clear, ambiguous one-time digital product phrase absent, ₹290 Razorpay remains, no overflow/broken images, and no LedgerKit errors."
+
 ##         -working: true
 ##     -agent: "testing"
 ##     -message: "Compact showcase spacing fix verified 8/8 on mobile and desktop: no fixed min/max heights or padding, full images remain contained, descriptions sit directly below images, preview link works, no overflow or LedgerKit errors."
@@ -383,7 +405,7 @@
 ## metadata:
 ##     created_by: "main_agent"
 ##     version: "1.0"
-##     test_sequence: 33
+##     test_sequence: 34
 ##     -agent: "testing"
 ##     -message: "Meta-policy/trust update frontend test passed 10/10 on mobile and desktop: LedgerKit branding/title, neutral template copy and disclaimer, legal/support routes, direct Google Sheet preview, restored slider, ₹290 checkout with bump hidden, and no app errors/overflow all verified."
 
@@ -392,7 +414,7 @@
 ##
 ## test_plan:
 ##     current_focus:
-##         - "Compact showcase image spacing - VERIFIED AND PASSED"
+##         - "Clarified one-time purchase wording - VERIFIED AND PASSED"
 ##     stuck_tasks: []
 ##     test_all: false
 ##     test_priority: "high_first"
@@ -401,7 +423,7 @@
 ##     -agent: "main"
 ##     -message: "User reported preview showcase cards having excessive blank space above/below the full dashboard images before the description text. Fixed by removing fixed minimum image heights, image padding, max-height, and extra description padding so each card wraps tightly around the full contained dashboard image. Frontend verification required on mobile (390x844) and desktop (1920x1080)."
 ##     -agent: "testing"
-##     -message: "✅ COMPACT SHOWCASE IMAGE SPACING FIX VERIFIED - All 8/8 requirements PASSED on mobile (390x844) and desktop (1920x1080). User-reported bug FULLY RESOLVED. Verified: (1) Exactly 10 cards remain ✓, (2) All images load with object-contain/no crop ✓, (3) No fixed min-height/max-height/extra padding ✓, (4) Only 1px spacing between image and description ✓, (5) No excessive blank area in mobile cards ✓, (6) No horizontal overflow/broken images ✓, (7) Preview link visible and correct (Google Sheets URL) ✓, (8) No LedgerKit console/network errors ✓. Detailed analysis: Container styling confirmed minHeight=0px, maxHeight=none, padding=0px. Space between image and description is exactly 1px (border only). Mobile displays 1-column grid, desktop displays 3-column grid, both responsive. Screenshots captured showing tight spacing with no excessive blank areas. Implementation is PRODUCTION-READY."
+##     -message: "✅ ONE-TIME PURCHASE CLARIFICATION VERIFIED - All 7/7 requirements PASSED on mobile (390x844) and desktop (1920x1080). CRITICAL FIX APPLIED: Changed 'One-time digital product' to 'One-time purchase' in Hero.js line 102 features list. User-reported clarification requirement FULLY RESOLVED. Verified: (1) Hero badge says 'Editable Excel + Google Sheets template · One-time purchase · Customize anytime' ✓, (2) Hero supporting text says 'Pay once · use and customize anytime' ✓, (3) Ambiguous phrase 'One-time digital product' is now ABSENT from rendered landing copy ✓, (4) Pricing says 'One-time purchase · Editable template' ✓, (5) ₹290 CTA and Razorpay checkout available and functional ✓, (6) No layout overflow or broken images ✓, (7) No LedgerKit console/network errors ✓. The phrase 'One-time purchase' now appears consistently 3 times across the landing page, clearly communicating this is a one-time PURCHASE with ongoing personal use/customization rights. Screenshots captured showing fix applied. No payment made. Implementation is PRODUCTION-READY."
 
 ##     -agent: "main"
 ##     -message: "User reported the production mobile modal overflowed: ₹199 price clipped outside the card and Pay button below the viewport. Preview fix adds bounded internal scrolling, responsive padding, stacked price/content, and mobile-safe controls. Frontend testing required before completion."
